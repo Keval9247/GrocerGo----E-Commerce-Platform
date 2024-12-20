@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to GrocerGo!</title>
+    <style>
+        /* Reset and container styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            font-size: 16px;
+        }
+
+        /* Header styling */
+        .header {
+            background-color: #9B1FE8;
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* Banner image styling */
+        .banner img {
+            width: 100%;
+            display: block;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        /* Content styling */
+        .content {
+            padding: 25px 20px;
+            text-align: left;
+        }
+
+        .content h2 {
+            color: #9B1FE8;
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .content p {
+            margin: 15px 0;
+            text-align: center;
+            color: #555;
+        }
+
+        /* Username styling */
+        .user {
+            color: #9B1FE8;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Button styling */
+        .button-wrapper {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .shopping-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            color: #ffffff;
+            background-color: #9B1FE8;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .shopping-btn:hover {
+            background-color: #a26ae2;
+            transform: translateY(-2px);
+        }
+
+        /* Footer styling */
+        .footer {
+            background-color: #333333;
+            color: #cccccc;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Welcome to GrocerGo!</h1>
+        </div>
+
+        <!-- Banner Image -->
+        <div class="banner">
+            <img src="https://shorturl.at/PIFDs" alt="Welcome to GrocerGo Store" >
+        </div>
+
+        <!-- Content Section -->
+        <div class="content">
+            <h2>Hello, <span class="user">{{username}}</span>!</h2>
+            <p>Thank you for joining GrocerGo, your go-to destination for high-quality groceries at amazing prices! We're thrilled to welcome you to our community.</p>
+            <p>Start shopping with us today and discover the convenience of having all your grocery needs met in one place.</p>
+            <div class="button-wrapper">
+                <a href="https://github.com/Keval9247" class="shopping-btn">Start Shopping</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 GrocerGo. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
