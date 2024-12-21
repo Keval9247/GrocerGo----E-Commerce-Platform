@@ -11,7 +11,7 @@ const Otp = require("../models/Otp");
 const path = require("path");
 const fs = require('fs');
 const uuid = require('uuid').v4
-const stripe = require('stripe')('sk_test_51PbhHqDCseLm0wrzwqICMdQxhA3D2yeHKPxmPM5FLCMmTYtFp4fB2VMjXDS3LZNTMi03bEL9L6bPSycMmiXgwVo600s5CpcnOk')
+const stripe = require('stripe')(process.env.STRIPE_SECRETKEY)
 
 const logincontroller = () => {
     return {
