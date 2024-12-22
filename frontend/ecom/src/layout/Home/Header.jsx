@@ -9,9 +9,22 @@ const StyledButton = styled(Button)(({ theme }) => ({
     transition: 'all 0.3s ease',
     textTransform: 'capitalize',
     fontSize: '16px',
-    '&:hover': {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    // '&:hover': {
+    //     transform: 'translateY(-2px)',
+    //     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    // },
+    '&:after': {
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '0%',
+        height: '2px',
+        backgroundColor: '#4F46E5',
+        transition: 'width 0.3s ease',
+    },
+    '&:hover:after': {
+        width: '100%',
     },
 }));
 
@@ -23,7 +36,7 @@ const Header = () => {
             position="fixed"
             sx={{
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(10px)',
+                backdropFilter: 'blur(2px)',
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                 zIndex: 1000,
                 padding: '0.5rem 2rem',
@@ -58,9 +71,9 @@ const Header = () => {
                 </Box>
 
                 {/* Navigation Links */}
-                <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                     <StyledButton
-                        onClick={() => window.scrollTo({ top: 1500, behavior: 'smooth' })}
+                        onClick={() => window.scrollTo({ top: 3250, behavior: 'smooth' })}
                         sx={{ color: '#847c94' }}
                     >
                         Why GrocerGo
@@ -87,7 +100,7 @@ const Header = () => {
 
                 {/* Authentication Buttons */}
                 <Box sx={{ display: 'flex', gap: '1rem' }}>
-                    <StyledButton
+                    <Button
                         variant="outlined"
                         sx={{
                             borderColor: '#4F46E5',
@@ -98,8 +111,8 @@ const Header = () => {
                         to="/login"
                     >
                         Login
-                    </StyledButton>
-                    <StyledButton
+                    </Button>
+                    <Button
                         variant="contained"
                         sx={{
                             backgroundColor: '#4F46E5',
@@ -112,7 +125,7 @@ const Header = () => {
                         to="/signup"
                     >
                         Sign Up
-                    </StyledButton>
+                    </Button>
                 </Box>
             </Toolbar>
         </AppBar>

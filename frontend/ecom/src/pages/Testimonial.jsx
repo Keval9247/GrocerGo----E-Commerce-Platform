@@ -52,8 +52,9 @@ const TestimonialSection = () => {
     return (
         <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
             <div className="container mx-auto">
-                <h2 className="text-4xl font-extrabold text-center text-[#36454F] mb-12">
+                <h2 className="relative text-4xl font-extrabold text-center text-[#36454F] mb-12">
                     Hear from Our Happy Customers
+                    <div className="absolute left-[28%] right-0 mx-auto h-[3px] bg-[#A555F7] w-[18%] bottom-[-12px]"></div>
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 pt-20">
                     {testimonials.map((testimonial, index) => (

@@ -35,6 +35,7 @@ import ForgotLayout from './layout/forgotPass/ForgotLayout';
 import HomeAbout from './pages/HomeAbout';
 import FAQ from './pages/FAQ';
 import LearnMore from './pages/LearnMore';
+import HomePage from './components/Home/HomePage';
 
 export const CartContent = createContext()
 
@@ -60,16 +61,19 @@ function App() {
       {/* <CartContent.Provider value={{ cartdata, setCartData }}> */}
       <Routes>
         {/* Public routes */}
-        <Route path="/" element={<Layout />}>
+        {/* <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+        </Route> */}
+        <Route element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="/login" element={<LoginLayout />} />
+          <Route path="/signup" element={<SignupLayout />} />
+          <Route path='/forgot-password' element={<ForgotLayout />} />
+          <Route path='/contact' element={<ContactUs />} />
+          <Route path='/about' element={<HomeAbout />} />
+          <Route path='/learn-more' element={<LearnMore />} />
+          <Route path="/FAQ" element={<FAQ />} />
         </Route>
-        <Route path="/login" element={<LoginLayout />} />
-        <Route path="/signup" element={<SignupLayout />} />
-        <Route path='/forgot-password' element={<ForgotLayout />} />
-        <Route path='/contact' element={<ContactUs />} />
-        <Route path='/about' element={<HomeAbout />} />
-        <Route path='/learn-more' element={<LearnMore />} />
-        <Route path="/FAQ" element={<FAQ />} />
 
 
         <Route path="/admin" element={<ProtectedRoute allowedRoles={[ROLES.ADMIN]} />}>
