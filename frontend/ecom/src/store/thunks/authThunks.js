@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 import bcrypt from 'bcryptjs';
-import { ForgotPassword, Login, Signup } from '../../apis/Authapi';
+import { ForgotPassword, Login, Signup, VerifyOtp } from '../../apis/Authapi';
 
 export const login = createAsyncThunk(
     'auth/login',
@@ -29,7 +29,6 @@ export const login = createAsyncThunk(
 export const signup = createAsyncThunk(
     'auth/signup',
     async ({ ...data }, { rejectWithValue }) => {
-        console.log("🚀 ~ data:", data)
         try {
             const response = await Signup(data);
             const { token, role } = response.user;
@@ -57,6 +56,18 @@ export const forgetPassword = createAsyncThunk(
             if (response.message) {
                 throw new Error(response.message);
             }
+            return response.data
+        } catch (error) {
+            return rejectWithValue(error.response.data.error);
+        }
+    }
+)
+
+export const verifyOtp = createAsyncThunk('auth/verifyOtp',
+    async (otp, { rejectWithValue }) => {
+        try {
+            const response = await VerifyOtp(otp)
+            console.log("response : ", response)
             return response.data
         } catch (error) {
             return rejectWithValue(error.response.data.error);

@@ -46,7 +46,6 @@ function App() {
   const [cartdata, setCartData] = useState()
 
   useEffect(() => {
-    // console.log(isAuthenticated);
     if (isAuthenticated) {
       if (role === ROLES.ADMIN) {
         navigate('/admin');

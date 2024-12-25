@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { sha256 } from 'js-sha256';
-import { Button, Grid, IconButton, InputAdornment, Typography, Box, Divider } from '@mui/material';
+import { Button, Grid, IconButton, InputAdornment, Typography, Box, Divider, CircularProgress } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -21,8 +21,7 @@ function Login() {
     const [errorMessage, setErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isOtpTabVisible, setIsOtpTabVisible] = useState(false);
-    console.log(1999, isOtpTabVisible);
-
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (isOtpTabVisible) setIsOtpTabVisible(false);
@@ -33,30 +32,41 @@ function Login() {
     };
 
     const handleLogin = async (data) => {
+        setIsLoading(true);
         try {
             const response = await dispatch(login({ email: data.email, password: data.password }));
-            console.log(123456, response?.payload);
 
-            const isVerified = response?.payload?.verify;
-            localStorage.setItem("UserEmail", response?.payload?.user)
+            const isVerified = response?.payload?.user?.isVerified;
+            const userRole = response?.payload?.user?.role;
+
+            localStorage.setItem("UserEmail", JSON.stringify(response?.payload?.user));
             localStorage.setItem('token', response?.payload?.token);
 
-            if (isVerified === false) {
-                toast.info("User is not Verified. Please try again with your 6-digit code.");
+            if (!isVerified) {
+                toast.info("User is not verified. Please enter the OTP sent to your email.");
                 setIsOtpTabVisible(true);
-            } else if (isVerified === true) {
-                toast.success('Login Successful');
-                // navigate('/user'); // Redirect to dashboard or user page
             } else {
-                throw new Error('Invalid credentials or unexpected response format');
+                toast.success("Login Successful");
+                navigate(userRole === 'admin' ? '/admin' : '/user');
             }
         } catch (error) {
-            toast.error(error.message || 'Login failed');
-            setErrorMessage(error.message || 'Login failed');
+            toast.error(error.message || "Login failed");
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    if (isLoading) {
+        return (
+            <Box className="flex justify-center items-center w-full h-screen">
+                <CircularProgress size={50} />
+            </Box>
+        )
+    }
+
+
     const handleGoogleLogin = async () => {
+        setIsLoading(true);
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const token = result.user.accessToken;
@@ -69,6 +79,7 @@ function Login() {
             toast.error(error.message || 'Google login failed');
             setErrorMessage(error.message || 'Google login failed');
         }
+        setIsLoading(false);
     };
 
     return (
@@ -132,8 +143,14 @@ function Login() {
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                <ButtonC type="submit" className="bg-indigo-600 w-full text-white py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300">
-                                    Login
+                                <ButtonC type="submit" className="bg-indigo-600 w-full text-white py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300" disabled={isLoading}>
+                                    {isLoading ? (
+                                        <div className="flex items-center justify-center">
+                                            <CircularProgress size={20} color="inherit" className="mr-2" />
+                                            Logging in...
+                                        </div>
+                                    ) : ("Login")
+                                    }
                                 </ButtonC>
                             </Grid>
                             <Grid item xs={12}>

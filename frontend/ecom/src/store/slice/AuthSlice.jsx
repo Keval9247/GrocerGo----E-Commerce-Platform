@@ -1,11 +1,12 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { forgetPassword, login, signup } from "../thunks/authThunks";
+import { createSlice } from "@reduxjs/toolkit";
+import { forgetPassword, login, signup, verifyOtp } from "../thunks/authThunks";
 
 const initialState = {
     isAuthenticated: false,
     user: null,
     role: null,
     error: null,
+    isVerified: false,
 };
 
 const authSlice = createSlice({
@@ -31,10 +32,11 @@ const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 console.log(111, action);
 
-                state.isAuthenticated = true;
+                state.isAuthenticated = action.payload?.user?.isVerified;
                 state.user = action.payload?.user;
                 state.role = action.payload?.user?.role;
                 state.error = null;
+                state.isVerified = action.payload?.user?.isVerified
             },)
             .addCase(login.rejected, (state, action) => {
                 state.isAuthenticated = false;
@@ -44,9 +46,10 @@ const authSlice = createSlice({
             },)
             .addCase(signup.fulfilled, (state, action) => {
                 state.isAuthenticated = false;
-                state.user = action.payload;
-                state.role = action.payload.role;
+                state.user = action.payload?.user;
+                state.role = action.payload?.user?.role;
                 state.error = null;
+                state.isVerified = action.payload?.user?.isVerified;
             },)
             .addCase(signup.rejected, (state, action) => {
                 state.isAuthenticated = false;
@@ -54,6 +57,15 @@ const authSlice = createSlice({
                 state.role = null;
                 state.error = action.payload ? action.payload.error : 'Sign up failed';;
             },)
+            .addCase(verifyOtp.fulfilled, (state, action) => {
+                state.user = action.payload?.user;
+                state.error = null;
+                state.isVerified = true;
+                state.role = action.payload?.user?.role;
+            })
+            .addCase(verifyOtp.rejected, (state, action) => {
+                state.error = action.payload ? action.payload.error : 'Invalid OTP';
+            })
             .addCase(forgetPassword.pending, (state, action) => {
                 state.user = null
                 state.error = null;

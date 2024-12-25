@@ -23,6 +23,7 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         readOne: async (rea, res) => {
             try {
                 const user = await Product.findById(rea.params.id, ['category', 'name', 'price', 'description']);
@@ -39,6 +40,7 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         login: async (req, res) => {
             try {
                 const { email, password } = req.body;
@@ -46,18 +48,50 @@ const logincontroller = () => {
                 if (!user) {
                     return res.status(400).json({ error: 'User not found' });
                 }
-                console.log("🚀 ~ login: ~ user:", user.password)
+                console.log("🚀🚀 Your selected text is req.body: ", user.isVerified);
 
                 const isMatch = await bcrypt.compare(password, user.password);
-                console.log("🚀 ~ login: ~ isMatch:", isMatch)
                 if (!isMatch) {
                     return res.status(400).json({ error: 'Invalid credentials' });
                 }
                 if (!user.isVerified) {
+                    const otp = OtpGenerate();
+                    console.log("🚀🚀 Your selected text is otp: ", otp);
+                    if (!otp) {
+                        return res.status(500).json({ error: 'Failed to generate OTP' });
+                    }
+                    await Otp.create({ userId: user._id, otp: otp });
+                    const htmlContent = `
+                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+                            <h1 style="color: #580380; text-align: center;">Welcome to GrocerGo!</h1>
+                            <p style="font-size: 16px; color: #333;">
+                                Hello! We're thrilled to have you join us. To complete your registration, please use the OTP below to verify your account:
+                            </p>
+                            <p style="font-size: 24px; color: #580380; font-weight: bold; text-align: center; margin: 20px 0;">
+                                ${otp}
+                            </p>
+                            <p style="font-size: 16px; color: #333;">
+                                If you didn’t request this email, please ignore it. Your account will remain secure.
+                            </p>
+                            <p style="font-size: 16px; color: #333;">
+                                Thanks for joining us and welcome to GrocerGo!
+                            </p>
+                            <p style="font-size: 14px; color: #888; text-align: center; border-top: 1px solid #ddd; padding-top: 20px;">
+                                © ${new Date().getFullYear()} GrocerGo. All rights reserved.
+                            </p>
+                        </div>
+                    `;
+                    await sendEmail(user.email, "Your OTP for Account Verification", htmlContent);
                     return res.status(200).json({
-                        verify: false,
-                        user: user.email,
-                        message: 'User is not verified'
+                        // verify: false,
+                        message: 'User is not verified',
+                        user: {
+                            id: user._id,
+                            name: user.name,
+                            email: user.email,
+                            role: user.role,
+                            isVerified: user.isVerified,
+                        },
                     });
                 }
 
@@ -66,8 +100,8 @@ const logincontroller = () => {
                     // name: user.name,
                     email: user.email
                 }
+
                 const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-                // console.log("🚀 ~ login: ~ token:", token)
 
                 res.cookie('token', `${token}`, { httpOnly: true })
                     .status(200).json({
@@ -78,7 +112,7 @@ const logincontroller = () => {
                             name: user.name,
                             email: user.email,
                             role: user.role,
-                            // password: hashedPassword,
+                            isVerified: user.isVerified,
                         },
                         token: token
                     });
@@ -86,12 +120,13 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         signup: async (req, res) => {
             try {
                 const { name, email, password, address, gender, phone, role = 'user' } = req.body;
                 const existingUser = await User.findOne({ email });
                 if (existingUser) {
-                    return res.status(400).json({ error: 'User with this email already exists' });
+                    return res.status(403).json({ success: false, error: 'User with this email already exists' });
                 }
 
                 const hashedPassword = await bcrypt.hash(password, 10);
@@ -154,32 +189,16 @@ const logincontroller = () => {
                             gender: newUser.gender,
                             phone: newUser.phone,
                             role: newUser.role,
+                            isVerified: newUser.isVerified,
                             token: token
                         },
                     });
-                // Send the response with the token and user info
-                // res.status(201).json({
-                //     success: true,
-                //     message: 'User registered successfully',
-                //     verification: "Verification mail sent. Please check your email.",
-                //     user: {
-                //         id: newUser._id,
-                //         name: newUser.name,
-                //         email: newUser.email,
-                //         address: newUser.address,
-                //         gender: newUser.gender,
-                //         phone: newUser.phone,
-                //         role: newUser.role,
-                //         isVerified: newUser.isVerified,
-                //         created_at: newUser.created_at,
-                //     },
-                //     token,
-                // });
             } catch (error) {
                 console.error('Registration error:', error.message);
                 res.status(500).json({ error: 'Server error' });
             }
         },
+
         forgotPassword: async (req, res) => {
             try {
                 const user = await User.findOne({ email: req.body.email });
@@ -204,6 +223,7 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         verifyOtp: async (req, res) => {
             try {
                 const { otp } = req.body;
@@ -214,19 +234,20 @@ const logincontroller = () => {
                 const createdAt = new Date(otpDoc.created_at);
                 const expiredAt = new Date(otpDoc.expiredAt);
 
-                if (expiredAt < new Date()) {
+                if (expiredAt < createdAt) {
                     return res.status(400).json({ error: 'OTP has expired' });
                 }
-                const user = await User.findByIdAndUpdate(otpDoc.userId, { isVerified: true });
+                const user = await User.findByIdAndUpdate(otpDoc.userId, { isVerified: true }, { new: true }).select("-password -token");
                 if (!user) {
                     return res.status(404).json({ error: 'User not found' });
                 }
 
-                res.status(200).json({ success: true, message: 'OTP verified successfully' });
+                res.status(200).json({ success: true, message: 'OTP verified successfully', user: user });
             } catch (error) {
                 res.status(500).json({ error: error.message });
             }
         },
+
         resendOtp: async (req, res) => {
             try {
                 const { email } = req.body;
@@ -308,6 +329,7 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         listproducts: async (req, res) => {
             try {
                 const pagesize = 6;
@@ -336,6 +358,7 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         addproduct: async (req, res) => {
             try {
                 const { name, price, description } = req.body;
@@ -359,6 +382,7 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         createPayment: async (req, res) => {
             try {
                 const { token, cartdata, totalPrice } = req.body;
@@ -402,6 +426,7 @@ const logincontroller = () => {
                 res.status(500).json({ error: error.message });
             }
         },
+
         addToCart: async (req, res) => {
             try {
                 console.log("🚀 ~ addToCart: ~ req.body:", req.body);
