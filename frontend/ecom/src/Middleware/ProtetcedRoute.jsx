@@ -18,16 +18,12 @@ const ProtectedRoute = ({ allowedRoles }) => {
         }
     }, [isAuthenticated, navigate]);
 
-    // Check if the user's role is included in allowedRoles
     if (!isAuthenticated) {
-        // Render a loading indicator or handle the case where authentication status is being checked
         return null;
     } else if (allowedRoles.includes(role)) {
-        // Render the nested routes if the role is allowed
         return <Outlet />;
     } else {
-        // Redirect to home or appropriate route if role is not allowed
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
 };
 

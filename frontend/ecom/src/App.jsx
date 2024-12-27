@@ -36,6 +36,14 @@ import HomeAbout from './pages/HomeAbout';
 import FAQ from './pages/FAQ';
 import LearnMore from './pages/LearnMore';
 import HomePage from './components/Home/HomePage';
+import AdminPanel from './admin/layout/AdminPanel';
+import Dashboard from './admin/pages/Dashboard';
+import OrderManagement from './admin/pages/OrderManagement';
+import ProductManagement from './admin/pages/ProductManagement';
+import UserManagement from './admin/pages/UserManagement';
+import Analytics from './admin/pages/Analytics';
+import AdminProfile from './admin/pages/AdminProfile';
+import AdminSettings from './admin/pages/AdminSettings';
 
 export const CartContent = createContext()
 
@@ -45,15 +53,15 @@ function App() {
   const navigate = useNavigate();
   const [cartdata, setCartData] = useState()
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (role === ROLES.ADMIN) {
-        navigate('/admin');
-      } else if (role === ROLES.USER) {
-        navigate('/user');
-      }
-    }
-  }, [isAuthenticated, role, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     if (role === ROLES.ADMIN) {
+  //       navigate('/admin');
+  //     } else if (role === ROLES.USER) {
+  //       navigate('/user');
+  //     }
+  //   }
+  // }, [isAuthenticated, role, navigate]);
 
   return (
     <>
@@ -76,10 +84,19 @@ function App() {
 
 
         <Route path="/admin" element={<ProtectedRoute allowedRoles={[ROLES.ADMIN]} />}>
-          <Route element={<AdminLayout />}>
+          {/* <Route element={<AdminLayout />}>
             <Route index element={<Home />} />
             <Route path="products" element={<Products />} />
             <Route path="solution" element={<Solution />} />
+          </Route> */}
+          <Route element={<AdminPanel />}>
+            <Route index element={<Dashboard />} />
+            <Route path="products" element={<ProductManagement />} />
+            <Route path="orders" element={<OrderManagement />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="profile" element={<AdminProfile />} />
+            <Route path='settings' element={<AdminSettings />} />
           </Route>
         </Route>
 

@@ -21,6 +21,10 @@ const User = new mongoose.Schema({
         type: String,
         required: true
     },
+    profilePic: {
+        type: String,
+        default: null
+    },
     gender: {
         type: String,
         required: true

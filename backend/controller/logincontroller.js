@@ -48,7 +48,7 @@ const logincontroller = () => {
                 if (!user) {
                     return res.status(400).json({ error: 'User not found' });
                 }
-                console.log("🚀🚀 Your selected text is req.body: ", user.isVerified);
+                console.log("🚀🚀 Your selected text is req.body: ", user);
 
                 const isMatch = await bcrypt.compare(password, user.password);
                 if (!isMatch) {

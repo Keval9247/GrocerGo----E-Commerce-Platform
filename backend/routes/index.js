@@ -5,11 +5,12 @@ const router = express.Router();
 const authRoutes = require('./authRoutes')
 const subscribeRoutes = require('./subscribeRoutes')
 const productsRoutes = require('./productRoutes')
+const userRoutes = require('./userRoutes')
 
 // // Load each route file dynamically
 // fs.readdirSync(__dirname).forEach((file) => {
 //   console.log("🚀 ~ fs.readdirSync ~ file:", file);
-  
+
 //   // Only process .js files and skip index.js itself
 //   if (file !== 'index.js' && file.endsWith('.js')) {
 //     const route = require(path.join(__dirname, file));
@@ -20,9 +21,10 @@ const productsRoutes = require('./productRoutes')
 //   }
 // });
 
-router.use('/auth',authRoutes);
-router.use('/subscribe',subscribeRoutes);
-router.use('/products',productsRoutes);
+router.use('/auth', authRoutes);
+router.use('/user', userRoutes);
+router.use('/subscribe', subscribeRoutes);
+router.use('/products', productsRoutes);
 
 
 module.exports = router;
