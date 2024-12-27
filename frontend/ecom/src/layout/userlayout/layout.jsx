@@ -15,24 +15,30 @@ function UserLayout() {
         //     <UserlayoutFooter /> {/* Footer */}
         // </div>
         // return (
-        <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-            {/* Sidebar */}
-            <Sidebar />
+        // <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+        //     {/* Sidebar */}
+        //     {/* <Sidebar /> */}
 
-            <Box sx={{ flexGrow: 1 }}>
-                {/* Header */}
-                <UserlayoutHeader />
+        //     <Box sx={{ flexGrow: 1 }}>
+        //         {/* Header */}
+        //         {/* <UserlayoutHeader /> */}
 
-                {/* Main Content */}
-                <Box sx={{ padding: 3 }}>
-                    <Outlet />  {/* This will render the content of the specific dashboard page */}
-                </Box>
+        //         {/* Main Content */}
+        //         <Box sx={{ padding: 3 }}>
+        //             <Outlet />  {/* This will render the content of the specific dashboard page */}
+        //         </Box>
 
-                {/* Footer */}
-                <UserlayoutFooter />
-            </Box>
+        //         {/* Footer */}
+        //         {/* <UserlayoutFooter /> */}
+        //     </Box>
+        // </Box>
+        // //   );
+        // );
+
+        <Box >
+            <Outlet />
+
         </Box>
-        //   );
     );
 }
 
