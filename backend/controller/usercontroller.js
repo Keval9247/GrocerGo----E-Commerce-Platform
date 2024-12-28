@@ -23,19 +23,19 @@ const userController = () => {
                 res.status(500).json({ error: error.message });
             }
         },
-        // getAdminDetails: async (req, res) => {
-        //     console.log(222);
+        getAdminDetails: async (req, res) => {
+            console.log(222);
 
-        //     try {
-        //         const user = await User.findOne({ role: 'admin' });
-        //         if (!user) {
-        //             return res.status(404).json({ error: 'No admin found' });
-        //         }
-        //         res.json(user);
-        //     } catch (error) {
-        //         res.status(500).json({ error: error.message });
-        //     }
-        // }
+            try {
+                const user = await User.findOne({ role: 'admin' }).select("-password ");
+                if (!user) {
+                    return res.status(404).json({ error: 'No admin found' });
+                }
+                res.json(user);
+            } catch (error) {
+                res.status(500).json({ error: error.message });
+            }
+        }
     }
 }
 
