@@ -50,6 +50,7 @@
     "react-stripe-checkout": "^2.6.3",
     "react-to-print": "^2.15.1",
     "react-toastify": "^10.0.5",
+    "recharts": "^2.15.0",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "strapi-stripe": "^3.4.1",

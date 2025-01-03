@@ -25,7 +25,9 @@ app.use(cors({
 app.use('/api', routes);
 
 // Static files (if necessary)
-app.use('/images', express.static(path.join(__dirname, 'uploadedimages')));
+// app.use('/images', express.static(path.join(__dirname, 'uploadedimages')));
+app.use("/public", express.static(path.join(__dirname, "./public")));
+// require('./')
 
 // Connect to MongoDB and start the server
 connectionMongodb()

@@ -44,14 +44,16 @@ import UserManagement from './admin/pages/UserManagement';
 import Analytics from './admin/pages/Analytics';
 import AdminProfile from './admin/pages/AdminProfile';
 import AdminSettings from './admin/pages/AdminSettings';
+import AddProduct from './admin/pages/products/AddProduct';
+import EditProduct from './admin/pages/products/EditProduct';
 
 export const CartContent = createContext()
 
 function App() {
-  const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
-  const role = useSelector((state) => state.authReducer.role);
-  const navigate = useNavigate();
-  const [cartdata, setCartData] = useState()
+  // const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
+  // const role = useSelector((state) => state.authReducer.role);
+  // const navigate = useNavigate();
+  // const [cartdata, setCartData] = useState()
 
   // useEffect(() => {
   //   if (isAuthenticated) {
@@ -92,11 +94,13 @@ function App() {
           <Route element={<AdminPanel />}>
             <Route index element={<Dashboard />} />
             <Route path="products" element={<ProductManagement />} />
+            <Route path="products/create-product" element={<AddProduct />} />
+            <Route path="products/edit-product/:id" element={<EditProduct />} />
             <Route path="orders" element={<OrderManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="profile" element={<AdminProfile />} />
-            <Route path='settings' element={<AdminSettings />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Route>
 
