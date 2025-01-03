@@ -1,12 +1,16 @@
-// routes/subscribe.js
-
 const express = require('express');
+const productController = require('../controller/productcontroller');
+const { productImageHandler } = require('../miidleware/uploadImage');
 const router = express.Router();
 
-// router.post('/', subscribecontroller().subscribeletter);
-router.post('/', (req, res) => {
-   console.log(1234);
-   
-});
+
+router.get('/count', productController().getCountData)
+router.post('/create-product', productImageHandler.single('productImg'), productController().createProduct)
+router.get('/', productController().getAllProducts)
+router.put('/update/:id', productImageHandler.single('productImg'), productController().updateProduct)
+
+router.get('/:id', productController().getProductById)
+
+router.delete('/delete', productController().deleteProduct)
 
 module.exports = router;
