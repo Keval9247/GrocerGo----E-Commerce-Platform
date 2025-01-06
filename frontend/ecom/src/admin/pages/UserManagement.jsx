@@ -197,37 +197,36 @@
 
 // export default UserManagement;
 
+
+
+
+
+
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { getAllProducts, GetUSers } from "../../apis/products/Productapi";
+import { GetUSers } from "../../apis/products/Productapi";
 import UserList from "./users/UserList";
 import UserEditForm from "./users/UserEditForm";
-import ProductDetails from "./users/ProductDetails";
+import UserDetailsModal from "./users/UserDetailsModal";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
-  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null); // Track selected user for the modal
+  console.log("🚀🚀 Your selected text is selectedUser: ", selectedUser);
   const [editingUser, setEditingUser] = useState(null);
   const [showProducts, setShowProducts] = useState(false);
 
   useEffect(() => {
-    // Fetch users and products from API
-    try {
-      const fetchData = async () => {
+    const fetchData = async () => {
+      try {
         const res = await GetUSers();
-        setUsers(res.users);
-        const productsRes = await getAllProducts();
-        setProducts(productsRes.products);
+        setUsers(res.users); // Populate users
+      } catch (error) {
+        console.log("Error fetching data:", error);
       }
-      fetchData();
-    } catch (error) {
-      console.log("🚀🚀 Your selected text is error: ", error);
+    };
 
-    }
-    // axios.get("/api/users").then((res) => setUsers(res.data));
-    // axios.get("/api/products").then((res) => setProducts(res.data));
+    fetchData();
   }, []);
 
   const handleEdit = (user) => {
@@ -250,23 +249,25 @@ const UserManagement = () => {
   return (
     <div className="container mx-auto px-4 pb-8">
       <h1 className="text-3xl font-bold mb-8">User Management</h1>
-      {!editingUser && !showProducts && (
-        <UserList
-          users={filteredUsers}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          onEdit={handleEdit}
-          onViewProducts={handleViewProducts}
-        />
-      )}
-      {editingUser && (
+
+      {/* {&& !showProducts && ( */}
+      <UserList
+        users={filteredUsers}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        onEdit={handleEdit}
+        onViewProducts={handleViewProducts}
+      />
+      {/* )} */}
+
+      {/* {editingUser && (
         <UserEditForm user={editingUser} onCancel={() => setEditingUser(null)} />
-      )}
-      {showProducts && (
-        <ProductDetails
-          userId={selectedUser.id}
-          products={products}
-          onBack={() => setShowProducts(false)}
+      )} */}
+
+      {selectedUser && (
+        <UserDetailsModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
         />
       )}
     </div>

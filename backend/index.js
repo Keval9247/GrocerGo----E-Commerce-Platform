@@ -10,7 +10,6 @@ const connectionMongodb = require('./db');
 const path = require('path');
 const routes = require('./routes/index.js');
 
-// Load environment variables
 dotenv.config();
 
 // Middleware
@@ -21,18 +20,15 @@ app.use(cors({
     credentials: true
 }));
 
-// Route handling
 app.use('/api', routes);
 
-// Static files (if necessary)
 // app.use('/images', express.static(path.join(__dirname, 'uploadedimages')));
 app.use("/public", express.static(path.join(__dirname, "./public")));
-// require('./')
 
-// Connect to MongoDB and start the server
+
 connectionMongodb()
     .then(() => {
-        app.listen(process.env.PORT, () => {
+        app.listen(process.env.PORT || 5858, () => {
             console.log(`Server is running on port ${process.env.PORT}`);
         });
     })

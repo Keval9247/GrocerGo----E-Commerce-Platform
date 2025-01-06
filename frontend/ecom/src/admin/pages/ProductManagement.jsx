@@ -107,8 +107,8 @@ const ProductsPage = () => {
                                 <th className="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-center">
                                     Price
                                 </th>
-                                <th className="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-center">
-                                    Stock
+                                <th className="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-center flex flex-col">
+                                    Stock <span className="text-xs font-normal normal-case">(Please hover to view availbale products.)</span>
                                 </th>
                                 <th className="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-center">
                                     Category
@@ -137,13 +137,21 @@ const ProductsPage = () => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-center">₹{product.ProductPrice}</td>
-                                    <td className="px-6 py-4 text-center">
+                                    <td className="px-6 py-4 text-center ">
                                         {product?.stock > 0 ? (
-                                            <Tooltip title={`${product.stock} available`} placement="top">
-                                                <span className="px-2 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                                                    In Stock
-                                                </span>
-                                            </Tooltip>
+                                            product.stock < 5 ? (
+                                                <Tooltip title={`Only ${product.stock} left in stock!`} placement="top">
+                                                    <span className="px-2 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">
+                                                        Low Stock <span className="text-xs text-gray-600 items-baseline">({product.stock})</span>
+                                                    </span>
+                                                </Tooltip>
+                                            ) : (
+                                                <Tooltip title={`${product.stock} available`} placement="top">
+                                                    <span className="px-2 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                                                        In Stock
+                                                    </span>
+                                                </Tooltip>
+                                            )
                                         ) : (
                                             <Tooltip title="Out of stock" placement="top">
                                                 <span className="px-2 py-1 rounded-full text-sm bg-red-100 text-red-800">
@@ -152,7 +160,7 @@ const ProductsPage = () => {
                                             </Tooltip>
                                         )}
                                     </td>
-                                    <td className="px-6 py-4 text-center">{product.category}</td>
+                                    <td className="px-6 py-4 text-center"><select className="bg-white px-4 py-1 rounded-lg  hover:cursor-pointer focus:outline-none"><option className="select-none " value={`${product.category}`}>{product.category}</option></select></td>
                                     <td className="px-6 py-4 text-center">
                                         <button
                                             className="text-indigo-600 hover:text-indigo-800 px-2"

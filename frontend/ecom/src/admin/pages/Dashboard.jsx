@@ -8,6 +8,7 @@ import { redirect, useNavigate } from "react-router-dom";
 const Dashboard = () => {
     const [dateRange] = useState("Last 7 Days");
     const [count, setCount] = useState(0);
+    console.log("🚀🚀 Your selected text is count: ", count);
     const navigate = useNavigate();
 
     // Sample data for charts
@@ -209,6 +210,7 @@ const Dashboard = () => {
                                         <FiAlertCircle className="text-red-500 mr-3" />
                                         <div>
                                             <h3 className="font-medium">{product.category}</h3>
+                                            <p className="text-xs text-gray-600">(Product Name : {product?.product})</p>
                                             <p className="text-sm text-red-600">Low stock alert: {product.stock} units left</p>
                                         </div>
                                     </div>
