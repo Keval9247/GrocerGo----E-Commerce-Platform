@@ -17,7 +17,7 @@ const productController = () => {
                 const ProductData = await Product.find().select("-token -password")
                 const UserCount = await User.find({ role: 'user' }).select("-token -password")
                 const ProductStockCount = await ProductData?.map((product) => {
-                    const data = { category: product.category, stock: product.stock }
+                    const data = { category: product.category, product: product.ProductName, stock: product.stock }
                     return data
                 })
 
