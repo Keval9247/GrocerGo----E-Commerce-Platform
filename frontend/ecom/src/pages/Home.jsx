@@ -228,6 +228,7 @@
 import React, { useState, useEffect } from "react";
 import { FiSearch, FiShoppingCart, FiUser, FiHome, FiPackage } from "react-icons/fi";
 import { AiFillStar } from "react-icons/ai";
+import { Link } from 'react-router-dom';
 
 const products = [
     {
@@ -286,7 +287,7 @@ const Dashboard = () => {
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Header */}
-            <header className="bg-white shadow-md">
+            {/* <header className="bg-white shadow-md">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="text-2xl font-bold text-gray-800">E-Shop</div>
@@ -298,7 +299,7 @@ const Dashboard = () => {
                         </nav>
                     </div>
                 </div>
-            </header>
+            </header> */}
 
             <div className="container mx-auto px-4 py-8">
                 <div className="flex flex-col md:flex-row gap-8">
