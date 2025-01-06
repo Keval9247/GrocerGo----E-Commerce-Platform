@@ -58,6 +58,16 @@ export const getAllProducts = async () => {
     }
 }
 
+export const GetProductsByCategory = async (category) => {
+    console.log("🚀🚀 Your selected text is category: ", category);
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/findProductByCategory`, { category: category });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const GetProductById = async (_id) => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${_id}`);

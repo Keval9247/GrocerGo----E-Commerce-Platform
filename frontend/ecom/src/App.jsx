@@ -46,6 +46,8 @@ import AdminProfile from './admin/pages/AdminProfile';
 import AdminSettings from './admin/pages/AdminSettings';
 import AddProduct from './admin/pages/products/AddProduct';
 import EditProduct from './admin/pages/products/EditProduct';
+import Categories from './components/Home/Category';
+import ProductsPage from './pages/Products';
 
 export const CartContent = createContext()
 
@@ -82,6 +84,11 @@ function App() {
           <Route path='/about' element={<HomeAbout />} />
           <Route path='/learn-more' element={<LearnMore />} />
           <Route path="/FAQ" element={<FAQ />} />
+
+          <Route element={<UserLayout />}>
+            <Route path="/user/categories" element={<Categories />} />
+            <Route path="/user/products" element={<ProductsPage />} />
+          </Route>
         </Route>
 
 
@@ -108,6 +115,8 @@ function App() {
           <Route element={<UserLayout />}>
             {/* Nested routes for Home */}
             <Route index element={<Home />} />
+            <Route path="categories" element={<Categories />} />
+            {/* <Route path="categories/:id" element={<CategoryDetail />} /> */}
             <Route path="home1" element={<Home1 />} />
             <Route path="home2" element={<Home2 />} />
             <Route path="home3" element={<Home3 />} />

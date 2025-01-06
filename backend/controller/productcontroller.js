@@ -59,7 +59,7 @@ const productController = () => {
         },
 
         createProduct: async (req, res) => {
-            const { category, name, price, description, stock } = req.body
+            const { category, name, price, description, stock, rating } = req.body
             const Productfile = req.file;
             if (!Productfile) {
                 return res.status(400).json({ error: 'Product image is required' });
@@ -70,11 +70,31 @@ const productController = () => {
                 ProductPrice: price,
                 ProductDescription: description,
                 stock: stock,
+                rating,
                 ProductImage: `/public/products/${Productfile.filename}`,
             });
             await product.save();
             res.status(201).json({ message: 'Product created successfully', product: product });
         },
+
+        findProductByCategory: async (req, res) => {
+            try {
+                const { category } = req.body;
+                if (!category) {
+                    return res.status(400).json({ error: "Category is required" });
+                }
+
+                const products = await Product.find({ category });
+                if (products.length === 0) {
+                    return res.status(404).json({ error: 'No products found for this category' });
+                }
+
+                res.status(200).json({ message: "Products Retrieved Successfully.", products });
+            } catch (error) {
+                res.status(500).json({ error: error.message });
+            }
+        },
+
 
         updateProduct: async (req, res) => {
             try {

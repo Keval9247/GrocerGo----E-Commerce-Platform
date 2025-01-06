@@ -12,7 +12,7 @@ import { Box, Typography } from "@mui/material";
 
 const Layout = ({ childern }) => {
   const location = useLocation();
-  const verifyPath = location.pathname.includes('login') || location.pathname.includes('signup');
+  const verifyPath = location.pathname.includes('login') || location.pathname.includes('signup') || location.pathname.includes('user');
 
   return (
     <>
