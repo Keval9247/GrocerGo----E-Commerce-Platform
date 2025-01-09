@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addproducts, fetchProducts, createPayment, readoneProduct, fetchProductsWithoutParams, addToCart, getCart, removeCartItem } from '../thunks/productThunk';
+import { addproducts, fetchProducts, createPayment, fetchProductsWithoutParams, addToCart, getCart, removeCartItem } from '../thunks/productThunk';
 
 const initialState = {
     products: [],
@@ -71,24 +71,24 @@ const productsSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            .addCase(readoneProduct.pending, (state, action) => {
-                state.loading = true;
-                state.error = null;
-                state.products = null;
-            })
-            .addCase(readoneProduct.fulfilled, (state, action) => {
-                console.log("🚀 ~ .addCase ~ state:", state)
-                console.log("Actions from product slice :", action);
+            // .addCase(readoneProduct.pending, (state, action) => {
+            //     state.loading = true;
+            //     state.error = null;
+            //     state.products = null;
+            // })
+            // .addCase(readoneProduct.fulfilled, (state, action) => {
+            //     console.log("🚀 ~ .addCase ~ state:", state)
+            //     console.log("Actions from product slice :", action);
                 
-                state.loading = false;
-                state.error = null;
-                state.products = action.payload;
-            })
-            .addCase(readoneProduct.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-                state.products = null;
-            })
+            //     state.loading = false;
+            //     state.error = null;
+            //     state.products = action.payload;
+            // })
+            // .addCase(readoneProduct.rejected, (state, action) => {
+            //     state.loading = false;
+            //     state.error = action.error.message;
+            //     state.products = null;
+            // })
             .addCase(addToCart.pending, (state, action) => {
                 state.loading = true;
                 state.error = null;

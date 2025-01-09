@@ -3,25 +3,6 @@ import { useEffect, useState } from "react";
 
 
 
-// const api = axios.create({
-//     baseURL: import.meta.env.VITE_BACKEND_URL,
-//     timeout: 5000,
-//     withCredentials: "include", // Include credentials in cross-origin requests
-// });
-
-// api.interceptors.request.use(
-//     (config) => {
-//         const token = localStorage.getItem('token');
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
-
 export const getDataLength = async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/count`);
@@ -59,7 +40,6 @@ export const getAllProducts = async () => {
 }
 
 export const GetProductsByCategory = async (category) => {
-    console.log("🚀🚀 Your selected text is category: ", category);
     try {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/findProductByCategory`, { category: category });
         return response.data;
@@ -68,9 +48,9 @@ export const GetProductsByCategory = async (category) => {
     }
 };
 
-export const GetProductById = async (_id) => {
+export const GetProductById = async (id) => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${_id}`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`);
         return response.data;
     } catch (error) {
         console.log(error);
@@ -94,6 +74,41 @@ export const DeleteProduct = async (_id) => {
         console.log(error);
     }
 }
+
+export const getAllRatingbyProductId = async (id) => {
+    console.log("🚀🚀 Your selected text is id: ", id);
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/get-rating/6773dd8686ce8bf3a98e72ed`);
+        console.log("🚀🚀 Your selected text is response: ", response);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //////
@@ -129,7 +144,7 @@ export const ListProductsWithoutParams = async () => {
 export const ReadOneProduct = async (_id) => {
     try {
         // const_id = '668e0be852c73adc6cd2073e';
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/product/${_id}`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${_id}`);
         console.log("Product API response:", response.data);
         return response.data;
     } catch (error) {

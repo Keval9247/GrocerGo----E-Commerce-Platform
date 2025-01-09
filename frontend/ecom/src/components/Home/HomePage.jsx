@@ -5,22 +5,31 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import WhyChooseUs from '../../pages/carousel';
 import TestimonialSection from '../../pages/Testimonial';
+import Loading from '../../utils/Loading';
 
 function HomePage() {
 
     const navigate = useNavigate();
     const [subscribeEmail, setSubscribeEmail] = useState();
     const [displayedProducts, setDisplayedProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchproductsjson = (async () => {
-            const response = await fetch('/json/SampleProducts.json');
-            console.log("🚀 ~ fetchproductsjson ~ ̥:", response)
-            const data = await response.json();
-            setDisplayedProducts(data);
-        })
-        fetchproductsjson();
-    }, [])
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch('/json/SampleProducts.json');
+                const data = await response.json();
+                setDisplayedProducts(data);
+            } catch (error) {
+                toast.error('Failed to fetch products.');
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProducts();
+    }, []);
 
 
     const validateEmail = (email) => {
@@ -39,30 +48,37 @@ function HomePage() {
 
     const handleSubscribeNewsletter = async () => {
         if (subscribeEmail) {
-            console.log("🚀 ~ handleSubscribeNewsletter ~ subscribeEmail:", subscribeEmail)
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/subscribe/`,
-                { email: subscribeEmail }
-            );
-            console.log(123, response);
-            toast.success('Subscribed to newsletter successfully!');
+            setLoading(true);
+            try {
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/`,
+                    { email: subscribeEmail }
+                );
+                toast.success('Subscribed to newsletter successfully!');
+                setSubscribeEmail('');
+            } catch (error) {
+                toast.error('Failed to subscribe to newsletter.');
+                console.error('Error subscribing:', error);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            toast.error('Invalid email format.');
         }
-        else {
-            toast.error("Invalid email format.");
-        }
-    }
-
-    const handleLoadMore = () => {
-        toast.info(`Please login to view more products.`);
-        setTimeout(() => {
-            navigate('/login');
-        }, 3000);
     };
 
+    const handleLoadMore = () => {
+        setLoading(true);
+        setTimeout(() => {
+            window.open('/user/products', '_blank');
+            setLoading(false);
+        }, 1000);
+    };
 
     return (
         <>
             <div className="bg-gray-100 min-h-screen pt-20">
                 <ToastContainer position="top-right" autoClose={2000} />
+                {loading && <Loading />}
 
                 {/* Hero Section */}
                 <section className="w-full bg-gradient-to-br from-indigo-600 to-purple-500 text-white py-20 px-6">

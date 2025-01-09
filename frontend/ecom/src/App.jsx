@@ -5,7 +5,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import AdminLayout from './layout/adminlayout/layout';
-import UserLayout from './layout/userlayout/layout';
+import UserLayout from './layout/userlayout/Userlayout';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import Solution from './pages/Solution';
@@ -48,6 +48,10 @@ import AddProduct from './admin/pages/products/AddProduct';
 import EditProduct from './admin/pages/products/EditProduct';
 import Categories from './components/Home/Category';
 import ProductsPage from './pages/Products';
+import UserProfile from './pages/UserProfile';
+import UserSettings from './pages/UserSettings';
+import UserContact from './pages/UserContact';
+import NotFoundPage from './pages/ErorrPage';
 
 export const CartContent = createContext()
 
@@ -88,6 +92,11 @@ function App() {
           <Route element={<UserLayout />}>
             <Route path="/user/categories" element={<Categories />} />
             <Route path="/user/products" element={<ProductsPage />} />
+            <Route path="/user/products/:id" element={<ProductsDetails />} />
+            <Route path="/user/cart" element={<Cart />} />
+            <Route path="/user/profile/:id" element={<UserProfile />} />
+            <Route path="/user/settings" element={<UserSettings />} />
+            <Route path="/user/contact" element={<UserContact />} />
           </Route>
         </Route>
 
@@ -111,10 +120,10 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="/user" element={<ProtectedRoute allowedRoles={[ROLES.USER]} />}>
+        <Route path="/user/products" element={<ProtectedRoute allowedRoles={[ROLES.USER]} />}>
           <Route element={<UserLayout />}>
             {/* Nested routes for Home */}
-            <Route index element={<Home />} />
+            <Route index element={<ProductsPage />} />
             <Route path="categories" element={<Categories />} />
             {/* <Route path="categories/:id" element={<CategoryDetail />} /> */}
             <Route path="home1" element={<Home1 />} />
@@ -123,7 +132,7 @@ function App() {
             <Route path='about' element={<About />} />
             {/* <Route path="contact" element={<Contact />} /> */}
             <Route path="products-list" element={<ProductUser />} />
-            <Route path="products-list/:_id" element={<ProductsDetails />} />
+            {/* <Route path="products-list/:_id" element={<ProductsDetails />} /> */}
             <Route path="services" element={<Services />} />
             <Route path="authority" element={<Authority />} />
             <Route path='payment/:_id' element={<Payment />} />
@@ -134,7 +143,7 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {/* </CartContent.Provider> */}
     </>

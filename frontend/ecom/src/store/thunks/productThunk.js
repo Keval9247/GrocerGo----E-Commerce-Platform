@@ -37,22 +37,22 @@ export const fetchProductsWithoutParams = createAsyncThunk(
     }
 )
 
-export const readoneProduct = createAsyncThunk(
-    'products/readoneProduct',
-    async (_id) => {
-        try {
-            const response = await ReadOneProduct(_id);
-            console.log("Product from thunk : ", response.user);
-            if (!response) {
-                throw new Error("Can't find product")
-            }
-            return response.user;
-        } catch (error) {
-            console.log("Error : ", error);
-            throw error;
-        }
-    }
-)
+// export const readoneProduct = createAsyncThunk(
+//     'products/readoneProduct',
+//     async (_id) => {
+//         try {
+//             const response = await ReadOneProduct(_id);
+//             console.log("Product from thunk : ", response?.user);
+//             if (!response) {
+//                 throw new Error("Can't find product")
+//             }
+//             return response.user;
+//         } catch (error) {
+//             console.log("Error : ", error);
+//             throw error;
+//         }
+//     }
+// )
 export const addproducts = createAsyncThunk(
     'products/addProducts',
     async (credentials) => {
@@ -117,7 +117,7 @@ export const getCart = createAsyncThunk(
 
 export const removeCartItem = createAsyncThunk(
     'products/removeCartItem',
-    async ( data ) => {
+    async (data) => {
         try {
             console.log(122223);
             console.log("��� ~ productId from thunk :", data)
