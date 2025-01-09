@@ -4,10 +4,8 @@ import axios from 'axios';
 
 
 export const Login = async (credentials) => {
-    console.log("🚀🚀 Your selected text is credentials: ", credentials);
     try {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, credentials);
-        console.log("🚀🚀 Your selected text is response: ", response);
         return response?.data;
     } catch (error) {
         throw error
@@ -36,6 +34,15 @@ export const VerifyOtp = async (otp) => {
     try {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verifyOtp`, otp);
         return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getUserDetials = async (id) => {
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/profile/${id}`);
+        return response.data;
     } catch (error) {
         throw error;
     }

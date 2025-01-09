@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Rating = require("../models/Rating");
 const User = require("../models/User");
 
 const productController = () => {
@@ -95,7 +96,6 @@ const productController = () => {
             }
         },
 
-
         updateProduct: async (req, res) => {
             try {
                 const { name, description, price, stock, category } = req.body;
@@ -143,6 +143,53 @@ const productController = () => {
                 res.status(500).json({ error: "Failed to delete product" });
             }
         },
+
+        createRatingAndReview: async (req, res) => {
+            try {
+                const { rating, review } = req.body;
+
+                const newReview = new Rating({
+                    productId: req.params.productId,
+                    userId: req.params.userId,
+                    rating,
+                    review
+                });
+
+                await newReview.save();
+                res.status(201).json({ message: 'Review and rating added successfully', data: newReview });
+            } catch (err) {
+                res.status(400).json({ message: 'Error adding review', error: err });
+            }
+        },
+
+        getProductRatings: async (req, res) => {
+            try {
+                const productRatings = await Rating.find({ productId: req.params.productId });
+
+                if (productRatings.length > 0) {
+                    const mappedRatingsWithUserDetails = await Promise.all(
+                        productRatings.map(async (rating) => {
+                            const user = await User.findById(rating.userId).select('-token -password')
+                            const userObj = {
+                                email: user.email,
+                                name: user.name,
+                                profileImage: user.profileImage
+                            }
+                            return { ...rating.toObject(), user:userObj };
+                        })
+                    );
+                    res.status(200).json({
+                        message: 'Ratings retrieved successfully',
+                        data: mappedRatingsWithUserDetails
+                    });
+                } else {
+                    res.status(404).json({ message: 'No ratings found for this product' });
+                }
+            } catch (err) {
+                res.status(500).json({ message: 'Error retrieving ratings', error: err });
+            }
+        }
+
     }
 }
 

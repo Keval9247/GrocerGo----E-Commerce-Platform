@@ -271,6 +271,11 @@ const Dashboard = () => {
     const [priceRange, setPriceRange] = useState(500);
     const [filteredProducts, setFilteredProducts] = useState(products);
     const [showQuickView, setShowQuickView] = useState(null);
+    
+
+    useEffect(()=>{
+
+    })
 
     useEffect(() => {
         const filtered = products.filter(product => {

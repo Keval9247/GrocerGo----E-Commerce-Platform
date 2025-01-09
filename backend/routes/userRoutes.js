@@ -7,6 +7,7 @@ const { saveAdminProfilePic } = require('../miidleware/uploadImage');
 router.get('/', userController().getAllUser);
 // router.get('/admin', userController().getAdminDetails);
 router.get('/:id', userController().getUserById);
+router.get('/profile/:id', userController().getProfileById)
 
 
 // router.put('/admin/update/:id', (req, res, next) => {

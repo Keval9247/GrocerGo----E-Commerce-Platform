@@ -10,6 +10,7 @@ const Product = new mongoose.Schema({
     ProductPrice: { type: Number, required: false, default: 0 },
     ProductDescription: { type: String, required: false, default: 'null' },
     ProductImage: { type: String, required: true, default: 'null' },
+    RatingCount: { type: Number, required: false, default: 0 },
 
     created_at: { type: Date, default: Date.now() },
     updated_at: { type: Date, default: Date.now() },

@@ -42,6 +42,10 @@ function Login() {
 
             localStorage.setItem("UserEmail", JSON.stringify(response?.payload?.user));
             localStorage.setItem('token', response?.payload?.token);
+            if (response?.payload.error) {
+                toast.error(response?.payload.error)
+                return;
+            }
 
             if (!isVerified) {
                 toast.info("User is not verified. Please enter the OTP sent to your email.");

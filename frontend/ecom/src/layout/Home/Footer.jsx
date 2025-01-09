@@ -53,7 +53,7 @@ const Footer = () => {
         if (subscribeEmail) {
             if (validateEmail(subscribeEmail)) {
                 console.log("🚀 ~ handleSubscribeNewsletter ~ subscribeEmail:", subscribeEmail)
-                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/subscribe/`,
+                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/`,
                     { email: subscribeEmail }
                 );
                 console.log(123, response);
