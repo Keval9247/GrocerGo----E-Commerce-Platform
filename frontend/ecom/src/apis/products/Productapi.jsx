@@ -75,11 +75,20 @@ export const DeleteProduct = async (_id) => {
     }
 }
 
-export const getAllRatingbyProductId = async (id) => {
-    console.log("🚀🚀 Your selected text is id: ", id);
+export const getAllRatingbyProductId = async (_id) => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/get-rating/6773dd8686ce8bf3a98e72ed`);
-        console.log("🚀🚀 Your selected text is response: ", response);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/get-rating/${_id}`);
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const AddRatingAndReview = async (props) => {
+    console.log("🚀🚀 Your selected text is => props: ", props);
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/rating-review/${props.userId}/${props.productId}`, { rating: props.rating, review: props.review });
+        console.log("🚀🚀 Your selected text is => response: ", response);
         return response.data;
     } catch (error) {
         console.log(error);

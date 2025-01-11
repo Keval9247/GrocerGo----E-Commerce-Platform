@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Button, Toolbar, Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     fontWeight: 'bold',
@@ -30,6 +30,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const Header = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    console.log("🚀🚀 Your selected text is => pathname: ", location);
 
     return (
         <AppBar
@@ -73,7 +75,15 @@ const Header = () => {
                 {/* Navigation Links */}
                 <Box sx={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                     <StyledButton
-                        onClick={() => window.scrollTo({ top: 3250, behavior: 'smooth' })}
+                        onClick={() => {
+                            if (location.pathname === '/') { window.scrollTo({ top: 3250, behavior: 'smooth' }) }
+                            else {
+                                navigate('/')
+                                setTimeout(() => {
+                                    window.scrollTo({ top: 3250, behavior: 'smooth' })
+                                }, 1000)
+                            }
+                        }}
                         sx={{ color: '#847c94' }}
                     >
                         Why GrocerGo

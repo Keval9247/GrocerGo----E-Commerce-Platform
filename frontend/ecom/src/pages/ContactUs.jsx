@@ -44,7 +44,7 @@ const ContactUs = () => {
             <Typography variant="h2" align="center" gutterBottom>
                 Contact Us
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+            <Typography variant="h5" align="center" color="textSecondary" >
                 We'd love to hear from you. Send us a message!
             </Typography>
             <MotionBox

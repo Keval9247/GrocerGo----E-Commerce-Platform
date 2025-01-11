@@ -18,9 +18,7 @@ import {
     Divider
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-// import EcoIcon from '@mui/icons-material/Eco';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import GroupIcon from '@mui/icons-material/Group';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';

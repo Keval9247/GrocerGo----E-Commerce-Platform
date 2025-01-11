@@ -64,7 +64,8 @@ export const forgetPassword = createAsyncThunk(
     }
 )
 
-export const verifyOtp = createAsyncThunk('auth/verifyOtp',
+export const verifyOtp = createAsyncThunk(
+    'auth/verifyOtp',
     async (otp, { rejectWithValue }) => {
         try {
             const response = await VerifyOtp(otp)

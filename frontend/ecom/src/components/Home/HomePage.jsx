@@ -93,7 +93,7 @@ function HomePage() {
                             </p>
                             <div className="flex flex-col sm:flex-row items-center sm:gap-4 gap-2">
                                 <button
-                                    onClick={() => navigate("/login")}
+                                    onClick={() => window.open("/user/products", '_blank')}
                                     className="bg-white text-[#36454F] py-3 px-8 rounded-lg font-bold hover:bg-gray-200 transition"
                                 >
                                     Start Shopping

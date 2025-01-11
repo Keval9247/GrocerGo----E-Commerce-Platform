@@ -52,7 +52,7 @@ function Login() {
                 setIsOtpTabVisible(true);
             } else {
                 toast.success("Login Successful");
-                navigate(userRole === 'admin' ? '/admin' : '/user');
+                navigate(userRole === 'admin' ? '/admin' : '/user/products');
             }
         } catch (error) {
             toast.error(error.message || "Login failed");
