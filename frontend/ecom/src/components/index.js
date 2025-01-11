@@ -1,4 +1,4 @@
-import About from "../pages/About";
+// import About from "../pages/About";
 import Home from "../pages/Home";
 import { ButtonC } from "./Button";
 import Input from "./Input";
@@ -7,7 +7,7 @@ import Signup from '../pages/Signup'
 
 export {
     Home,
-    About,
+    // About,
     Input,
     ButtonC,
     Login,

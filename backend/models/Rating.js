@@ -19,6 +19,7 @@ const reviewSchema = new mongoose.Schema({
     comment: {
         type: String,
         required: false,
+        default: "Review Not Given."
     },
     createdAt: {
         type: Date,

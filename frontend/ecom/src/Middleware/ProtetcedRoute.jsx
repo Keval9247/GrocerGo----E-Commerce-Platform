@@ -10,21 +10,21 @@ const ProtectedRoute = ({ allowedRoles }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!isAuthenticated || !token) {
-            dispatch(clearAuthentication());
-            navigate('/login');
-        }
-    }, [isAuthenticated, navigate]);
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     if (!isAuthenticated || !token) {
+    //         dispatch(clearAuthentication());
+    //         navigate('/login');
+    //     }
+    // }, [isAuthenticated, navigate]);
 
-    if (!isAuthenticated) {
-        return null;
-    } else if (allowedRoles.includes(role)) {
-        return <Outlet />;
-    } else {
-        return <Navigate to="/login" replace />;
-    }
+    // if (!isAuthenticated) {
+    //     return null;
+    // } else if (allowedRoles.includes(role)) {
+    return <Outlet />;
+    // } else {
+    //     return <Navigate to="/login" replace />;
+    // }
 };
 
 export default ProtectedRoute;
