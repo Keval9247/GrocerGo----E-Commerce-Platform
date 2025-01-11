@@ -37,7 +37,8 @@ const Cart = new mongoose.Schema({
     }],
     totalPrice: {
         type: Number,
-        required: false
+        required: false,
+        default: 0,
     },
     created_at: {
         type: Date,
@@ -48,5 +49,11 @@ const Cart = new mongoose.Schema({
         default: Date.now()
     }
 })
+
+Cart.pre('save', function (next) {
+    this.updated_at = Date.now();
+    next();
+});
+
 
 module.exports = mongoose.model('Cart', Cart)

@@ -2,6 +2,33 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { AddProducts, CraetePayment, ListProducts, ReadOneProduct, ListProductsWithoutParams, AddToCart, GetCart, RemoveFromCart } from "../../apis/products/Productapi";
 
+
+export const fetchAddToCart = createAsyncThunk(
+    'products/addToCart',
+    async (creadentials) => {
+        console.log("🚀🚀 Your selected text is => creadentials: ", creadentials);
+        try {
+            const cart = getState().products.cart;
+            const existingItem = cart.find(item => item.productId === productId);
+
+            if (existingItem) {
+                dispatch(updateCartQuantity({ productId, quantity: existingItem.quantity + quantity }));
+            } else {
+                dispatch(addProductToCart({ productId, quantity }));
+            }
+        } catch (error) {
+            console.log("Error : ", error);
+        }
+    }
+)
+
+
+
+
+
+///------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async ({ ...props }) => {
