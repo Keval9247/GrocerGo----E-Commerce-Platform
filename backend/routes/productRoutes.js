@@ -2,6 +2,7 @@ const express = require('express');
 const productController = require('../controller/productcontroller');
 const { productImageHandler } = require('../miidleware/uploadImage');
 const router = express.Router();
+const cartRoutes = require('./cartRoutes');
 
 
 router.get('/count', productController().getCountData)
@@ -21,5 +22,7 @@ router.get('/:id', productController().getProductById)
 router.get('/get-rating/:productId', productController().getProductRatings)
 router.post('/rating-review/:userId/:productId', productController().createRatingAndReview)
 
+
+router.use('/cart', cartRoutes)
 
 module.exports = router;
