@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 
 export const getDataLength = async () => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/count`
-    );
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/count`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -14,9 +12,7 @@ export const getDataLength = async () => {
 
 export const GetUSers = async () => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/users`
-    );
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/users`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -25,10 +21,7 @@ export const GetUSers = async () => {
 
 export const CreateProduct = async (formdata) => {
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/create-product`,
-      formdata
-    );
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/create-product`, formdata);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -37,9 +30,7 @@ export const CreateProduct = async (formdata) => {
 
 export const getAllProducts = async () => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products`
-    );
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -48,12 +39,7 @@ export const getAllProducts = async () => {
 
 export const GetProductsByCategory = async (category) => {
   try {
-    const response = await axios.post(
-      `${
-        import.meta.env.VITE_BACKEND_URL
-      }/api/admin/products/findProductByCategory`,
-      { category: category }
-    );
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/findProductByCategory`, { category: category });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -62,9 +48,7 @@ export const GetProductsByCategory = async (category) => {
 
 export const GetProductById = async (id) => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`
-    );
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -73,9 +57,7 @@ export const GetProductById = async (id) => {
 
 export const UpdateProduct = async (_id, formdata) => {
   try {
-    const response = await axios.put(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/update/${_id}`,
-      formdata
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/update/${_id}`, formdata
     );
     return response.data;
   } catch (error) {
@@ -85,9 +67,7 @@ export const UpdateProduct = async (_id, formdata) => {
 
 export const DeleteProduct = async (_id) => {
   try {
-    const response = await axios.delete(
-      `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/delete`,
-      { data: { _id } }
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/delete`, { data: { _id } }
     );
     return response.data;
   } catch (error) {
@@ -97,9 +77,7 @@ export const DeleteProduct = async (_id) => {
 
 export const getAllRatingbyProductId = async (_id) => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/products/get-rating/${_id}`
-    );
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/get-rating/${_id}`);
     return response?.data;
   } catch (error) {
     console.log(error);
@@ -107,33 +85,75 @@ export const getAllRatingbyProductId = async (_id) => {
 };
 
 export const AddRatingAndReview = async (props) => {
-  console.log("🚀🚀 Your selected text is => props: ", props);
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/products/rating-review/${
-        props.userId
-      }/${props.productId}`,
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/rating-review/${props.userId}/${props.productId}`,
       { rating: props.rating, review: props.review }
     );
-    console.log("🚀🚀 Your selected text is => response: ", response);
     return response.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const Add_to_cart = async (props) => {
+export const Add_To_Cart = async (_id, props) => {
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/products/add-to-cart`,
-      props
-    );
-    console.log("������ Your selected text is => response: ", response);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/add-to-cart/${_id}`, props);
     return response.data;
   } catch (error) {
     console.log(error);
   }
 };
+
+export const GetCartItems = async (id) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/getcart/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const UpdateCartItemQuantity = async (userId, productId, quantity) => {
+  console.log("🚀🚀 Your selected text is => userId, productId, quantity: ", userId, productId, quantity);
+  try {
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/update-quantity`, { userId, productId, quantity });
+    console.log("🚀🚀 Your selected text is => response: ", response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+export const DeleteCartItem = async (userId, productId) => {
+  console.log("🚀🚀 Your selected text is => productId: ", productId);
+  try {
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/remove-from-cart`, { data: { userId: userId, productId: productId } });
+    console.log("🚀🚀 Your selected text is => response: ", response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -144,8 +164,7 @@ export const ListProducts = ({ ...props }) => {
       console.log("🚀 ~ fetchProducts ~ token:", token);
       console.log("Current Page: ", page);
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/list-products?page=${
-          page.page
+        `${import.meta.env.VITE_BACKEND_URL}/api/list-products?page=${page.page
         }&limit=${page.productsPerPage}`
       );
       console.log("Product API response:", response);

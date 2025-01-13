@@ -12,13 +12,17 @@ const Cart = new mongoose.Schema({
         required: true
     },
     items: [{
-        profilePic: {
+        productImage: {
             type: String,
             required: false
         },
         productId: {
             type: String,
             ref: 'Product',
+            required: true
+        },
+        name: {
+            type: String,
             required: true
         },
         description: {
@@ -29,6 +33,12 @@ const Cart = new mongoose.Schema({
             type: Number,
             required: true,
             default: 1,
+        },
+        stock: {
+            type: Number,
+            required: false,
+            default: 0,
+            min: 0,
         },
         price: {
             type: Number,

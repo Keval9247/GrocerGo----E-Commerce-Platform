@@ -1,330 +1,191 @@
-// import React, { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { ROLES } from "../Roles/roles";
-// import { useNavigate } from "react-router-dom";
-// import {
-//   Box,
-//   Typography,
-//   Card,
-//   CardContent,
-//   CardMedia,
-//   Grid,
-//   IconButton,
-//   Divider,
-//   Paper,
-//   Container,
-//   Fade,
-//   useTheme,
-// } from "@mui/material";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-// import { ButtonC } from "../components";
-// import { ToastContainer, toast } from "react-toastify";
-// import StripeCheckout from "react-stripe-checkout";
-// import {
-//   getCart,
-//   createPayment,
-//   removeCartItem,
-// } from "../store/thunks/productThunk";
-// import { ItemCenterStyle } from "../css/ItemsCenter";
-
-// function Cart() {
-//   const theme = useTheme();
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const isAuthenticated = useSelector(
-//     (state) => state.authReducer.isAuthenticated
-//   );
-//   const role = useSelector((state) => state.authReducer.role);
-//   const [cartdata, setCartData] = useState({ items: [] });
-//   const [totalPrice, setTotalPrice] = useState(0);
-
-//   // useEffect(() => {
-//   //     if (!isAuthenticated) {
-//   //         navigate('*');
-//   //     } else if (role !== ROLES.USER) {
-//   //         navigate('/');
-//   //     } else {
-//   //         fetchCart();
-//   //     }
-//   //     return () => navigate('/user/cart');
-//   // }, [isAuthenticated, role, navigate]);
-
-//   const fetchCart = async () => {
-//     try {
-//       const response = await dispatch(getCart());
-//       if (response.payload && response.payload.cart) {
-//         setCartData(response.payload.cart);
-//       } else {
-//         setCartData({ items: [] });
-//       }
-//     } catch (error) {
-//       console.error("Error fetching cart:", error);
-//       setCartData({ items: [] });
-//     }
-//   };
-
-//   const handleRemoveItem = async (productId) => {
-//     try {
-//       const response = await dispatch(removeCartItem({ productId }));
-//       setCartData((prevCart) => ({
-//         ...prevCart,
-//         items: prevCart.items.filter((item) => item.productId !== productId),
-//       }));
-//       toast.success("Item removed from cart.");
-//       fetchCart();
-//     } catch (error) {
-//       console.error("Error removing item from cart:", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     const calculateTotal = () => {
-//       return cartdata.items.reduce(
-//         (total, item) => total + item.price * item.quantity,
-//         0
-//       );
-//     };
-//     setTotalPrice(calculateTotal());
-//   }, [cartdata.items]);
-
-//   const handleToken = (token) => {
-//     if (token && token.email) {
-//       toast.success("Payment successful!");
-//       setCartData({ items: [] });
-//     } else {
-//       toast.error("Payment failed. Missing token information.");
-//     }
-//   };
-
-//   const createPaymentHandler = async () => {
-//     try {
-//       const token = {
-//         email: "bkenil583@gmail.com",
-//         id: "tok_visa",
-//       };
-//       if (cartdata.items.length > 0) {
-//         const response = await dispatch(
-//           createPayment({ token, cartdata, totalPrice })
-//         );
-//       } else {
-//         toast.error("No products in cart to create payment.");
-//       }
-//     } catch (error) {
-//       console.error("Error creating payment:", error);
-//       toast.error("Payment failed. Please try again.");
-//     }
-//   };
-
-//   return (
-//     <div
-//       style={{
-//         ...ItemCenterStyle,
-//         height: "100vh",
-//         display: "flex",
-//         justifyContent: "center",
-//         alignItems: "center",
-//       }}
-//     >
-//       <Container
-//         maxWidth="lg"
-//         sx={{
-//           display: "flex",
-//           justifyContent: "center",
-//           alignItems: "center",
-//           height: "100%",
-//           padding: 0, // Ensure no extra padding affects centering
-//         }}
-//       >
-//         <Paper
-//           elevation={3}
-//           sx={{
-//             p: 5,
-//             borderRadius: 5,
-//             width: "100%",
-//             maxWidth: "900px", // Adjust max width as needed
-//             display: "flex",
-//             flexDirection: "column",
-//             alignItems: "center",
-//             height: "auto", // Ensure height is dynamic based on content
-//           }}
-//         >
-//           <Typography variant="h3" mb={3} color="primary" fontWeight="bold">
-//             Your Cart{" "}
-//             <ShoppingCartIcon
-//               fontSize="large"
-//               sx={{ verticalAlign: "bottom", ml: 3 }}
-//             />
-//           </Typography>
-//           {!Array.isArray(cartdata.items) || cartdata.items.length === 0 ? (
-//             <>
-//               <Typography variant="h6" mb={4} color="text.secondary">
-//                 Your cart is empty.
-//               </Typography>
-//               <ButtonC
-//                 variant="contained"
-//                 onClick={() => navigate("/user/products-list")}
-//               >
-//                 Select / View Products
-//               </ButtonC>
-//             </>
-//           ) : (
-//             <Fade in={true} timeout={1000}>
-//               <Box>
-//                 <Grid container spacing={3}>
-//                   {cartdata.items.map((item) => (
-//                     <Grid item xs={12} sm={6} md={4} key={item.productId}>
-//                       <Card
-//                         sx={{
-//                           display: "flex",
-//                           flexDirection: "column",
-//                           height: "100%",
-//                           transition:
-//                             "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-//                           "&:hover": {
-//                             transform: "scale(1.03)",
-//                             boxShadow: theme.shadows[10],
-//                           },
-//                         }}
-//                       >
-//                         <CardMedia
-//                           component="img"
-//                           height="140"
-//                           image={`http://localhost:4000${item.category}`}
-//                           alt={item.name}
-//                         />
-//                         <CardContent sx={{ flexGrow: 1 }}>
-//                           <Typography variant="h6" gutterBottom>
-//                             {item.name}
-//                           </Typography>
-//                           <Typography
-//                             variant="body1"
-//                             color="primary"
-//                             fontWeight="bold"
-//                           >
-//                             Price: ${item.price}
-//                           </Typography>
-//                           <Typography variant="body2">
-//                             Quantity: {item.quantity}
-//                           </Typography>
-//                         </CardContent>
-//                         <IconButton
-//                           aria-label="delete"
-//                           onClick={() => handleRemoveItem(item.productId)}
-//                           sx={{ alignSelf: "flex-end", m: 1 }}
-//                         >
-//                           <DeleteIcon color="error" />
-//                         </IconButton>
-//                       </Card>
-//                     </Grid>
-//                   ))}
-//                 </Grid>
-//                 <Divider sx={{ my: 5 }} />
-//                 <Box
-//                   display="flex"
-//                   justifyContent="space-between"
-//                   alignItems="center"
-//                 >
-//                   <Typography variant="h5" fontWeight="bold">
-//                     Total: ${totalPrice}
-//                   </Typography>
-//                   <StripeCheckout
-//                     stripeKey={import.meta.env.VITE_APP_STRIPE_KEY}
-//                     token={handleToken}
-//                     amount={totalPrice * 100}
-//                     currency="USD"
-//                     locale="auto"
-//                   >
-//                     <ButtonC
-//                       sx={{ backgroundColor: "#00264d", color: "#ffffff" }}
-//                       variant="contained"
-//                       onClick={createPaymentHandler}
-//                     >
-//                       Pay Now
-//                     </ButtonC>
-//                   </StripeCheckout>
-//                   <ToastContainer position="top-right" autoClose={2000} />
-//                 </Box>
-//               </Box>
-//             </Fade>
-//           )}
-//         </Paper>
-//       </Container>
-//     </div>
-//   );
-// }
-
-// export default Cart;
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { EmptyState } from "./UserWishlist";
+import { DeleteCartItem, GetCartItems, UpdateCartItemQuantity } from "../apis/products/Productapi";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Loading from "../utils/Loading";
+import { Elements } from "@stripe/react-stripe-js";
+import UserCheckout from "./UserCheckout";
+import { loadStripe } from "@stripe/stripe-js";
+import { Link } from "react-router-dom";
 
-const initialCart = [
-  { id: "3", name: "Minimalist Desk Lamp", price: 89.99, image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500", quantity: 1 },
-  { id: "4", name: "Aesthetic Vase", price: 49.99, image: "https://images.unsplash.com/photo-1578500494198-246f612d3b3d?w=500", quantity: 2 },
-];
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISH_KEY);
 
 const CartPage = () => {
-  const [cart, setCart] = useState(initialCart);
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.authReducer.user);
 
-  const handleRemoveFromCart = (product) => setCart(cart.filter((item) => item.id !== product.id));
+  // Fetch cart items from API
+  const fetchCartItems = async () => {
+    setLoading(true);
+    try {
+      const response = await GetCartItems(user?.id);
+      setCart(response.items);
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleUpdateQuantity = (productId, change) => setCart(cart.map((item) => item.id === productId ? { ...item, quantity: Math.max(1, item.quantity + change) } : item));
+  useEffect(() => {
+    if (user?.id) {
+      fetchCartItems();
+    }
+  }, [user]);
 
+  const handleUpdateQuantity = async (productId, change) => {
+    try {
+      const item = cart.find((item) => item.productId === productId);
+      if (!item) {
+        toast.error("Item not found in cart.");
+        return;
+      }
+
+      const newQuantity = Math.max(1, Math.min(item.quantity + change, item.stock));
+      const response = await UpdateCartItemQuantity(user?.id, productId, newQuantity);
+
+      // if (!response.success) {
+      //   throw new Error(response.message || "Failed to update quantity");
+      // }
+
+      setCart((prevCart) =>
+        prevCart.map((item) =>
+          item.productId === productId ? { ...item, quantity: newQuantity } : item
+        )
+      );
+
+      toast.success(response.message || "Quantity updated successfully");
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      toast.error(error.message || "Failed to update quantity");
+    }
+  };
+
+  // Remove an item from the cart
+  const handleRemoveFromCart = async (productId) => {
+    setLoading(true);
+    try {
+      const response = await DeleteCartItem(user?.id, productId);
+      toast.success(response?.message);
+      await fetchCartItems();
+    } catch (error) {
+      console.error("Error removing item:", error);
+      toast.error("Failed to remove item from cart.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  // Calculate subtotal and total dynamically
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = subtotal; // Assuming shipping is free, so total = subtotal
 
   return (
-    <div className="container py-8">
-      <h1 className="text-3xl font-bold text-secondary-foreground mb-8">Shopping Cart</h1>
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       {cart.length === 0 ? (
-        <EmptyState title="Your cart is empty" description="Add items to your cart to continue shopping." link="/" linkText="Start Shopping" />
+        <EmptyState
+          title="Your cart is empty"
+          description="Add items to your cart to continue shopping."
+          link="/user/products"
+          linkText="Start Shopping"
+        />
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            {cart.map((item) => (
-              <div key={item.id} className="bg-white rounded-lg shadow-md p-4 animate-slide-up">
-                <div className="flex gap-4">
-                  <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-secondary-foreground">{item.name}</h3>
-                    <p className="text-primary-dark font-medium mt-1">${item.price.toFixed(2)}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <button size="icon" variant="outline" onClick={() => handleUpdateQuantity(item.id, -1)}><Minus className="w-4 h-4" /></button>
-                      <span className="w-8 text-center">{item.quantity}</span>
-                      <button size="icon" variant="outline" onClick={() => handleUpdateQuantity(item.id, 1)}><Plus className="w-4 h-4" /></button>
+        <>
+          <div className="p-16">
+            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-start">
+              Your Items :
+            </h3>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Cart Items */}
+              <div className="lg:col-span-2 space-y-6">
+                {cart.map((item) => (
+                  <div
+                    key={item.productId}
+                    className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col sm:flex-row gap-6 items-center animate-fade-in"
+                  >
+                    <img
+                      src={item.productImage ? `${import.meta.env.VITE_BACKEND_URL}${item.productImage}` : "/images/productnull.jpg"}
+                      alt={item.name}
+                      className="w-32 h-32 object-cover rounded-lg"
+                    />
+                    <div className="flex-1 w-full">
+                      <h3 className="font-semibold text-xl text-gray-900 mb-2">
+                        {item.name}
+                      </h3>
+                      <p className="text-indigo-600 font-medium text-lg mb-2">
+                        ${item.price.toFixed(2)}
+                      </p>
+                      <p className="text-gray-600 text-sm mb-4">
+                        {item.description}
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handleUpdateQuantity(item.productId, -1)}
+                          className="px-3 py-2 border rounded-lg bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <span className="px-4 py-2 bg-gray-50 border rounded-lg text-center font-medium">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => handleUpdateQuantity(item.productId, 1)}
+                          className={`px-3 py-2 border rounded-lg ${item.quantity >= item.stock ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-200"
+                            } transition`}
+                          disabled={item.quantity >= item.stock}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
+                    <button
+                      onClick={() => handleRemoveFromCart(item.productId)}
+                      className="text-red-500 hover:text-red-600 transition self-start sm:self-center"
+                    >
+                      Remove
+                    </button>
                   </div>
-                  <button variant="outline" className="text-destructive hover:text-destructive-foreground" onClick={() => handleRemoveFromCart(item)}>Remove</button>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
-              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+              {/* Order Summary */}
+              <div className="lg:col-span-1 bg-white rounded-xl shadow-sm p-6 sticky top-8">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">Order Summary</h2>
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-gray-900 font-medium">${subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Shipping</span>
+                    <span className="text-gray-900 font-medium">Free</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span className="font-medium">Free</span>
+                <hr className="my-6 border-gray-200" />
+                <div className="flex justify-between mb-6">
+                  <span className="text-xl font-semibold text-gray-900">Total</span>
+                  <span className="text-xl font-semibold text-gray-900">${total.toFixed(2)}</span>
                 </div>
-              </div>
-              <div className="border-t pt-4">
-                <div className="flex justify-between mb-4">
-                  <span className="font-semibold">Total</span>
-                  <span className="font-semibold">${subtotal.toFixed(2)}</span>
-                </div>
-                <button className="w-full bg-primary hover:bg-primary-dark">Proceed to Checkout</button>
+                <Link state={{ total }} to="/user/payment/checkout" className="w-full py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  Proceed to Checkout
+                </Link>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
+
+      {/* <Elements stripe={stripePromise}>
+        <UserCheckout total={total} />
+      </Elements> */}
     </div>
   );
 };

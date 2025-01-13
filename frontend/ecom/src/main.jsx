@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store, persistor } from './store/store.js'
 import { PersistGate } from 'redux-persist/integration/react'
+import { ToastContainer } from 'react-toastify'
 
 
 
@@ -18,6 +19,7 @@ root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
+        <ToastContainer position="top-right" autoClose={2000} />
         <App />
       </BrowserRouter>
     </PersistGate>

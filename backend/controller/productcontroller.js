@@ -174,7 +174,6 @@ const productController = () => {
                     const mappedRatingsWithUserDetails = await Promise.all(
                         productRatings.map(async (rating) => {
                             const user = await User.findById(rating.userId).select('-token -password')
-                            console.log("🚀🚀 Your selected text is => user: ", user);
                             const userObj = {
                                 email: user.email,
                                 name: user.name,
@@ -193,15 +192,15 @@ const productController = () => {
             }
         },
 
-        addToCartProduct : async(req,res)=>{
-            try{
+        addToCartProduct: async (req, res) => {
+            try {
                 const { productId, userId } = req.body;
                 const user = await User.findByIdAndUpdate(userId, { $push: { cart: productId } }, { new: true });
                 if (!user) {
                     return res.status(404).json({ error: 'User not found' });
                 }
                 res.status(200).json({ message: 'Product added to cart successfully', user });
-            }catch(error){
+            } catch (error) {
                 res.status(500).json({ error: error.message });
             }
         }

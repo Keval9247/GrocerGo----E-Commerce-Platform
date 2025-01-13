@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Truck, CheckCircle, Package, Calendar, Tag, ShieldBan } from "lucide-react";
-import { AddRatingAndReview, getAllRatingbyProductId, GetProductById, GetProductsByCategory } from "../apis/products/Productapi";
+import { Add_To_Cart, AddRatingAndReview, getAllRatingbyProductId, GetProductById, GetProductsByCategory } from "../apis/products/Productapi";
 import Loading from "../utils/Loading";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import ShareOptions from "./ShareOption";
+import { Tooltip } from '@mui/material'
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -20,40 +21,64 @@ const ProductDetails = () => {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [productRating, setProductRating] = useState();
   const [showShareOptions, setShowShareOptions] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [cartPreview, setCartPreview] = useState('');
 
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const user = useSelector((state) => state.authReducer.user);
+  console.log("🚀🚀 Your selected text is => user: ", user);
+
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await GetProductById(id);
+  //       setProductDetails(response?.product);
+  //       if (response?.product.category) {
+  //         const similarProducts = await GetProductsByCategory(response?.product.category);
+  //         setSimilarProducts(similarProducts?.products?.filter((p) => p._id !== response.product._id));
+  //       }
+  //       if (response?.product._id) await fetchProductRatings(response?.product._id);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchProduct();
+  // }, [id]);
+
+  const fetchProductDetails = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await GetProductById(id);
+      setProductDetails(response?.product);
+      if (response?.product.category) {
+        const similarProducts = await GetProductsByCategory(response?.product.category);
+        setSimilarProducts(similarProducts?.products?.filter((p) => p._id !== response.product._id));
+      }
+      if (response?.product._id) await fetchProductRatings(response?.product._id);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [id])
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      setLoading(true);
-      try {
-        const response = await GetProductById(id);
-        setProductDetails(response?.product);
-        if (response?.product.category) {
-          const similarProducts = await GetProductsByCategory(response?.product.category);
-          setSimilarProducts(similarProducts?.products?.filter((p) => p._id !== response.product._id));
-        }
-        if (response?.product._id) await fetchProductRatings(response?.product._id);
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProduct();
-  }, [id]);
+    fetchProductDetails();
+  }, [fetchProductDetails]);
 
-  const fetchProductRatings = async (productId) => {
+  const fetchProductRatings = useCallback(async (productId) => {
     try {
       const response = await getAllRatingbyProductId(productId);
       setProductRating(response.data);
     } catch (error) {
       console.error("Error fetching ratings:", error);
     }
-  };
+  }, []);
 
-  const handleAddReview = async () => {
+  const handleAddReview = useCallback(async () => {
     if (!review.trim() || !rating) {
       setReviewError("Please provide both a review and rating");
       return;
@@ -74,9 +99,27 @@ const ProductDetails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [review, rating, productDetails, user, fetchProductRatings])
+
+  useEffect(() => { }, [cartPreview])
 
   const handleShareToggle = () => setShowShareOptions(!showShareOptions);
+
+  const handletoAddToCart = async (product) => {
+    console.log("🚀🚀 Your selected text is => product: ", product);
+    if (!user) navigate("/login");
+    else {
+      setCartPreview(product);
+      await Add_To_Cart(product._id, { userId: user?.id, productId: product._id, quantity: 1 })
+      toast.success("Product added to cart successfully!");
+      setAddedToCart(true);
+    }
+  }
+
+  const handleAddToFavaourite = () => {
+    toast.success("Product added to favorites successfully!");
+  }
+
 
   const handleReviewModalToggle = () => {
     if (!user) navigate("/login");
@@ -96,6 +139,7 @@ const ProductDetails = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* <ToastContainer position="top-right" /> */}
       <div className="max-w-7xl mx-auto py-8 px-4">
         <nav className="flex items-center space-x-2 text-sm">
           <button onClick={() => navigate("/user/products")} className="flex items-center text-blue-600 hover:text-blue-800">
@@ -152,10 +196,12 @@ const ProductDetails = () => {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <button onClick={() => navigate(`/user/payment/${productDetails._id}`)} disabled={productDetails.stock === 0} className={`flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 ${productDetails.stock === 0 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"} transition`}>
-                  <ShoppingCart className="w-5 h-5" /> <span>Buy Now</span>
-                </button>
-                <button className="flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
+                <Tooltip title={!user ? "Please login to purchase this product" : ""} arrow placement="top">
+                  <button onClick={() => handletoAddToCart(productDetails)} disabled={productDetails.stock === 0 || !user} className={`flex-1 py-3 px-8 ${!user ? 'hover:cursor-not-allowed hover:bg-slate-600' : 'hover:cursor-pointer'} rounded-lg flex items-center justify-center space-x-2 ${productDetails.stock === 0 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"} transition`}>
+                    <ShoppingCart className="w-5 h-5" /> <span>Buy Now</span>
+                  </button>
+                </Tooltip>
+                <button onClick={handleAddToFavaourite} className="flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
                   <Heart className="w-5 h-5" /> <span>Save</span>
                 </button>
                 <button onClick={handleShareToggle} className="py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
@@ -317,6 +363,56 @@ const ProductDetails = () => {
           onClose={() => setShowShareOptions(false)}
         />
       )}
+
+      {addedToCart && cartPreview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
+            <button
+              onClick={() => setAddedToCart(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <div className="flex flex-col justify-center items-center text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 48 48">
+                <path fill="#c8e6c9" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path><path fill="#4caf50" d="M34.586,14.586l-13.57,13.586l-5.602-5.586l-2.828,2.828l8.434,8.414l16.395-16.414L34.586,14.586z"></path>
+              </svg>
+              <p className="text-center text-xl font-bold text-green-600 mb-4">
+                Product Added to Cart!
+              </p>
+            </div>
+            <div className="flex gap-4 items-center">
+              <img
+                src={`${import.meta.env.VITE_BACKEND_URL}${cartPreview.ProductImage}`}
+                alt={cartPreview.ProductName}
+                className="w-24 h-24 rounded-lg border border-gray-300 object-cover"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">{cartPreview.ProductName}</h3>
+                <p className="text-blue-600 text-lg font-bold">${cartPreview.ProductPrice}</p>
+                <p className="text-gray-500 text-sm mt-1">Stock Available: {cartPreview.stock} units</p>
+              </div>
+            </div>
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={() => navigate("/user/cart")}
+                className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold shadow-md"
+              >
+                Go to Cart
+              </button>
+              <button
+                onClick={() => setAddedToCart(false)}
+                className="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
     </div>
   );
