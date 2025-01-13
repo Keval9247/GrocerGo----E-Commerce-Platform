@@ -35,9 +35,9 @@ import UserSettings from "./pages/UserSettings";
 import UserContact from "./pages/UserContact";
 import NotFoundPage from "./pages/ErorrPage";
 import Deals from "./pages/Deals";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserWishlist from "./pages/UserWishlist";
+import UserCheckout, { CheckoutPage } from "./pages/UserCheckout";
 
 export const CartContent = createContext();
 
@@ -59,7 +59,6 @@ function App() {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={2000} />
       {/* <CartContent.Provider value={{ cartdata, setCartData }}> */}
       <Routes>
         <Route element={<Layout />}>
@@ -82,6 +81,8 @@ function App() {
             <Route path="/user/profile/:id" element={<UserProfile />} />
             <Route path="/user/settings" element={<UserSettings />} />
             <Route path="/user/contact" element={<UserContact />} />
+            <Route path="/user/payment/checkout" element={<CheckoutPage />} />
+
           </Route>
         </Route>
 

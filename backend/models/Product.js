@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 const Product = new mongoose.Schema({
     category: { type: String, enum: ["Electronics", "Furniture", "Books", "Fashion", "Home & Kitchen", "Toys", "Sports"], required: false },
-    ProductName: { type: String, required: false },
+    ProductName: { type: String, required: false, default: 'Unnamed Product' },
     sales: { type: Number, required: false, default: 0 },
     growth: { type: Number, required: false, default: 0 },
     stock: { type: Number, required: false, default: 0 },
