@@ -14,7 +14,6 @@ const AddProduct = () => {
         image: null,
     });
     const [image, setImage] = useState(null);
-    console.log("🚀🚀 Your selected text is image: ", newProduct.image);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -119,8 +118,20 @@ const AddProduct = () => {
                         <option value="Furniture" className="bg-white">
                             Furniture
                         </option>
-                        <option value="Clothing" className="bg-white">
-                            Clothing
+                        <option value="Books" className="bg-white">
+                            Books
+                        </option>
+                        <option value="Fashion" className="bg-white">
+                            Fashion
+                        </option>
+                        <option value="Home & Kitchen" className="bg-white">
+                            Home & Kitchen
+                        </option>
+                        <option value="Toys" className="bg-white">
+                            Toys
+                        </option>
+                        <option value="Sports" className="bg-white">
+                            Sports
                         </option>
                     </select>
                 </div>

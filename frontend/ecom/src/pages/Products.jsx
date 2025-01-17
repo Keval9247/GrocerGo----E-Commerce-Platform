@@ -140,9 +140,8 @@ const ProductsPage = () => {
               >
                 <div className="relative">
                   <img
-                    src={`${import.meta.env.VITE_BACKEND_URL}${
-                      product.ProductImage
-                    }`}
+                    src={`${import.meta.env.VITE_BACKEND_URL}${product.ProductImage
+                      }`}
                     alt={product.ProductName}
                     className="w-full h-48 object-cover"
                   />
@@ -167,11 +166,10 @@ const ProductsPage = () => {
                     {[...Array(5)].map((_, i) => (
                       <AiFillStar
                         key={i}
-                        className={`${
-                          i < Math.floor(product.rating)
+                        className={`${i < Math.floor(product.rating)
                             ? "text-yellow-400"
                             : "text-gray-300"
-                        }`}
+                          }`}
                       />
                     ))}
                     <span className="ml-1 text-sm text-gray-600">

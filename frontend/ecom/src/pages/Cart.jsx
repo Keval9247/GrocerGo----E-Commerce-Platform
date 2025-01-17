@@ -1,23 +1,28 @@
-import { useEffect, useState } from "react";
-import { Minus, Plus } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { EmptyState } from "./UserWishlist";
 import { DeleteCartItem, GetCartItems, UpdateCartItemQuantity } from "../apis/products/Productapi";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../utils/Loading";
-import { Elements } from "@stripe/react-stripe-js";
-import UserCheckout from "./UserCheckout";
-import { loadStripe } from "@stripe/stripe-js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getCheckoutSession } from "../apis/payment/paymentApi";
+import { Tooltip } from "@mui/material";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISH_KEY);
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useSelector((state) => state.authReducer.user);
+  const navigate = useNavigate();
 
-  // Fetch cart items from API
+  useEffect(() => {
+    if (!user) {
+      toast.error("Please log in to view your cart.");
+      navigate(-1);
+    }
+  }, [user])
+
   const fetchCartItems = async () => {
     setLoading(true);
     try {
@@ -36,6 +41,22 @@ const CartPage = () => {
     }
   }, [user]);
 
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const debouncedUpdateQuantity = useCallback(
+    debounce(async (userId, productId, newQuantity) => {
+      const response = await UpdateCartItemQuantity(userId, productId, newQuantity);
+      toast.success(response?.message || "Quantity updated successfully");
+    }, 500),
+    []
+  )
+
   const handleUpdateQuantity = async (productId, change) => {
     try {
       const item = cart.find((item) => item.productId === productId);
@@ -45,11 +66,6 @@ const CartPage = () => {
       }
 
       const newQuantity = Math.max(1, Math.min(item.quantity + change, item.stock));
-      const response = await UpdateCartItemQuantity(user?.id, productId, newQuantity);
-
-      // if (!response.success) {
-      //   throw new Error(response.message || "Failed to update quantity");
-      // }
 
       setCart((prevCart) =>
         prevCart.map((item) =>
@@ -57,14 +73,13 @@ const CartPage = () => {
         )
       );
 
-      toast.success(response.message || "Quantity updated successfully");
+      debouncedUpdateQuantity(user?.id, productId, newQuantity);
     } catch (error) {
       console.error("Error updating quantity:", error);
       toast.error(error.message || "Failed to update quantity");
     }
   };
 
-  // Remove an item from the cart
   const handleRemoveFromCart = async (productId) => {
     setLoading(true);
     try {
@@ -79,13 +94,28 @@ const CartPage = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
+  const handleCheckout = async (cart) => {
+    try {
+      const response = await getCheckoutSession(user?.id, cart)
+      console.log("🚀🚀 Your selected text is => response: ", response);
+      if (response.url) {
+        window.location.href = response.url;
+      }
+      else {
+        toast.error("Failed to create checkout session");
+      }
+    } catch (error) {
+      console.log("🚀🚀 Your selected text is => error: ", error);
+    }
   }
 
   // Calculate subtotal and total dynamically
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const total = subtotal; // Assuming shipping is free, so total = subtotal
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -136,28 +166,30 @@ const CartPage = () => {
                         <span className="px-4 py-2 bg-gray-50 border rounded-lg text-center font-medium">
                           {item.quantity}
                         </span>
-                        <button
-                          onClick={() => handleUpdateQuantity(item.productId, 1)}
-                          className={`px-3 py-2 border rounded-lg ${item.quantity >= item.stock ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-200"
-                            } transition`}
-                          disabled={item.quantity >= item.stock}
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
+                        <Tooltip title={`${item.quantity >= item.stock ? `Only ${item.stock} items left in stock!` : ""}`} placement="top">
+                          <button
+                            onClick={() => handleUpdateQuantity(item.productId, 1)}
+                            className={`px-3 py-2 border rounded-lg ${item.quantity >= item.stock ? "bg-gray-200 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-200"
+                              } transition`}
+                            disabled={item.quantity >= item.stock}
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </Tooltip>
                       </div>
                     </div>
                     <button
                       onClick={() => handleRemoveFromCart(item.productId)}
-                      className="text-red-500 hover:text-red-600 transition self-start sm:self-center"
+                      className="text-white bg-red-500 rounded-lg p-1 hover:bg-red-600 transition self-start sm:self-center"
                     >
-                      Remove
+                      <Trash2 />
                     </button>
                   </div>
                 ))}
               </div>
 
               {/* Order Summary */}
-              <div className="lg:col-span-1 bg-white rounded-xl shadow-sm p-6 sticky top-8">
+              <div className="lg:col-span-1 bg-white rounded-xl shadow-sm p-6 sticky top-8 h-fit">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Order Summary</h2>
                 <div className="space-y-4">
                   <div className="flex justify-between">
@@ -174,18 +206,18 @@ const CartPage = () => {
                   <span className="text-xl font-semibold text-gray-900">Total</span>
                   <span className="text-xl font-semibold text-gray-900">${total.toFixed(2)}</span>
                 </div>
-                <Link state={{ total }} to="/user/payment/checkout" className="w-full py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  Proceed to Checkout
-                </Link>
+                <div className="w-full ">
+                  <Link state={{ total }} onClick={() => handleCheckout(cart)}
+                    // to="/user/payment/checkout"
+                    className="block text-center py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Proceed to Checkout
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </>
       )}
-
-      {/* <Elements stripe={stripePromise}>
-        <UserCheckout total={total} />
-      </Elements> */}
     </div>
   );
 };

@@ -34,7 +34,7 @@ const ProductsPage = () => {
     fetchProducts();
   }, [deleteModal]);
 
-  const productsPerPage = 10;
+  const productsPerPage = 50;
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
@@ -45,6 +45,7 @@ const ProductsPage = () => {
     indexOfFirstProduct,
     indexOfLastProduct
   );
+  console.log("🚀🚀 Your selected text is => currentProducts: ", currentProducts);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -132,9 +133,8 @@ const ProductsPage = () => {
               {currentProducts?.map((product, index) => (
                 <tr
                   key={product._id}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
-                  } hover:bg-gray-200`}
+                  className={`${index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
+                    } hover:bg-gray-200`}
                 >
                   <td className="px-6 py-4 text-center">{index + 1}.</td>
                   <td className="px-6 py-4 text-center">
@@ -143,9 +143,7 @@ const ProductsPage = () => {
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-center items-center">
                       <img
-                        src={`${import.meta.env.VITE_BACKEND_URL}${
-                          product.ProductImage
-                        }`}
+                        src={`${import.meta.env.VITE_BACKEND_URL}${product.ProductImage}`}
                         alt={product.ProductName}
                         className="rounded-full hover:scale-110 transition-transform duration-300 w-16 h-16 shadow-md"
                       />

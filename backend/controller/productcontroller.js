@@ -107,7 +107,7 @@ const productController = () => {
                     category,
                 };
                 if (req.file) {
-                    updateData.ProductImage = `/uploads/products/${req.file.filename}`;
+                    updateData.ProductImage = `/public/products/${req.file.filename}`;
                 }
 
                 const updatedProduct = await Product.findByIdAndUpdate(

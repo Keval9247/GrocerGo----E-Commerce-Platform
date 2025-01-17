@@ -35,9 +35,11 @@ import UserSettings from "./pages/UserSettings";
 import UserContact from "./pages/UserContact";
 import NotFoundPage from "./pages/ErorrPage";
 import Deals from "./pages/Deals";
-import "react-toastify/dist/ReactToastify.css";
+
 import UserWishlist from "./pages/UserWishlist";
-import UserCheckout, { CheckoutPage } from "./pages/UserCheckout";
+import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
+import CheckoutCancelPage from "./pages/CheckoutCancelPage";
+import UserOrders from "./pages/UserOrders";
 
 export const CartContent = createContext();
 
@@ -81,8 +83,10 @@ function App() {
             <Route path="/user/profile/:id" element={<UserProfile />} />
             <Route path="/user/settings" element={<UserSettings />} />
             <Route path="/user/contact" element={<UserContact />} />
-            <Route path="/user/payment/checkout" element={<CheckoutPage />} />
-
+            <Route path="/user/orders/:userId" element={<UserOrders />} />
+            {/* <Route path="/user/payment/checkout" element={<CheckoutPage />} /> */}
+            <Route path="/user/payment/success" element={<CheckoutSuccessPage />} />
+            <Route path="/user/payment/cancel" element={<CheckoutCancelPage />} />
           </Route>
         </Route>
 
@@ -108,30 +112,30 @@ function App() {
           </Route>
         </Route>
 
-        <Route
+        {/* <Route
           path="/user/products"
           element={<ProtectedRoute allowedRoles={[ROLES.USER]} />}
-        >
-          <Route element={<UserLayout />}>
-            {/* Nested routes for Home */}
-            <Route index element={<ProductsPage />} />
-            {/* <Route path="categories/:id" element={<CategoryDetail />} /> */}
-            {/* <Route path="home1" element={<Home1 />} />
+        > */}
+        {/* <Route element={<UserLayout />}> */}
+        {/* Nested routes for Home */}
+        <Route index element={<ProductsPage />} />
+        {/* <Route path="categories/:id" element={<CategoryDetail />} /> */}
+        {/* <Route path="home1" element={<Home1 />} />
             <Route path="home2" element={<Home2 />} />
             <Route path="home3" element={<Home3 />} /> */}
-            {/* <Route path='about' element={<About />} /> */}
-            {/* <Route path="contact" element={<Contact />} /> */}
-            {/* <Route path="products-list" element={<ProductUser />} /> */}
-            {/* <Route path="products-list/:_id" element={<ProductsDetails />} /> */}
-            {/* <Route path="services" element={<Services />} /> */}
-            {/* <Route path="authority" element={<Authority />} /> */}
-            {/* <Route path='payment/:_id' element={<Payment />} /> */}
-            {/* <Route path='payment/success' element={<PaymentSuccessPage />} /> */}
-            {/* <Route path='cart' element={<Cart />} /> */}
+        {/* <Route path='about' element={<About />} /> */}
+        {/* <Route path="contact" element={<Contact />} /> */}
+        {/* <Route path="products-list" element={<ProductUser />} /> */}
+        {/* <Route path="products-list/:_id" element={<ProductsDetails />} /> */}
+        {/* <Route path="services" element={<Services />} /> */}
+        {/* <Route path="authority" element={<Authority />} /> */}
+        {/* <Route path='payment/:_id' element={<Payment />} /> */}
+        {/* <Route path='payment/success' element={<PaymentSuccessPage />} /> */}
+        {/* <Route path='cart' element={<Cart />} /> */}
 
-            {/* <Route path='contact-us' element={<ContactUs />} /> */}
-          </Route>
-        </Route>
+        {/* <Route path='contact-us' element={<ContactUs />} /> */}
+        {/* </Route> */}
+        {/* </Route> */}
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

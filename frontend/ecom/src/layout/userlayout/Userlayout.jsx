@@ -5,28 +5,17 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Box, Tooltip } from "@mui/material";
 import Sidebar from "./UserSidebar";
 import { FiHeart, FiShoppingCart, FiUser } from "react-icons/fi";
-import { useSelector } from "react-redux";
-import {
-  Contact,
-  Contact2,
-  Contact2Icon,
-  LucideContact2,
-  LucideSettings2,
-  Phone,
-  Settings,
-  X,
-} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { LucideSettings2, Phone, Settings, X, } from "lucide-react";
+import { clearAuthentication, logout } from "../../store/slice/AuthSlice";
+import { toast } from "react-toastify";
 
 function UserLayout() {
-  const isAuthenticated = useSelector(
-    (state) => state.authReducer.isAuthenticated
-  );
+  const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.user);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(!user);
   const dropdownref = useRef();
-  const [cartCount, setCartCount] = useState(0);
-  const [cartItems, setCartItems] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,17 +29,34 @@ function UserLayout() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isDropdownOpen]);
 
   const handleProfileClick = () => {
     navigate(`/user/profile/${user.id}`);
   };
 
+  const handleLogout = () => {
+    dispatch(clearAuthentication());
+    navigate("/login");
+  };
+
+  const handleCart = () => {
+    if (!user) {
+      toast.error("Please Login to view your cart.")
+      setTimeout(() => {
+        setIsDropdownOpen(true);
+      }, 1500)
+      return;
+    }
+    else {
+      navigate(`/user/cart`);
+    }
+  }
+
   return (
     <>
       <header className="sticky top-0 px-56 z-50 w-full border-b bg-indigo-50 backdrop-blur supports-[backdrop-filter]:bg-indigo-50/60">
         <div className="container flex h-16 items-center">
-          {/* Logo Section */}
           <Link
             to="/user/products"
             className="mr-6 flex items-center space-x-2"
@@ -58,11 +64,7 @@ function UserLayout() {
             <span className="text-xl font-bold">GrocerGo</span>
           </Link>
 
-          {/* Navigation Links */}
           <nav className="flex items-center space-x-6 text-sm font-medium">
-            {/* <Link to="/user/products" className="transition-colors hover:text-foreground/80">
-                            Products
-                        </Link> */}
             <Link
               to="/user/categories"
               className="transition-colors hover:text-foreground/80"
@@ -77,15 +79,7 @@ function UserLayout() {
             </Link>
           </nav>
 
-          {/* Search and Profile Section */}
           <div className="ml-auto flex items-center space-x-4">
-            {/* <form className="hidden lg:block">
-                            <input
-                                type="search"
-                                placeholder="Search products..."
-                                className="w-[300px] px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-800 focus:ring-offset-1"
-                            />
-                        </form> */}
             <div>
               <Tooltip
                 title="Wish-List"
@@ -107,7 +101,7 @@ function UserLayout() {
                 <button
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300"
                   aria-label="Profile"
-                  onClick={() => navigate("/user/cart")}
+                  onClick={handleCart}
                 >
                   <FiShoppingCart className="h-5 w-5" />
                 </button>
@@ -139,10 +133,10 @@ function UserLayout() {
                       </li>
                       <li
                         className="flex gap-7 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
-                        onClick={() => navigate("/user/contact")}
+                        onClick={() => navigate(`/user/orders/${user.id}`)}
                       >
                         <Phone width={20} height={20} />
-                        Contact
+                        Order
                       </li>
                       <li
                         className="flex gap-7 px-5   py-2 mt-1 text-sm font-semibold tracking-normal text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
@@ -151,11 +145,17 @@ function UserLayout() {
                         <LucideSettings2 />
                         Settings
                       </li>
-                      <li className="flex gap-7 border-t px-6 mt-2 py-1 text-sm font-semibold tracking-wide text-white bg-red-600 hover:bg-red-700 cursor-pointer rounded-lg items-center">
+                      <li onClick={handleLogout} className="flex gap-7 border-t px-6 mt-2 py-1 text-sm font-semibold tracking-wide text-white bg-red-600 hover:bg-red-700 cursor-pointer rounded-lg items-center">
                         {LogoutProfileIcon()}
                         Logout
                       </li>
                     </ul>
+                    <div className="border-t flex items-center justify-center gap-4 border-gray-300 mt-2 pt-2 pb-2 hover:text-blue-600 hover:cursor-pointer">
+                      <Phone width={15} height={15} />
+                      <p className="text-center font-mono text-xs text-gray-60 hover:cursor-pointer" onClick={() => navigate("/user/contact")}>
+                        Contact Us
+                      </p>
+                    </div>
                   </div>
                 ) : (
                   <div
@@ -313,7 +313,7 @@ const NotificationIcon = () => {
       width="30"
       height="30"
       viewBox="0 0 50 50"
-      // className="fill-current text-white group-hover:text-white ease-in-out"
+    // className="fill-current text-white group-hover:text-white ease-in-out"
     >
       <path
         className="fill-slate-500 text-white group-hover:text-white ease-in-out"
