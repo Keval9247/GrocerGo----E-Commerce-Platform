@@ -20,6 +20,7 @@ const EditProduct = () => {
   });
   console.log("🚀🚀 Your selected text is => product: ", product);
   const [imagePreview, setImagePreview] = useState(null);
+  console.log("🚀🚀 Your selected text is => imagePreview: ", imagePreview);
   const [newImage, setNewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -39,10 +40,10 @@ const EditProduct = () => {
           price: response?.product.ProductPrice,
           stock: response?.product.stock,
           category: response?.product.category,
-          //   image: response?.product.ProductImage,
+          image: response?.product.ProductImage
         });
 
-        setImagePreview(response?.product.ProductImage);
+        // setImagePreview(response?.product.ProductImage);
       } catch (error) {
         toast.error("Failed to load product details");
       } finally {
@@ -75,7 +76,7 @@ const EditProduct = () => {
     formData.append("price", product.price);
     formData.append("stock", product.stock);
     formData.append("category", product.category);
-    if (newImage) formData.append("productImg", image);
+    if (newImage) formData.append("productImg", newImage);
 
     try {
       await UpdateProduct(id, formData);
@@ -185,10 +186,18 @@ const EditProduct = () => {
               onChange={handleImageChange}
               className="w-full p-2 border rounded-md focus:ring-blue-500 focus:outline-none focus:ring-2"
             />
-            {imagePreview && (
+            {imagePreview ? (
               <div className="mt-2 relative w-48 h-48">
                 <img
-                  src={`${import.meta.env.VITE_BACKEND_URL}${imagePreview}`}
+                  src={imagePreview}
+                  alt="Product Preview"
+                  className="w-full h-full object-cover rounded-md shadow-md"
+                />
+              </div>
+            ) : (
+              <div className="mt-2 relative w-48 h-48">
+                <img
+                  src={`${import.meta.env.VITE_BACKEND_URL}${product?.image}`}
                   alt="Product Preview"
                   className="w-full h-full object-cover rounded-md shadow-md"
                 />
@@ -205,9 +214,8 @@ const EditProduct = () => {
             </button>
             <button
               type="submit"
-              className={`px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 ${
-                updating ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 ${updating ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               disabled={
                 !product.name ||
                 !product.price ||

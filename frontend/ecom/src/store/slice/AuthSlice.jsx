@@ -17,7 +17,7 @@ const authSlice = createSlice({
         logout: (state) => {
             state.isAuthenticated = false;
             state.user = null;
-            state.role = null; /*clear on logout */
+            state.role = null;
             state.error = null;
             localStorage.removeItem('token');
         },
@@ -30,8 +30,6 @@ const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                console.log(111, action);
-
                 state.isAuthenticated = action.payload?.user?.isVerified;
                 state.user = action.payload?.user;
                 state.role = action.payload?.user?.role;

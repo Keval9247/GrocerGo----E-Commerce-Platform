@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { FiBox, FiShoppingBag, FiHome, FiUsers, FiMenu, FiX, FiBarChart2, FiUser, } from "react-icons/fi";
 import { ToastContainer } from "react-toastify";
+import { clearAuthentication, logout } from "../../store/slice/AuthSlice";
+import { useDispatch } from "react-redux";
 
 const AdminPanel = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,6 +11,7 @@ const AdminPanel = () => {
     const [activeLink, setActiveLink] = useState("dashboard");
     const navigate = useNavigate();
     const profileSelection = useRef();
+    const dispatch = useDispatch()
 
     const username = JSON.parse(localStorage.getItem("UserEmail"))?.name || "Admin";
     const profileImage = null;
@@ -43,6 +46,7 @@ const AdminPanel = () => {
         console.log("Logout clicked");
         localStorage.removeItem("token");
         localStorage.removeItem("UserEmail");
+        dispatch(logout())
         navigate("/login");
     };
 

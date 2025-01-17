@@ -114,22 +114,17 @@ export const GetCartItems = async (id) => {
 }
 
 export const UpdateCartItemQuantity = async (userId, productId, quantity) => {
-  console.log("🚀🚀 Your selected text is => userId, productId, quantity: ", userId, productId, quantity);
   try {
     const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/update-quantity`, { userId, productId, quantity });
-    console.log("🚀🚀 Your selected text is => response: ", response);
     return response.data;
   } catch (error) {
     console.log(error);
   }
 }
-
 
 export const DeleteCartItem = async (userId, productId) => {
-  console.log("🚀🚀 Your selected text is => productId: ", productId);
   try {
     const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/remove-from-cart`, { data: { userId: userId, productId: productId } });
-    console.log("🚀🚀 Your selected text is => response: ", response);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -137,6 +132,15 @@ export const DeleteCartItem = async (userId, productId) => {
 }
 
 
+export const GetOrderHistory = async (userId) => {
+  console.log("🚀🚀 Your selected text is => userId: ", userId);
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/orders/readOne/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 
