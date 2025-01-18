@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 
 function UserLayout() {
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
+  const totalItems = useSelector((state) => state.productsReducer.cartItems);
+  console.log("🚀🚀 Your selected text is => totalItems: ", totalItems);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.user);
   const [isDropdownOpen, setIsDropdownOpen] = useState(!user);
@@ -79,7 +81,7 @@ function UserLayout() {
             </Link>
           </nav>
 
-          <div className="ml-auto flex items-center space-x-4">
+          <div className="ml-auto flex items-center space-x-7">
             <div>
               <Tooltip
                 title="Wish-List"
@@ -96,16 +98,21 @@ function UserLayout() {
                 </button>
               </Tooltip>
             </div>
-            <div>
+            <div className="relative">
               <Tooltip title="Cart" arrow>
                 <button
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300"
-                  aria-label="Profile"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+                  aria-label="Cart"
                   onClick={handleCart}
                 >
-                  <FiShoppingCart className="h-5 w-5" />
+                  <FiShoppingCart className="h-5 w-5 text-gray-700" />
                 </button>
               </Tooltip>
+              {totalItems > 0 && (
+                <Box component="span" className="absolute -top-2 -right-2 flex items-center justify-center text-xs font-medium bg-red-500 text-white rounded-full w-5 h-5">
+                  {totalItems}
+                </Box>
+              )}
             </div>
             <div className="relative">
               <Tooltip title="Profile Settings" arrow>

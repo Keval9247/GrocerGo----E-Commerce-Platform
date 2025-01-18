@@ -6,10 +6,8 @@ import { ForgotPassword, Login, Signup, VerifyOtp } from '../../apis/Authapi';
 export const login = createAsyncThunk(
     'auth/login',
     async ({ email, password }, { rejectWithValue }) => {
-        console.log("🚀🚀 Your selected text is email, password: ", email, password);
         try {
             const response = await Login({ email, password });
-            console.log("🚀🚀 Your selected text is response: ", response);
             // const { token, role } = response.user;
 
             // if (!response.user.token) {
@@ -50,10 +48,8 @@ export const signup = createAsyncThunk(
 export const forgetPassword = createAsyncThunk(
     'auth/forgetPassword',
     async (email, { rejectWithValue }) => {
-        console.log("🚀 ~ email:", email)
         try {
             const response = await ForgotPassword({ email })
-            console.log("response : ", response)
             if (response.message) {
                 throw new Error(response.message);
             }
@@ -69,7 +65,6 @@ export const verifyOtp = createAsyncThunk(
     async (otp, { rejectWithValue }) => {
         try {
             const response = await VerifyOtp(otp)
-            console.log("response : ", response)
             return response.data
         } catch (error) {
             return rejectWithValue(error.response.data.error);

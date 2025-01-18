@@ -36,9 +36,7 @@ function HomePage() {
         if (email) {
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const isemailTrue = regex.test(email)
-            console.log("🚀 ~ validateEmail ~ isemailTrue:", isemailTrue)
             const reposnse = isemailTrue ? setSubscribeEmail(email) : setSubscribeEmail('')
-            console.log("🚀 ~ validateEmail ~ reposnse:", reposnse)
             return;
         }
     };

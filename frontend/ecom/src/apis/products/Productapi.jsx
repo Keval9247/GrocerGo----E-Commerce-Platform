@@ -6,7 +6,7 @@ export const getDataLength = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/count`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -15,7 +15,7 @@ export const GetUSers = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/users`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -24,7 +24,7 @@ export const CreateProduct = async (formdata) => {
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/create-product`, formdata);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -33,7 +33,7 @@ export const getAllProducts = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -42,7 +42,7 @@ export const GetProductsByCategory = async (category) => {
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/findProductByCategory`, { category: category });
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -51,7 +51,7 @@ export const GetProductById = async (id) => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -61,7 +61,7 @@ export const UpdateProduct = async (_id, formdata) => {
     );
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -71,7 +71,7 @@ export const DeleteProduct = async (_id) => {
     );
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -80,7 +80,7 @@ export const getAllRatingbyProductId = async (_id) => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/get-rating/${_id}`);
     return response?.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -91,16 +91,16 @@ export const AddRatingAndReview = async (props) => {
     );
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
-export const Add_To_Cart = async (_id, props) => {
+export const Add_To_Cart = async (props) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/add-to-cart/${_id}`, props);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/add-to-cart/${props._id}`, props);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -109,16 +109,16 @@ export const GetCartItems = async (id) => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/getcart/${id}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
-export const UpdateCartItemQuantity = async (userId, productId, quantity) => {
+export const UpdateCartItemQuantity = async (data) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/update-quantity`, { userId, productId, quantity });
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/update-quantity`, data);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -127,18 +127,16 @@ export const DeleteCartItem = async (userId, productId) => {
     const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/remove-from-cart`, { data: { userId: userId, productId: productId } });
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
-
 export const GetOrderHistory = async (userId) => {
-  console.log("🚀🚀 Your selected text is => userId: ", userId);
   try {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/orders/readOne/${userId}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -233,19 +231,19 @@ export const CraetePayment = async (credentials) => {
   }
 };
 
-export const AddToCart = async (productId) => {
-  try {
-    console.log("🚀 ~ AddToCart ~ productId:", productId);
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/cart/add`,
-      productId
-    );
-    console.log("Cart API response:", response);
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const AddToCart = async (productId) => {
+//   try {
+//     console.log("🚀 ~ AddToCart ~ productId:", productId);
+//     const response = await axios.post(
+//       `${import.meta.env.VITE_BACKEND_URL}/api/cart/add`,
+//       productId
+//     );
+//     console.log("Cart API response:", response);
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const GetCart = async () => {
   try {

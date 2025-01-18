@@ -7,9 +7,7 @@ let dispatch = useDispatch()
 
 export const loginUser = async (credentials) => {
     try {
-        console.log("creadentials: ", credentials);
         const result = await dispatch(login(credentials));
-        console.log(111, result);
         return result.payload;
     } catch (error) {
         throw error;

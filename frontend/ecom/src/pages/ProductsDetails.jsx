@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Truck, CheckCircle, Package, Calendar, Tag, ShieldBan } from "lucide-react";
-import { Add_To_Cart, AddRatingAndReview, getAllRatingbyProductId, GetProductById, GetProductsByCategory } from "../apis/products/Productapi";
+import { AddRatingAndReview, getAllRatingbyProductId, GetProductById, GetProductsByCategory } from "../apis/products/Productapi";
 import Loading from "../utils/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import ShareOptions from "./ShareOption";
 import { Tooltip } from '@mui/material'
+import { AddToCart } from "../store/thunks/productThunk";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const ProductDetails = () => {
 
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const user = useSelector((state) => state.authReducer.user);
-  console.log("🚀🚀 Your selected text is => user: ", user);
+  const dispatch = useDispatch();
 
   // useEffect(() => {
   //   const fetchProduct = async () => {
@@ -106,11 +107,16 @@ const ProductDetails = () => {
   const handleShareToggle = () => setShowShareOptions(!showShareOptions);
 
   const handletoAddToCart = async (product) => {
-    console.log("🚀🚀 Your selected text is => product: ", product);
     if (!user) navigate("/login");
     else {
       setCartPreview(product);
-      await Add_To_Cart(product._id, { userId: user?.id, productId: product._id, quantity: 1 })
+      const payload = {
+        _id: product._id,
+        userId: user.id,
+        productId: product._id,
+        quantity: 1,
+      }
+      const response = await dispatch(AddToCart(payload))
       toast.success("Product added to cart successfully!");
       setAddedToCart(true);
     }

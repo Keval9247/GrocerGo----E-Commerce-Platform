@@ -38,7 +38,7 @@ const ProductsPage = () => {
       }
       setProducts(response.products); // Set the products from the API response
     } catch (error) {
-      console.log("Error fetching products: ", error);
+      console.error("Error fetching products: ", error);
     }
   };
 
