@@ -18,9 +18,7 @@ const EditProduct = () => {
     category: "",
     image: null,
   });
-  console.log("🚀🚀 Your selected text is => product: ", product);
   const [imagePreview, setImagePreview] = useState(null);
-  console.log("🚀🚀 Your selected text is => imagePreview: ", imagePreview);
   const [newImage, setNewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);

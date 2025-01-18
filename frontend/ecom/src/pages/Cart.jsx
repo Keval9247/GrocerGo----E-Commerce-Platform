@@ -2,12 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { EmptyState } from "./UserWishlist";
 import { DeleteCartItem, GetCartItems, UpdateCartItemQuantity } from "../apis/products/Productapi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../utils/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import { getCheckoutSession } from "../apis/payment/paymentApi";
 import { Tooltip } from "@mui/material";
+import { setTotalItems } from "../store/slice/ProductSlice";
+import { UpdateCart } from "../store/thunks/productThunk";
 
 
 const CartPage = () => {
@@ -15,6 +17,7 @@ const CartPage = () => {
   const [loading, setLoading] = useState(true);
   const user = useSelector((state) => state.authReducer.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!user) {
@@ -27,6 +30,10 @@ const CartPage = () => {
     setLoading(true);
     try {
       const response = await GetCartItems(user?.id);
+      if (response?.items) {
+        const totalItems = response.items.reduce((total, item) => total + item.quantity, 0)
+        dispatch(setTotalItems(totalItems))
+      }
       setCart(response.items);
     } catch (error) {
       console.error("Error fetching cart items:", error);
@@ -51,7 +58,8 @@ const CartPage = () => {
 
   const debouncedUpdateQuantity = useCallback(
     debounce(async (userId, productId, newQuantity) => {
-      const response = await UpdateCartItemQuantity(userId, productId, newQuantity);
+      const data = { userId, productId, quantity: newQuantity }
+      const response = await dispatch(UpdateCart(data));
       toast.success(response?.message || "Quantity updated successfully");
     }, 500),
     []
@@ -97,7 +105,6 @@ const CartPage = () => {
   const handleCheckout = async (cart) => {
     try {
       const response = await getCheckoutSession(user?.id, cart)
-      console.log("🚀🚀 Your selected text is => response: ", response);
       if (response.url) {
         window.location.href = response.url;
       }
@@ -105,7 +112,7 @@ const CartPage = () => {
         toast.error("Failed to create checkout session");
       }
     } catch (error) {
-      console.log("🚀🚀 Your selected text is => error: ", error);
+      console.error("🚀🚀 Your selected text is => error: ", error);
     }
   }
 

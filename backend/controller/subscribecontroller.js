@@ -9,7 +9,6 @@ const subscribecontroller = () => {
         subscribeletter: async (req, res) => {
             try {
                 const { email } = req.body;
-                console.log("🚀 ~ subscribeletter: ~ email:", email)
                 if (!email) {
                     return res.status(400).json({ error: 'Email is required.' });
                 }

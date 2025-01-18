@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { XCircle, ShoppingCart, Home } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { handlePaymentCancel } from '../apis/payment/paymentApi';
 
 const CancelPage = () => {
+    const [searchParams] = useSearchParams();
+    const sessionId = searchParams.get("session_id");
+    const [orderId, setOrderId] = useState('');
+
+
+    useEffect(() => {
+        if (sessionId) {
+            const fetchHandleCancel = async () => {
+                try {
+                    const response = await handlePaymentCancel(sessionId);
+                    setOrderId(response.orderId);
+                } catch (error) {
+                    console.error("Error updating order status:", error);
+                }
+            };
+            fetchHandleCancel();
+        }
+    }, [sessionId]);
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
             <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-full">
@@ -10,6 +31,7 @@ const CancelPage = () => {
                 <p className="text-gray-600 mb-6">
                     Your payment was not completed. Please review your payment details and try again. If you continue to experience issues, contact our support team.
                 </p>
+                <p className='font-semibold mb-5'>Your OrderId is : <span>{orderId ? orderId : "order id not found."}</span></p>
                 <div className="flex flex-col space-y-4">
                     <a
                         href="/user/cart"

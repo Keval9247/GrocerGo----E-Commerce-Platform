@@ -41,7 +41,6 @@ const Footer = () => {
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const isemailTrue = regex.test(email)
             const reposnse = isemailTrue ? setSubscribeEmail(email) : setSubscribeEmail('')
-            console.log("🚀 ~ validateEmail ~ reposnse:", reposnse)
             return;
         }
     };
@@ -52,11 +51,9 @@ const Footer = () => {
     const handleSubscribeNewsletter = async () => {
         if (subscribeEmail) {
             if (validateEmail(subscribeEmail)) {
-                console.log("🚀 ~ handleSubscribeNewsletter ~ subscribeEmail:", subscribeEmail)
                 const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/`,
                     { email: subscribeEmail }
                 );
-                console.log(123, response);
                 toast.success('Subscribed to newsletter successfully!');
                 location.reload();
             }
@@ -69,12 +66,12 @@ const Footer = () => {
     // Footer dynamic sections
     const footerContent = {
         products: [
-            { name: 'Explore Products', link: '/explore' },
-            { name: "Men's Fashion", link: '/mens-fashion' },
-            { name: "Women's Fashion", link: '/womens-fashion' },
-            { name: 'Kids Wear', link: '/kids-wear' },
-            { name: 'Shoes & Bags', link: '/shoes-bags' },
-            { name: 'Accessories', link: '/accessories' },
+            { name: 'Explore Products', link: '/user/products' },
+            { name: "Men's Fashion", link: '/user/products' },
+            { name: "Women's Fashion", link: '/user/products' },
+            { name: 'Kids Wear', link: '/user/products' },
+            { name: 'Shoes & Bags', link: '/user/products' },
+            { name: 'Accessories', link: '/user/products' },
         ],
         company: [
             { name: 'About Us', link: '/about' },

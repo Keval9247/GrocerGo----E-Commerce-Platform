@@ -35,7 +35,6 @@ function Login() {
         setIsLoading(true);
         try {
             const response = await dispatch(login({ email: data.email, password: data.password }));
-            console.log("🚀🚀 Your selected text is response: ", response);
 
             const isVerified = response?.payload?.user?.isVerified;
             const userRole = response?.payload?.user?.role;

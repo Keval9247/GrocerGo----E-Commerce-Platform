@@ -129,7 +129,6 @@ const productController = () => {
         },
 
         deleteProduct: async (req, res) => {
-            console.log("🚀🚀 Your selected text is req.body: ", req.body);
             try {
                 const deletedProduct = await Product.findByIdAndDelete(req.body._id);
                 if (!deletedProduct)
@@ -147,7 +146,6 @@ const productController = () => {
         createRatingAndReview: async (req, res) => {
             try {
                 const { rating, review } = req.body;
-                console.log("🚀🚀 Your selected text is => req.body: ", req.body);
 
                 const newReview = new Rating({
                     productId: req.params.productId,
@@ -155,7 +153,6 @@ const productController = () => {
                     rating,
                     comment: review,
                 });
-                console.log("🚀🚀 Your selected text is => newReview: ", newReview);
 
                 await newReview.save();
                 res.status(201).json({ message: 'Review and rating added successfully', data: newReview });

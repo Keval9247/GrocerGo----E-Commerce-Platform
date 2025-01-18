@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addproducts, fetchProducts, createPayment, fetchProductsWithoutParams, addToCart, getCart, removeCartItem } from '../thunks/productThunk';
+import { addproducts, fetchProducts, createPayment, fetchProductsWithoutParams, getCart, removeCartItem, AddToCart, UpdateCart } from '../thunks/productThunk';
 
 const initialState = {
     products: [],
     cart: [],
+    cartItems: 0,
     allproducts: [],
     loading: false,
     error: null,
@@ -12,7 +13,11 @@ const initialState = {
 const productsSlice = createSlice({
     name: 'products',
     initialState,
-    reducers: {},
+    reducers: {
+        setTotalItems: (state, action) => {
+            state.cartItems = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchProductsWithoutParams.pending, (state, action) => {
@@ -20,7 +25,6 @@ const productsSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchProductsWithoutParams.fulfilled, (state, action) => {
-                console.log("🚀 ~ .addCase ~ action:", action)
                 state.loading = false;
                 state.error = null;
                 state.products = action.payload;
@@ -35,7 +39,6 @@ const productsSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchProducts.fulfilled, (state, action) => {
-                console.log("🚀 ~ .addCase ~ action:", action)
                 state.loading = false;
                 state.allproducts = action.payload.products;
             })
@@ -49,7 +52,6 @@ const productsSlice = createSlice({
                 // state.products = [];
             })
             .addCase(addproducts.fulfilled, (state, action) => {
-                console.log("action : ", action);
                 state.loading = false;
                 state.products = action.meta.arg;
                 state.error = null;
@@ -63,7 +65,6 @@ const productsSlice = createSlice({
                 state.error = null;
             })
             .addCase(createPayment.fulfilled, (state, action) => {
-                console.log("Actions from product slice :", action);
                 state.loading = false;
                 state.error = null;
             })
@@ -71,37 +72,31 @@ const productsSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            // .addCase(readoneProduct.pending, (state, action) => {
-            //     state.loading = true;
-            //     state.error = null;
-            //     state.products = null;
-            // })
-            // .addCase(readoneProduct.fulfilled, (state, action) => {
-            //     console.log("🚀 ~ .addCase ~ state:", state)
-            //     console.log("Actions from product slice :", action);
-                
-            //     state.loading = false;
-            //     state.error = null;
-            //     state.products = action.payload;
-            // })
-            // .addCase(readoneProduct.rejected, (state, action) => {
-            //     state.loading = false;
-            //     state.error = action.error.message;
-            //     state.products = null;
-            // })
-            .addCase(addToCart.pending, (state, action) => {
+            .addCase(AddToCart.pending, (state, action) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addToCart.fulfilled, (state, action) => {
-                console.log("🚀 ~ .addCase ~ action:", action)
-                console.log("🚀 ~ .addCase ~ state:", state)
+            .addCase(AddToCart.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
                 state.cart = action.payload;
-                // console.log("🚀 ~ .addCase ~ [...state.cart, action.payload]:", [...cart, action.payload])
+                state.cartItems = action.payload.cart.items.reduce((total, item) => total + item.quantity, 0);
             })
-            .addCase(addToCart.rejected, (state, action) => {
+            .addCase(AddToCart.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(UpdateCart.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(UpdateCart.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.cart = action.payload;
+                state.cartItems = action.payload.cart.items.reduce((total, item) => total + item.quantity, 0);
+            })
+            .addCase(UpdateCart.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })
@@ -123,8 +118,6 @@ const productsSlice = createSlice({
                 state.error = null;
             })
             .addCase(removeCartItem.fulfilled, (state, action) => {
-                console.log("��� ~.addCase ~ action:", action)
-                console.log("��� ~.addCase ~ state:", state)
                 state.loading = false;
                 state.error = null;
                 state.cart = action.payload.cart
@@ -137,4 +130,5 @@ const productsSlice = createSlice({
     },
 });
 
+export const { setTotalItems } = productsSlice.actions;
 export default productsSlice.reducer;

@@ -1,10 +1,8 @@
 const express = require('express');
 const User = require('../models/User');
-const configDotenv = require('dotenv');
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-configDotenv.config();
 
 
 
@@ -21,11 +19,12 @@ const paymentController = () => {
                         product_data: {
                             name: item.name,
                             description: item.description,
-                            images: [`${process.env.BACKEND_URL}${item.productImage}`],
+                            // images: [`${process.env.BACKEND_URL}${item.productImage}`],
                         },
                     },
                     quantity: item.quantity,
                 }))
+                console.log("🚀🚀 Your selected text is => `${process.env.BACKEND_URL}${encodeURIComponent(item.productImage)}`: ", `${process.env.BACKEND_URL}${(items?.map((item) => item.productImage))}`);
 
                 const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 

@@ -31,7 +31,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    console.log("🚀🚀 Your selected text is => pathname: ", location);
 
     return (
         <AppBar

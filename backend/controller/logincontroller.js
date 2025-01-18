@@ -48,7 +48,6 @@ const logincontroller = () => {
                 if (!user) {
                     return res.status(400).json({ error: 'User not found' });
                 }
-                console.log("🚀🚀 Your selected text is req.body: ", user);
 
                 const isMatch = await bcrypt.compare(password, user.password);
                 if (!isMatch) {
@@ -343,9 +342,6 @@ const logincontroller = () => {
                 }
                 const lastIndexForSliced = req.query.limit ? req.query.limit : product.length
                 const slicedproducts = product.slice(startIndex, lastIndexForSliced);
-                // console.log("🚀 ~ listproducts: ~ slicedproducts:", slicedproducts)
-
-                // console.log("🚀 ~ listproducts: ~ endIndex:", endIndex)
                 res.status(200).json({
                     success: true,
                     message: 'Products listed successfully',
@@ -386,7 +382,6 @@ const logincontroller = () => {
         createPayment: async (req, res) => {
             try {
                 const { token, cartdata, totalPrice } = req.body;
-                console.log("🚀 ~ createPayment: ~ product:", cartdata.items.map(item => item.price))
                 // const { price, name } = product;
 
                 if (!token || !token.email) {
@@ -401,7 +396,6 @@ const logincontroller = () => {
                     source: token.id, // This attaches the payment method (token) to the customer
                 });
                 const name = cartdata.items ? cartdata.items.map(item => item.name) : req.user.email
-                console.log("🚀 ~ createPayment: ~ name:", name)
 
                 // Create a PaymentIntent
                 const paymentIntent = await stripe.paymentIntents.create({
@@ -415,7 +409,6 @@ const logincontroller = () => {
                     off_session: true,
                     return_url: 'http://localhost:4000/', // Replace with your own return URL
                 });
-                console.log("🚀 ~ createPayment: ~ cartdata:", cartdata)
                 res.status(200).json({
                     success: true,
                     message: 'Payment successful',
@@ -429,7 +422,6 @@ const logincontroller = () => {
 
         addToCart: async (req, res) => {
             try {
-                console.log("🚀 ~ addToCart: ~ req.body:", req.body);
                 if (!req.body) {
                     return res.status(400).json({ error: 'No image provided' });
                 }
@@ -466,9 +458,6 @@ const logincontroller = () => {
                         category: category // Assuming req.body contains the category
                     });
                 }
-
-                // Save the cart with updated items
-                console.log("🚀 ~ addToCart: ~ cart:", cart);
                 await cart.save();
 
                 // Respond with success message and updated cart
@@ -487,7 +476,6 @@ const logincontroller = () => {
             try {
                 const userId = req.user.id;
                 let cart = await Cart.findOne({ userId: userId }, ['userId', 'category', 'items.productId', 'items.quantity', 'items.category', 'items.price'])
-                console.log("🚀 ~ getCart: ~ cart:", cart)
 
                 if (!cart) {
                     return res.status(404).json({ success: true, message: "Cart is Empty" });
@@ -507,7 +495,6 @@ const logincontroller = () => {
         removeFromCart: async (req, res) => {
             try {
                 const { productId } = req.body;
-                console.log("🚀 ~ removeFromCart: ~ productId:", productId)
                 const userId = req.user.id;
 
                 if (!productId) {
@@ -515,7 +502,6 @@ const logincontroller = () => {
                 }
 
                 const cart = await Cart.findOne({ userId: userId });
-                console.log("🚀 ~ removeFromCart: ~ a:", cart)
                 // console.log("🚀 ~ removeFromCart: ~ cart:", cart)
 
                 // if (!cart) {
@@ -524,7 +510,6 @@ const logincontroller = () => {
                 // const response = Cart.deleteOne
 
                 cart.items = cart.items.filter(item => item.productId !== productId?.productId);
-                // console.log("��� ~ removeFromCart: ~ b:", b)
                 await cart.save();
 
                 res.status(200).json({

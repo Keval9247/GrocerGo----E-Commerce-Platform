@@ -1,12 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { AddProducts, CraetePayment, ListProducts, ReadOneProduct, ListProductsWithoutParams, AddToCart, GetCart, RemoveFromCart } from "../../apis/products/Productapi";
+import { AddProducts, CraetePayment, ListProducts, ReadOneProduct, ListProductsWithoutParams, GetCart, RemoveFromCart, Add_To_Cart, UpdateCartItemQuantity } from "../../apis/products/Productapi";
 
 
 export const fetchAddToCart = createAsyncThunk(
     'products/addToCart',
     async (creadentials) => {
-        console.log("🚀🚀 Your selected text is => creadentials: ", creadentials);
         try {
             const cart = getState().products.cart;
             const existingItem = cart.find(item => item.productId === productId);
@@ -17,11 +16,35 @@ export const fetchAddToCart = createAsyncThunk(
                 dispatch(addProductToCart({ productId, quantity }));
             }
         } catch (error) {
-            console.log("Error : ", error);
+            console.error("Error : ", error);
         }
     }
 )
 
+
+export const AddToCart = createAsyncThunk(
+    'products/Add_To_Cart',
+    async (props) => {
+        try {
+            const response = await Add_To_Cart(props)
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+)
+
+export const UpdateCart = createAsyncThunk(
+    'products/updateCartQuantity',
+    async (props) => {
+        try {
+            const response = await UpdateCartItemQuantity(props);
+            return response;
+        } catch (error) {
+            console.error("Error : ", error);
+        }
+    }
+)
 
 
 
@@ -33,7 +56,6 @@ export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async ({ ...props }) => {
         try {
-            // console.log("props : ", { ...props });
             const response = await ListProducts({ ...props });
             console.log("product list from thunk : ", response);
             if (!response) {
@@ -113,19 +135,19 @@ export const createPayment = createAsyncThunk(
     }
 )
 
-export const addToCart = createAsyncThunk(
-    'products/addToCart',
-    async (formdata) => {
-        try {
-            console.log("🚀 ~ productId:", formdata)
-            const response = await AddToCart(formdata)
-            console.log("Cart API response:", response);
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-)
+// export const addToCart = createAsyncThunk(
+//     'products/addToCart',
+//     async (formdata) => {
+//         try {
+//             console.log("🚀 ~ productId:", formdata)
+//             const response = await AddToCart(formdata)
+//             console.log("Cart API response:", response);
+//             return response;
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     }
+// )
 
 // console.log("🚀 ~ addToCart:", addToCart)
 export const getCart = createAsyncThunk(

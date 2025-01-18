@@ -43,7 +43,6 @@ const AdminPanel = () => {
     };
 
     const handleLogout = () => {
-        console.log("Logout clicked");
         localStorage.removeItem("token");
         localStorage.removeItem("UserEmail");
         dispatch(logout())

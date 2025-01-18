@@ -21,7 +21,7 @@ const UserProfile = () => {
             };
             fetchProfileData();
         } catch (error) {
-            console.log("Error fetching user details:", error);
+            console.error("Error fetching user details:", error);
         }
     }, []);
 

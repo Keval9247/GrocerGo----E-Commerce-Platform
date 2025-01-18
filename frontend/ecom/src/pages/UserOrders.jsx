@@ -36,6 +36,18 @@ const OrdersPage = () => {
     if (!orders || orders.length === 0) {
         return <div className="text-center py-8">No orders found.</div>;
     }
+    const handleOrderStatus = (status) => {
+        switch (status) {
+            case "completed":
+                return "bg-green-100 text-green-800";
+            case "pending":
+                return "bg-yellow-100 text-yellow-800";
+            case "failed":
+                return "bg-red-100 text-red-800";
+            default:
+                return "bg-gray-100 text-gray-800";
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -70,18 +82,12 @@ const OrdersPage = () => {
                                     <div className="space-y-2">
                                         <p className="text-sm text-gray-600">
                                             <span className="font-medium">Status:</span>{" "}
-                                            <span
-                                                className={`px-2 py-1 rounded-full text-xs font-semibold ${order.paymentStatus === "completed"
-                                                    ? "bg-green-100 text-green-800"
-                                                    : "bg-yellow-100 text-yellow-800"
-                                                    }`}
-                                            >
+                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${handleOrderStatus(order.paymentStatus)}`}>
                                                 {order.paymentStatus}
                                             </span>
                                         </p>
                                         <p className="text-sm text-gray-600">
-                                            <span className="font-medium">Total Amount:</span> $
-                                            {order.totalAmount.toFixed(2)}
+                                            <span className="font-medium">Total Amount : </span> <span className="text-green-600 font-bold text-xl">${order.totalAmount.toFixed(2)}</span>
                                         </p>
                                     </div>
                                 </div>
