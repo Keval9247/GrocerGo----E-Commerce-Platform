@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .header img {
+            width: 100px;
+        }
+
+        .company-info {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .invoice-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .invoice-details,
+        .customer-info,
+        .shipping-details,
+        .order-details {
+            margin-bottom: 20px;
+        }
+
+        .invoice-details p,
+        .customer-info p,
+        .shipping-details p {
+            margin: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .total-amount {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .payment-terms {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        .thank-you {
+            text-align: center;
+            font-size: 18px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <h1>Grocer Go</h1>
+            <p>The Online Shopping Platform</p>
+            <h2>Invoice</h2>
+        </div>
+        <div class="company-info">
+            <p>Surat, Gujarat.</p>
+            <p>Business City, BS 12345</p>
+            <p>Phone: (123) 456-7890</p>
+            <p>Email: info@grocergo.com</p>
+            <p>Website: www.grocergo.com</p>
+        </div>
+        <div class="invoice-details">
+            <p><strong>Invoice ID:</strong> 679387878cadd8e021f0e04a</p>
+            <p><strong>Date:</strong> 1/24/2025</p>
+        </div>
+        <div class="customer-info">
+            <h2>Customer Information:</h2>
+            <p><strong>Customer Name:</strong> Keval Buyer</p>
+            <p><strong>Customer Email:</strong> sb-soxyz37124892@personal.example.com</p>
+        </div>
+        <div class="shipping-details">
+            <h2>Shipping Details:</h2>
+            <p><strong>Address 1:</strong> 1 Main St</p>
+            <p><strong>Address 2:</strong> </p>
+            <p><strong>City:</strong> San Jose</p>
+            <p><strong>State:</strong> CA</p>
+            <p><strong>Postal Code:</strong> 95131</p>
+        </div>
+        <div class="order-details">
+            <h2>Order Details:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                <tr>
+                    <td>1</td>
+                    <td>Wireless Noise-Canceling Headphones</td>
+                    <td>1</td>
+                    <td>
+                    <tr>
+                        <td>{{index}}</td>
+                        <td>{{name}}</td>
+                        <td>{{quantity}}</td>
+                        <td>${{price}}</td>
+                        <td>${{total}}</td>
+                    </tr>
+                    99.99</td>
+                    <td>
+                    <tr>
+                        <td>{{index}}</td>
+                        <td>{{name}}</td>
+                        <td>{{quantity}}</td>
+                        <td>${{price}}</td>
+                        <td>${{total}}</td>
+                    </tr>
+                    99.99</td>
+                </tr>
+            
+                </tbody>
+            </table>
+        </div>
+        <div class="total-amount">
+            <p><strong>Total Amount:</strong> $199.99</p>
+        </div>
+        <div class="thank-you">
+            <h2>Thank you for your shopping!</h2>
+        </div>
+        <div class="footer">
+            <p>Grocer Go - 123 Business Rd. - Surat City, GJ 12345 - Phone: (123) 456-7890</p>
+        </div>
+    </div>
+</body>
+
+</html>

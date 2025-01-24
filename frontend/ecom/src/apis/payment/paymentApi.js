@@ -29,3 +29,28 @@ export const handlePaymentCancel = async (session_id) => {
         throw error;
     }
 }
+
+export const payPalPayment = async (order) => {
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/paypal`, order);
+        return response.data;
+    } catch (error) {
+        console.error('Error paying with PayPal:', error);
+        throw error;
+    }
+}
+
+export const payPalSuccess = async (orderId) => {
+    console.log("🚀🚀 Your selected text is => orderId: ", orderId);
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/paypal-success`, { orderId },
+            {
+                responseType: "blob", // Ensure response is treated as binary
+            }
+        );
+        return response;
+    } catch (error) {
+        console.error('Error handling PayPal payment success:', error);
+        throw error;
+    }
+}

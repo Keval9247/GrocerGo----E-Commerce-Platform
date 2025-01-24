@@ -8,6 +8,7 @@ import { store, persistor } from './store/store.js'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 
 
 const rootElement = document.getElementById('root');
@@ -18,10 +19,19 @@ root.render(
   // <React.StrictMode>
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
-        <ToastContainer position="top-right" autoClose={2000} />
-        <App />
-      </BrowserRouter>
+      <PayPalScriptProvider
+        options={{
+          "client-id": import.meta.env.VITE_PAYPAL_CLIENTID,
+          currency: "USD",
+          vault: true,
+          intent: 'capture'
+        }}
+      >
+        <BrowserRouter>
+          <ToastContainer position="top-right" autoClose={2000} />
+          <App />
+        </BrowserRouter>
+      </PayPalScriptProvider>
     </PersistGate>
   </Provider>
   // </React.StrictMode>,

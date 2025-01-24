@@ -8,7 +8,6 @@ import { redirect, useNavigate } from "react-router-dom";
 const Dashboard = () => {
     const [dateRange] = useState("Last 7 Days");
     const [count, setCount] = useState(0);
-    console.log("🚀🚀 Your selected text is count: ", count);
     const navigate = useNavigate();
 
     // Sample data for charts

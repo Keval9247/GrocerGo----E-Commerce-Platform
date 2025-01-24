@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 function UserLayout() {
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const totalItems = useSelector((state) => state.productsReducer.cartItems);
-  console.log("🚀🚀 Your selected text is => totalItems: ", totalItems);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.user);
   const [isDropdownOpen, setIsDropdownOpen] = useState(!user);
@@ -299,13 +298,13 @@ const LogoutProfileIcon = () => {
         opacity="0.5"
         d="M12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4"
         stroke="#ffffff"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke-linecap="round"
       />
       <path
         d="M10 12H20M20 12L17 9M20 12L17 15"
         stroke="#ffffff"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
