@@ -24,7 +24,6 @@ const cartController = () => {
                     return res.status(400).json({ message: 'Missing required fields' });
                 }
                 const product = await Product.findById(productId);
-                console.log("🚀🚀 Your selected text is => product: ", product);
                 if (!product) {
                     return res.status(404).json({ message: 'Product not found' });
                 }
@@ -72,7 +71,6 @@ const cartController = () => {
 
         removeItemFromCart: async (req, res) => {
             const { userId, productId } = req.body;
-            console.log("🚀🚀 Your selected text is => req.body: ", req.body);
             try {
                 if (!userId || !productId) {
                     return res.status(400).json({ message: 'Missing required fields' });

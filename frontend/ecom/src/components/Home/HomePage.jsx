@@ -123,7 +123,7 @@ function HomePage() {
                     <div className="container mx-auto">
                         <h2 className="relative text-3xl font-bold text-center text-[#36454F] mb-12" >
                             Explore Our Products
-                            <div className="absolute left-[8%] right-0 mx-auto h-[3px] bg-[#A555F7] w-[15%] top-full mt-2"></div>
+                            <div className="absolute left-[7%] right-0 mx-auto h-[3px] bg-[#A555F7] w-[13%] top-full mt-2"></div>
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-between">
                             {displayedProducts.map((product, index) => (
@@ -171,10 +171,10 @@ function HomePage() {
                             <g filter="url(#filter1_d)">
                                 <path d="M5.06821 23.7085C11.8577 18.4987 116.141 0.127073 128.03 4.71073C133.156 6.68695 137.191 8.74997 138.824 12.2559C139.832 14.4169 139.719 15.9896 138.524 18.1758C135.462 23.7804 118.221 24.8966 118.81 18.9659C119.2 15.0361 123.871 13.2048 128.18 11.4263C132.489 9.64789 155.225 5.01909 169.743 9.75353C178.057 12.4647 188.56 22.0095 190.583 28.9142C193.869 40.1238 186.85 71.5283 186.09 73.9658"
                                     stroke="#ffffff"
-                                    stroke-width="2.53575"
-                                    stroke-linecap="round"
-                                    stroke-dasharray="5.07 5.07"
-                                    shape-rendering="crispEdges">
+                                    strokeWidth="2.53575"
+                                    strokeLinecap="round"
+                                    strokeDasharray="5.07 5.07"
+                                    shapeRendering="crispEdges">
                                 </path>
                             </g>
                             <defs>
@@ -203,7 +203,7 @@ function HomePage() {
                     </div>
                     <Typography variant="h4" fontWeight="bold" color="white" className='relative'>
                         Why Choose <span className="text-[#DCE0E4]">Us </span><span className="font-bold text-[50px] pl-4 ">?</span>
-                        <div className="absolute left-[3%] right-0 mx-auto h-[3px] bg-[#ffffff] w-[12%] top-full mt-2"></div>
+                        <div className="absolute left-[3%] right-0 mx-auto h-[3px] bg-[#ffffff] w-[10%] top-full mt-2"></div>
                     </Typography>
                 </Box>
                 <WhyChooseUs />
@@ -215,7 +215,7 @@ function HomePage() {
                     <div className="container mx-auto px-4 text-center">
                         <h2 className="relative text-4xl font-extrabold mb-6 text-center">
                             Stay Connected with Us
-                            <div className="absolute left-[13%] right-0 mx-auto h-[3px] bg-[#ffffff] w-[20%] bottom-[-15px]"></div>
+                            <div className="absolute left-[11%] right-0 mx-auto h-[3px] bg-[#ffffff] w-[16%] mt-2"></div>
                         </h2>
                         <p className="text-lg mb-8 max-w-2xl mx-auto">
                             Subscribe to our newsletter to receive exclusive updates, offers, and the latest trends right in your inbox.

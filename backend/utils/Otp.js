@@ -13,10 +13,9 @@ const OtpGenerate = () => {
 };
 
 
-const ExpireOtp=()=>{
-    const expiredAt =new Date();
+const ExpireOtp = () => {
+    const expiredAt = new Date();
     expiredAt.setMinutes(expiredAt.getMinutes() + 10);
-    console.log("🚀 ~ ExpireOtp ~ expiredAt:", expiredAt)
     return expiredAt;
 }
 

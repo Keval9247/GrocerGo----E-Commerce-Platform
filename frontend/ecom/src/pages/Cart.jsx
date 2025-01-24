@@ -6,15 +6,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../utils/Loading";
 import { Link, useNavigate } from "react-router-dom";
-import { getCheckoutSession } from "../apis/payment/paymentApi";
+import { getCheckoutSession, payPalPayment, payPalSuccess } from "../apis/payment/paymentApi";
 import { Tooltip } from "@mui/material";
 import { setTotalItems } from "../store/slice/ProductSlice";
 import { UpdateCart } from "../store/thunks/productThunk";
-
+import { PayPalButtons } from "@paypal/react-paypal-js";
+import axios from "axios";
+import html2pdf from 'html2pdf.js';
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [payPalOrderId, setPayPalOrderId] = useState(null);
+  const [isInvoice, setIsInvoice] = useState(false);
   const user = useSelector((state) => state.authReducer.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -116,7 +120,57 @@ const CartPage = () => {
     }
   }
 
-  // Calculate subtotal and total dynamically
+  const handlePayPalCheckout = async () => {
+    try {
+      const response = await payPalPayment({ userId: user?.id, items: cart, });
+      if (response?.id) {
+        setPayPalOrderId(response?.id);
+        toast.success("Redirecting to PayPal payment...");
+      } else {
+        toast.error("Failed to initiate PayPal payment.");
+      }
+    } catch (error) {
+      console.error("PayPal checkout error:", error);
+      toast.error("Failed to initiate PayPal payment.");
+    }
+  };
+
+  const handlePayPalSuccess = async (orderId) => {
+    try {
+      const response = await payPalSuccess(orderId);
+
+      // Create a new tab with the invoice HTML
+      const newTab = window.open();
+      newTab.document.write(response.data);
+      newTab.document.close();
+
+      // Wait for the content to load
+      setTimeout(async () => {
+        // Convert the HTML content to PDF
+        html2pdf()
+          .from(newTab.document.body)
+          .set({
+            margin: 10,
+            filename: `Invoice_${orderId}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          })
+          .save()
+          .then(() => {
+            // Close the new tab after PDF is downloaded
+            newTab.close();
+          });
+
+        toast.success("Payment successful! Invoice is available.");
+        await fetchCartItems(); // Refresh the cart after payment
+      }, 1000); // Adjust the delay as needed
+    } catch (error) {
+      console.error("PayPal success error:", error);
+      toast.error("Error handling PayPal payment.");
+    }
+  };
+
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const total = subtotal; // Assuming shipping is free, so total = subtotal
 
@@ -195,7 +249,6 @@ const CartPage = () => {
                 ))}
               </div>
 
-              {/* Order Summary */}
               <div className="lg:col-span-1 bg-white rounded-xl shadow-sm p-6 sticky top-8 h-fit">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Order Summary</h2>
                 <div className="space-y-4">
@@ -213,13 +266,38 @@ const CartPage = () => {
                   <span className="text-xl font-semibold text-gray-900">Total</span>
                   <span className="text-xl font-semibold text-gray-900">${total.toFixed(2)}</span>
                 </div>
-                <div className="w-full ">
-                  <Link state={{ total }} onClick={() => handleCheckout(cart)}
-                    // to="/user/payment/checkout"
-                    className="block text-center py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                    Proceed to Checkout
-                  </Link>
+                <div className="w-full">
+                  <button
+                    type="button"
+                    onClick={() => handleCheckout(cart)}
+                    className="block w-full text-center py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Proceed to Checkout with Stripe
+                  </button>
+                  <div className="flex items-center my-6">
+                    <hr className="flex-grow border-gray-300" />
+                    <span className="px-4 text-gray-500 font-medium">OR</span>
+                    <hr className="flex-grow border-gray-300" />
+                  </div>
+
                 </div>
+                {payPalOrderId ? (
+                  <PayPalButtons
+                    createOrder={() => payPalOrderId}
+                    onApprove={(data) => handlePayPalSuccess(data.orderID)}
+                    onError={(error) => {
+                      console.error("PayPal Button Error:", error);
+                      toast.error("Failed to process PayPal payment.");
+                    }}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handlePayPalCheckout(cart)}
+                    className="block w-full text-center py-3 mt-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  >
+                    Pay with PayPal
+                  </button>
+                )}
               </div>
             </div>
           </div>

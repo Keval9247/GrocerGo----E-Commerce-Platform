@@ -45,6 +45,15 @@ const OrderSchema = new mongoose.Schema({
         enum: ['pending', 'completed', 'failed'],
         default: 'pending',
     },
+    paymentMethod: {
+        type: String,
+        enum: ['cod', 'paypal', 'stripe'],
+        default: 'cod',
+    },
+    paypalOrderId: {
+        type: String,
+        required: false,
+    },
     stripeSessionId: {
         type: String,
         required: false,
