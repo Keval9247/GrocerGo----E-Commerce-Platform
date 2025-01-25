@@ -25,11 +25,9 @@ function ForgotPassword() {
 
 
   const handleResetPassword = async (email) => {
-    console.log("��� ~ handleResetPassword ~ email:", email)
     setIsLoading(true);
     try {
       const a = await dispatch(forgetPassword(email));
-      console.log("🚀 ~ handleResetPassword ~ a:", a)
       if (a.payload.success === true) {
         toast.success('Password reset link sent to your email!');
         Navigate('/login');
@@ -44,16 +42,11 @@ function ForgotPassword() {
       setIsLoading(false);
     }
   };
-  // useEffect(() => {
-  //   handleResetPas sword()
-  // }, [])
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ onSubmit ~ data:", data)
     setIsLoading(true);
     try {
       const response = await handleResetPassword(data.email);
-      console.log("response : ", response);
     } catch (error) {
       console.error('Error sending password reset email:', error);
     } finally {

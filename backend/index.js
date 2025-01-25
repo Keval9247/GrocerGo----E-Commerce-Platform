@@ -29,7 +29,7 @@ app.use("/public", express.static(path.join(__dirname, "./public")));
 connectionMongodb()
     .then(() => {
         app.listen(process.env.PORT || 5858, () => {
-            console.log(`Server is running on port ${process.env.PORT}`);
+            console.log(`Server is running on port http://localhost:${process.env.PORT}`);
         });
     })
     .catch((error) => {

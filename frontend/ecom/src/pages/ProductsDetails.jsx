@@ -202,8 +202,11 @@ const ProductDetails = () => {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <Tooltip title={!user ? "Please login to purchase this product" : ""} arrow placement="top">
-                  <button onClick={() => handletoAddToCart(productDetails)} disabled={productDetails.stock === 0 || !user} className={`flex-1 py-3 px-8 ${!user ? 'hover:cursor-not-allowed hover:bg-slate-600' : 'hover:cursor-pointer'} rounded-lg flex items-center justify-center space-x-2 ${productDetails.stock === 0 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"} transition`}>
+                <Tooltip title={!user ? "Please login to purchase this product" : productDetails.stock === 0 ? "Out of stock" : ""} arrow placement="top">
+                  <button
+                    onClick={() => handletoAddToCart(productDetails)}
+                    disabled={productDetails.stock === 0 || !user}
+                    className={`flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 ${productDetails.stock === 0 || !user ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"} transition`}>
                     <ShoppingCart className="w-5 h-5" /> <span>Buy Now</span>
                   </button>
                 </Tooltip>
@@ -299,8 +302,8 @@ const ProductDetails = () => {
           {similarProducts.length > 0 ? (
             <div className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {similarProducts.map((product) => (
-                  <div key={product._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition p-4">
+                {similarProducts?.map((product) => (
+                  <div key={product._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition p-4 hover:cursor-pointer" onClick={() => navigate(`/user/products/${product._id}`)}>
                     <div className="w-full h-60 overflow-hidden rounded-lg">
                       <img src={`${import.meta.env.VITE_BACKEND_URL}${product.ProductImage}`} alt={product.ProductName} className="w-full h-60 object-cover cursor-pointer transform hover:scale-105 transition" />
                     </div>

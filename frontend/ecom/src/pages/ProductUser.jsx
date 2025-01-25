@@ -25,7 +25,6 @@ function ProductUser() {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const products = useSelector((state) => state.productsReducer.products);
-  console.log("🚀 ~ ProductUser ~ products:", products)
   const role = useSelector((state) => state.authReducer.role);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('Relevant');

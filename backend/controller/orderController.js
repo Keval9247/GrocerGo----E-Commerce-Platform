@@ -14,7 +14,8 @@ const orderController = () => {
         getOrderById: async (req, res) => {
             const { id } = req.params;
             try {
-                const order = await Order.find({ userId: id });
+                const order = await Order.find({ userId: id }).sort({ orderDate: -1 }).exec();
+
                 if (!order) {
                     return res.status(404).json({ error: 'Order not found' });
                 }

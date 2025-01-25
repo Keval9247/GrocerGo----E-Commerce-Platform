@@ -8,7 +8,7 @@ import Loading from "../utils/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import { getCheckoutSession, payPalPayment, payPalSuccess } from "../apis/payment/paymentApi";
 import { Tooltip } from "@mui/material";
-import { setTotalItems } from "../store/slice/ProductSlice";
+import { clearCart, setTotalItems } from "../store/slice/ProductSlice";
 import { UpdateCart } from "../store/thunks/productThunk";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
@@ -34,11 +34,11 @@ const CartPage = () => {
     setLoading(true);
     try {
       const response = await GetCartItems(user?.id);
-      if (response?.items) {
-        const totalItems = response.items.reduce((total, item) => total + item.quantity, 0)
+      if (response?.cart?.items) {
+        const totalItems = response?.cart?.items?.reduce((total, item) => total + item.quantity, 0)
         dispatch(setTotalItems(totalItems))
       }
-      setCart(response.items);
+      setCart(response?.cart?.items);
     } catch (error) {
       console.error("Error fetching cart items:", error);
     } finally {
@@ -139,39 +139,34 @@ const CartPage = () => {
     try {
       const response = await payPalSuccess(orderId);
 
-      // Create a new tab with the invoice HTML
-      const newTab = window.open();
-      newTab.document.write(response.data);
-      newTab.document.close();
+      // Convert Blob to text if the response is a Blob
+      const htmlContent = typeof response.data === 'object' && response.data instanceof Blob
+        ? await response.data.text()
+        : response.data;
 
-      // Wait for the content to load
-      setTimeout(async () => {
-        // Convert the HTML content to PDF
-        html2pdf()
-          .from(newTab.document.body)
-          .set({
-            margin: 10,
-            filename: `Invoice_${orderId}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          })
-          .save()
-          .then(() => {
-            // Close the new tab after PDF is downloaded
-            newTab.close();
-          });
-
-        toast.success("Payment successful! Invoice is available.");
-        await fetchCartItems(); // Refresh the cart after payment
-      }, 1000); // Adjust the delay as needed
+      html2pdf()
+        .from(htmlContent)
+        .set({
+          margin: 10,
+          filename: `Invoice_${orderId}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .save()
+        .then(() => {
+          toast.success("Payment successful! Invoice is downloaded.");
+          toast.info("Invoice is downloaded.");
+          dispatch(clearCart());
+          navigate(`/user/orders/${user.id}`);
+        });
     } catch (error) {
       console.error("PayPal success error:", error);
       toast.error("Error handling PayPal payment.");
     }
   };
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cart?.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const total = subtotal; // Assuming shipping is free, so total = subtotal
 
   if (loading) {
@@ -180,7 +175,7 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      {cart.length === 0 ? (
+      {!cart ? (
         <EmptyState
           title="Your cart is empty"
           description="Add items to your cart to continue shopping."
@@ -196,7 +191,7 @@ const CartPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Cart Items */}
               <div className="lg:col-span-2 space-y-6">
-                {cart.map((item) => (
+                {cart?.map((item) => (
                   <div
                     key={item.productId}
                     className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col sm:flex-row gap-6 items-center animate-fade-in"
@@ -254,7 +249,7 @@ const CartPage = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="text-gray-900 font-medium">${subtotal.toFixed(2)}</span>
+                    <span className="text-gray-900 font-medium">${subtotal?.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
@@ -264,7 +259,7 @@ const CartPage = () => {
                 <hr className="my-6 border-gray-200" />
                 <div className="flex justify-between mb-6">
                   <span className="text-xl font-semibold text-gray-900">Total</span>
-                  <span className="text-xl font-semibold text-gray-900">${total.toFixed(2)}</span>
+                  <span className="text-xl font-semibold text-gray-900">${total?.toFixed(2)}</span>
                 </div>
                 <div className="w-full">
                   <button

@@ -2,8 +2,6 @@ const path = require('path');
 const fs = require('fs');
 const sendEmail = require("../miidleware/sendEmail");
 
-// const sendEmail = require('../middleware/sendEmail');
-
 const subscribecontroller = () => {
     return {
         subscribeletter: async (req, res) => {

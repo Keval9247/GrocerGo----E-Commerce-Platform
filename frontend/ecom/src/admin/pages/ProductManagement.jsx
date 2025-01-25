@@ -45,7 +45,6 @@ const ProductsPage = () => {
     indexOfFirstProduct,
     indexOfLastProduct
   );
-  console.log("🚀🚀 Your selected text is => currentProducts: ", currentProducts);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);

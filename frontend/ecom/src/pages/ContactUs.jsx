@@ -34,7 +34,6 @@ const ContactUs = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
         setOpenSnackbar(true);
         setFormData({ name: '', email: '', message: '' });
     };

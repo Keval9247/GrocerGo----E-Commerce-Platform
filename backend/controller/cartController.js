@@ -8,10 +8,10 @@ const cartController = () => {
             try {
                 const cart = await Cart.findOne(userId);
                 if (!cart) {
-                    return res.status(404).json({ message: 'Cart not found' });
+                    return res.status(200).json({ success: false, message: "Cart not found.", cart: cart });
                 }
 
-                res.status(200).json(cart);
+                res.status(200).json({ success: true, message: "Cart data retrieved successfully", cart });
             } catch (error) {
                 res.status(500).json({ message: 'Error retrieving cart', error });
             }
@@ -28,23 +28,19 @@ const cartController = () => {
                     return res.status(404).json({ message: 'Product not found' });
                 }
 
-                // Find the user's cart or create a new one if it doesn't exist
                 let cart = await Cart.findOne({ userId });
 
                 if (!cart) {
                     cart = new Cart({ userId, items: [], totalPrice: 0 });
                 }
 
-                // Check if the product already exists in the cart
                 const existingItemIndex = cart.items.findIndex(
                     (item) => item.productId.toString() === productId
                 );
 
                 if (existingItemIndex !== -1) {
-                    // Update the quantity if the product already exists
                     cart.items[existingItemIndex].quantity += quantity;
                 } else {
-                    // Add the product as a new item
                     cart.items.push({
                         productId,
                         quantity,
@@ -55,7 +51,6 @@ const cartController = () => {
                         stock: product?.stock || 0,
                     });
                 }
-                // Recalculate total price
                 cart.totalPrice = cart.items.reduce((total, item) => {
                     const itemTotal = item.quantity * item.price;
                     return total + (isNaN(itemTotal) ? 0 : itemTotal);
@@ -87,13 +82,8 @@ const cartController = () => {
                     return res.status(404).json({ message: 'Item not found in cart' });
                 }
 
-                // Recalculate total price
-                cart.totalPrice = cart.items.reduce(
-                    (total, item) => total + item.quantity * item.price,
-                    0
-                );
+                cart.totalPrice = cart.items.reduce((total, item) => total + item.quantity * item.price, 0);
 
-                // Save the updated cart
                 await cart.save();
 
                 res.status(200).json({ message: 'Item removed from cart', cart });
@@ -115,40 +105,30 @@ const cartController = () => {
                     return res.status(400).json({ message: 'Quantity must be a number and at least 1' });
                 }
 
-                // Find the user's cart
                 const cart = await Cart.findOne({ userId });
                 if (!cart) {
                     return res.status(404).json({ message: 'Cart not found for the user' });
                 }
 
-                // Ensure cart.items exists and is an array
                 if (!cart.items || !Array.isArray(cart.items)) {
                     return res.status(400).json({ message: 'Cart items are invalid or missing' });
                 }
 
-                // Find the item in the cart
                 const item = cart.items.find((item) => item.productId == productId);
                 if (!item) {
                     return res.status(404).json({ message: 'Item not found in cart' });
                 }
 
-                // Validate quantity against available stock
                 if (quantity > item.stock) {
                     return res.status(400).json({
                         message: `Quantity exceeds available stock (${item.stock})`,
                     });
                 }
 
-                // Update item quantity
                 item.quantity = quantity;
 
-                // Recalculate total price
-                cart.totalPrice = cart.items.reduce(
-                    (total, item) => total + item.quantity * item.price,
-                    0
-                );
+                cart.totalPrice = cart.items.reduce((total, item) => total + item.quantity * item.price, 0);
 
-                // Save the updated cart
                 await cart.save();
 
                 res.status(200).json({ message: 'Cart updated successfully', cart });

@@ -41,11 +41,10 @@ export const payPalPayment = async (order) => {
 }
 
 export const payPalSuccess = async (orderId) => {
-    console.log("🚀🚀 Your selected text is => orderId: ", orderId);
     try {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/paypal-success`, { orderId },
             {
-                responseType: "blob", // Ensure response is treated as binary
+                responseType: "blob",
             }
         );
         return response;
