@@ -6,7 +6,6 @@ const imagestorage = multer.diskStorage({
         cb(null, '/home/swati/keval/newtut/MERN/backend/uploadedimages');
     },
     filename: (req, file, cb) => {
-        console.log("filename : ", Date.now() + '-' + file.originalname);
         cb(null, Date.now() + '-' + file.originalname);
     }
 })
@@ -16,7 +15,6 @@ const adminImageStorage = multer.diskStorage({
         cb(null, path.join(__dirname, '../public/profile/admin/'));
     },
     filename: (req, file, cb) => {
-        console.log("filename : ", Date.now() + '-' + file.originalname);
         cb(null, Date.now() + '.' + file.originalname);
     }
 })
@@ -26,7 +24,6 @@ const productStorage = multer.diskStorage({
         cb(null, path.join(__dirname, '../public/products/'));
     },
     filename: (req, file, cb) => {
-        console.log("filename : ", Date.now() + '-' + file.originalname);
         cb(null, Date.now() + '.' + file.originalname);
     }
 })

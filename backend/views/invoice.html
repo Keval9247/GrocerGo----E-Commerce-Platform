@@ -9,7 +9,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             color: #333;
             background-color: #f8f9fa;
         }
@@ -33,33 +33,76 @@
             border-radius: 10px 10px 0 0;
         }
 
-        .header img {
-            width: 100px;
+        .header h1 {
+            font-size: 28px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            margin: 10px 0;
+            font-weight: bold;
         }
 
         .company-info {
             text-align: right;
             margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
         }
 
-        .invoice-title {
-            text-align: center;
-            font-size: 24px;
+        .company-info p {
+            margin: 5px 0;
+        }
+
+        .invoice-details {
             margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .invoice-details p {
+            margin: 5px 0;
+        }
+
+        .customer-info {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .customer-info h2,
+        .shipping-details h2,
+        .order-details h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
             color: #007bff;
         }
 
-        .invoice-details,
-        .customer-info,
-        .shipping-details,
+        .customer-info p,
+        .shipping-details p {
+            margin: 5px 0;
+        }
+
+        .shipping-details {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
         .order-details {
             margin-bottom: 20px;
         }
 
-        .invoice-details p,
-        .customer-info p,
-        .shipping-details p {
-            margin: 5px 0;
+        .order-details h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #007bff;
         }
 
         table {
@@ -73,11 +116,13 @@
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            font-size: 14px;
         }
 
         table th {
             background-color: #007bff;
             color: #fff;
+            font-weight: bold;
         }
 
         table tr:nth-child(even) {
@@ -89,20 +134,15 @@
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 20px;
-        }
-
-        .payment-terms {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f1f1f1;
-            border-radius: 5px;
+            color: #007bff;
         }
 
         .thank-you {
             text-align: center;
             font-size: 18px;
-            color: #007bff;
+            font-weight: bold;
             margin-bottom: 20px;
+            color: #007bff;
         }
 
         .footer {
@@ -112,6 +152,57 @@
             border-top: 1px solid #ddd;
             font-size: 12px;
             color: #777;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            .invoice-container {
+                box-shadow: none;
+                border: none;
+                padding: 10px;
+            }
+
+            .header {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header h2 {
+                font-size: 20px;
+            }
+
+            .company-info,
+            .invoice-details,
+            .customer-info,
+            .shipping-details,
+            .order-details {
+                margin-bottom: 10px;
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .total-amount {
+                font-size: 16px;
+            }
+
+            .thank-you {
+                font-size: 16px;
+            }
+
+            .footer {
+                font-size: 10px;
+            }
         }
     </style>
 </head>
@@ -123,22 +214,26 @@
             <p>The Online Shopping Platform</p>
             <h2>Invoice</h2>
         </div>
+
         <div class="company-info">
             <p>Surat, Gujarat.</p>
-            <p>Business City, BS 12345</p>
+            <p>Surat City, GJ 12345</p>
             <p>Phone: (123) 456-7890</p>
             <p>Email: info@grocergo.com</p>
             <p>Website: www.grocergo.com</p>
         </div>
+
         <div class="invoice-details">
             <p><strong>Invoice ID:</strong> {{invoiceId}}</p>
             <p><strong>Date:</strong> {{invoiceDate}}</p>
         </div>
+
         <div class="customer-info">
             <h2>Customer Information:</h2>
             <p><strong>Customer Name:</strong> {{customerName}}</p>
             <p><strong>Customer Email:</strong> {{customerEmail}}</p>
         </div>
+
         <div class="shipping-details">
             <h2>Shipping Details:</h2>
             <p><strong>Address 1:</strong> {{address1}}</p>
@@ -147,6 +242,7 @@
             <p><strong>State:</strong> {{state}}</p>
             <p><strong>Postal Code:</strong> {{postalCode}}</p>
         </div>
+
         <div class="order-details">
             <h2>Order Details:</h2>
             <table>
@@ -172,12 +268,15 @@
                 </tbody>
             </table>
         </div>
+
         <div class="total-amount">
             <p><strong>Total Amount:</strong> ${{totalAmount}}</p>
         </div>
+
         <div class="thank-you">
             <h2>Thank you for your shopping!</h2>
         </div>
+
         <div class="footer">
             <p>Grocer Go - 123 Business Rd. - Surat City, GJ 12345 - Phone: (123) 456-7890</p>
         </div>

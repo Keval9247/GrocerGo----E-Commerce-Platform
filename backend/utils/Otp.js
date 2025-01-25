@@ -8,7 +8,6 @@ const OtpGenerate = () => {
         lowerCaseAlphabets: false,
         alphabets: false,
     });
-    console.log("🚀 ~ Otp ~ otp:", otp)
     return otp;
 };
 

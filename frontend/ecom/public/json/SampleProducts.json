@@ -27,25 +27,25 @@
         "name": "Laptop Pro 15",
         "description": "A powerful laptop for professionals.",
         "price": 2000,
-        "image": "http://surl.li/wljscu"
+        "image": "/images/laptop15.jpeg"
     },
     {
         "name": "Bluetooth Speaker",
         "description": "Portable speaker with amazing sound.",
         "price": 60,
-        "image": "http://surl.li/yiiijw"
+        "image": "/images/blutooth.jpeg"
     },
     {
         "name": "Digital Camera",
         "description": "Capture stunning photos with this camera.",
         "price": 450,
-        "image": "http://surl.li/qmfrrq"
+        "image": "/images/cameraa.jpg"
     },
     {
         "name": "Tablet X12",
         "description": "A versatile tablet for work and play.",
         "price": 600,
-        "image": "http://surl.li/opnnub"
+        "image": "/images/tablett.jpeg"
     },
     {
         "name": "Gaming Mouse",
@@ -69,42 +69,42 @@
         "name": "Smart Thermostat",
         "description": "Control your home's temperature from anywhere.",
         "price": 120,
-        "image": "http://surl.li/lmltql"
+        "image": "/images/thermostant.jpeg"
     },
     {
         "name": "Smart Light Bulb",
         "description": "Change the lighting mood in your home with ease.",
         "price": 25,
-        "image": "http://surl.li/fzqvlq"
+        "image": "/images/bulb.jpeg"
     },
     {
         "name": "Electric Kettle",
         "description": "Boil water quickly and efficiently.",
         "price": 50,
-        "image": "http://surl.li/mqcmxx"
+        "image": "/images/cattle.jpeg"
     },
     {
         "name": "Smart Vacuum Cleaner",
         "description": "Let the robot vacuum do the cleaning for you.",
         "price": 250,
-        "image": "http://surl.li/prrlvn"
+        "image": "/images/vaccum.jpeg"
     },
     {
         "name": "Drone X500",
         "description": "Capture aerial shots with this high-performance drone.",
         "price": 500,
-        "image": "http://surl.li/hoqupa"
+        "image": "/images/drone.jpeg"
     },
     {
         "name": "Fitness Tracker Band",
         "description": "Track your activity and stay fit.",
         "price": 45,
-        "image": "http://surl.li/zquasf"
+        "image": "/images/band.jpeg"
     },
     {
         "name": "Electric Scooter",
         "description": "A fast and eco-friendly way to travel.",
         "price": 350,
-        "image": "http://surl.li/gheeqa"
+        "image": "/images/scooter.jpeg"
     }
 ]

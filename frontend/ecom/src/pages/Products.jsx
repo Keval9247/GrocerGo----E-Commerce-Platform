@@ -146,12 +146,12 @@ const ProductsPage = () => {
                     className="w-full h-48 object-cover"
                   />
                   {showQuickView === index && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+                      onClick={() => navigate(`/user/products/${product._id}`)}
+                    >
                       <button
                         className="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100"
-                        onClick={() =>
-                          navigate(`/user/products/${product._id}`)
-                        }
+
                       >
                         Quick View
                       </button>
@@ -167,8 +167,8 @@ const ProductsPage = () => {
                       <AiFillStar
                         key={i}
                         className={`${i < Math.floor(product.rating)
-                            ? "text-yellow-400"
-                            : "text-gray-300"
+                          ? "text-yellow-400"
+                          : "text-gray-300"
                           }`}
                       />
                     ))}

@@ -55,7 +55,6 @@ const logincontroller = () => {
                 }
                 if (!user.isVerified) {
                     const otp = OtpGenerate();
-                    console.log("🚀🚀 Your selected text is otp: ", otp);
                     if (!otp) {
                         return res.status(500).json({ error: 'Failed to generate OTP' });
                     }
@@ -467,7 +466,7 @@ const logincontroller = () => {
                     cart: cart
                 });
             } catch (error) {
-                console.log('Error adding product to cart:', error);
+                console.error('Error adding product to cart:', error);
                 res.status(500).json({ error: error.message });
             }
         },
@@ -487,7 +486,7 @@ const logincontroller = () => {
                     cart: cart
                 });
             } catch (error) {
-                console.log('Error retrieving cart:', error);
+                console.error('Error retrieving cart:', error);
                 res.status(500).json({ error: error.message });
             }
         },
@@ -502,12 +501,6 @@ const logincontroller = () => {
                 }
 
                 const cart = await Cart.findOne({ userId: userId });
-                // console.log("🚀 ~ removeFromCart: ~ cart:", cart)
-
-                // if (!cart) {
-                //     return res.status(404).json({ success: false, message: "Cart not found" });
-                // }
-                // const response = Cart.deleteOne
 
                 cart.items = cart.items.filter(item => item.productId !== productId?.productId);
                 await cart.save();
@@ -518,7 +511,7 @@ const logincontroller = () => {
                     // cart: cart
                 });
             } catch (error) {
-                console.log('Error removing product from cart:', error);
+                console.error('Error removing product from cart:', error);
                 res.status(500).json({ error: error.message });
             }
 

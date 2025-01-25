@@ -216,7 +216,6 @@ const paymentController = () => {
 
         handlePayPalSuccess: async (req, res) => {
             const { orderId } = req.body;
-            console.log("🚀🚀 Your selected text is => orderId: ", orderId);
 
             try {
                 const accessToken = await generatePayPalAccessToken();
@@ -239,7 +238,6 @@ const paymentController = () => {
                     }
 
                     const purchaseUnit = captureResponse.data.purchase_units?.[0] || {};
-                    console.log("🚀🚀 Your selected text is => purchaseUnit: ", purchaseUnit);
                     const payerInfo = captureResponse.data.payer || {};
 
                     const deliveryDetails = {
@@ -250,40 +248,22 @@ const paymentController = () => {
                         city: purchaseUnit.shipping?.address?.admin_area_2 || "Default City",
                         address1: purchaseUnit.shipping?.address?.address_line_1 || "Default Address 1",
                         address2: purchaseUnit.shipping?.address?.address_line_2 || "",
-                        postalCode: purchaseUnit.shipping?.address?.postal_code || "000000",
+                        pin: purchaseUnit.shipping?.address?.postal_code || "000000",
                     };
 
                     order.deliveryDetails = deliveryDetails;
                     order.paymentStatus = "completed";
                     await order.save();
+                    await Cart.findOneAndDelete({ userId: order.userId });
 
                     const htmlContent = GenerateHTMLInvoice(order, payerInfo, purchaseUnit);
-
-                    // Send the HTML content as a response
                     res.setHeader('Content-Type', 'text/html');
                     res.send(htmlContent);
                 } else {
                     res.status(400).json({ error: "Payment not completed." });
                 }
             } catch (error) {
-                // Improved error logging
                 console.error("PayPal success handler error:", error);
-
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    console.error("Response data:", error.response.data);
-                    console.error("Response status:", error.response.status);
-                    console.error("Response headers:", error.response.headers);
-                    res.status(error.response.status).json({ error: error.response.data });
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    console.error("No response received:", error.request);
-                    res.status(500).json({ error: "No response received from PayPal." });
-                } else {
-                    // Something happened in setting up the request
-                    console.error("Error setting up the request:", error.message);
-                    res.status(500).json({ error: "Error setting up the request." });
-                }
             }
         },
 
