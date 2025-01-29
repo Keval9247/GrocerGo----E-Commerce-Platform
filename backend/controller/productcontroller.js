@@ -1,3 +1,4 @@
+const { default: Favourite } = require("../models/Favourite");
 const Product = require("../models/Product");
 const Rating = require("../models/Rating");
 const User = require("../models/User");
@@ -189,18 +190,84 @@ const productController = () => {
             }
         },
 
-        // addToCartProduct: async (req, res) => {
-        //     try {
-        //         const { productId, userId } = req.body;
-        //         const user = await User.findByIdAndUpdate(userId, { $push: { cart: productId } }, { new: true });
-        //         if (!user) {
-        //             return res.status(404).json({ error: 'User not found' });
-        //         }
-        //         res.status(200).json({ message: 'Product added to cart successfully', user });
-        //     } catch (error) {
-        //         res.status(500).json({ error: error.message });
-        //     }
-        // }
+        addToFavourite: async (req, res) => {
+            try {
+                const { productId } = req.params;
+                const userId = req?.user?.id;
+                console.log("🚀🚀 Your selected text is => req.user: ", req.user);
+
+                if (!productId) {
+                    return res.status(400).json({ error: "Product ID is required" });
+                }
+
+                const existingFavourite = await Favourite.findOne({ userId, productId });
+                if (existingFavourite) {
+                    return res.status(400).json({ error: "Product already in favourites" });
+                }
+
+                const favourite = await Favourite.create({ userId, productId });
+
+                // Populate the product details before sending response
+                const populatedFavourite = await Favourite.findById(favourite._id)
+                    .populate("productId")
+                    .populate("userId", "name email"); // Populate user with selected fields
+                console.log("🚀🚀 Your selected text is => populatedFavourite: ", populatedFavourite);
+
+                res.status(200).json({
+                    message: "Product added to favourites successfully",
+                    favourite: populatedFavourite,
+                });
+            } catch (error) {
+                console.error("Error adding product to favourites:", error);
+                res.status(500).json({ error: error.message });
+            }
+        },
+
+        removeFromFavourite: async (req, res) => {
+            try {
+                const { productId } = req.body;
+                const userId = req.user.id;
+
+                if (!productId) {
+                    return res.status(400).json({ error: 'Product ID is required' });
+                }
+
+                const user = await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { favouriteProducts: productId } },
+                    { new: true }
+                );
+
+                if (!user) {
+                    return res.status(404).json({ error: 'User not found' });
+                }
+
+                res.status(200).json({ message: 'Product removed from favourites successfully', user });
+            } catch (error) {
+                console.error('Error removing product from favourites:', error);
+                res.status(500).json({ error: error.message });
+            }
+        },
+
+        getFavourites: async (req, res) => {
+            try {
+                const userId = req.user.id;
+
+                const user = await User.findById(userId)
+                    .select('-token -password')
+                    .populate('favouriteProducts', 'id ProductName ProductImage')
+                    .exec();
+
+                if (!user) {
+                    return res.status(404).json({ error: 'User not found' });
+                }
+
+                res.status(200).json({ message: 'Favourites retrieved successfully', user });
+            } catch (error) {
+                console.error('Error retrieving favourites:', error);
+                res.status(500).json({ error: error.message });
+            }
+        },
     }
 }
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MessageSquare, MapPin, Clock, Send, Facebook, Twitter, Instagram, Linkedin, AlertCircle } from 'lucide-react';
+import { Mail, MapPin, Clock, Send, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const ContactPage = () => {
@@ -9,18 +11,9 @@ const ContactPage = () => {
         height: "100%",
     };
 
-    const center = {
-        lat: 21.1888,
-        lng: 72.8293,
-    };
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-    });
+    const center = { lat: 21.1888, lng: 72.8293 };
+    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState(null);
 
     const handleChange = (e) => {
         setFormData({
@@ -34,15 +27,14 @@ const ContactPage = () => {
         setIsSubmitting(true);
 
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            setSubmitStatus('success');
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/contact`, formData)
+            console.log("🚀🚀 Your selected text is => response: ", response);
+            toast.success(response?.data);
             setFormData({ name: '', email: '', subject: '', message: '' });
         } catch (error) {
-            setSubmitStatus('error');
+            toast.error("Something did wrong.");
         } finally {
             setIsSubmitting(false);
-            setTimeout(() => setSubmitStatus(null), 3000);
         }
     };
 
@@ -74,9 +66,8 @@ const ContactPage = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 mt-10 overflow-hidden">
             <div className="max-w-7xl mx-auto">
-                {/* Header Section */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -85,7 +76,6 @@ const ContactPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Contact Information */}
                     <div className="lg:col-span-1">
                         <div className="bg-white rounded-2xl shadow-lg p-8">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
@@ -108,7 +98,6 @@ const ContactPage = () => {
                                 ))}
                             </div>
 
-                            {/* Social Media Links */}
                             <div className="mt-8 pt-8 border-t border-gray-200">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Follow Us</h3>
                                 <div className="flex space-x-4">
@@ -130,7 +119,6 @@ const ContactPage = () => {
                         </div>
                     </div>
 
-                    {/* Contact Form */}
                     <div className="lg:col-span-2">
                         <div className="bg-white rounded-2xl shadow-lg p-8">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
@@ -196,22 +184,6 @@ const ContactPage = () => {
                                     />
                                 </div>
 
-                                {submitStatus && (
-                                    <div className={`p-4 rounded-lg ${submitStatus === 'success'
-                                        ? 'bg-green-50 text-green-700'
-                                        : 'bg-red-50 text-red-700'
-                                        }`}>
-                                        <div className="flex items-center">
-                                            <AlertCircle className="w-5 h-5 mr-2" />
-                                            <span>
-                                                {submitStatus === 'success'
-                                                    ? 'Message sent successfully!'
-                                                    : 'Failed to send message. Please try again.'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                )}
-
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
@@ -226,7 +198,6 @@ const ContactPage = () => {
                     </div>
                 </div>
 
-                {/* Map Section */}
                 <div className="mt-12">
                     <div className="bg-white rounded-2xl shadow-lg p-4">
                         <div className="w-full h-96 rounded-lg bg-gray-200 flex items-center justify-center">

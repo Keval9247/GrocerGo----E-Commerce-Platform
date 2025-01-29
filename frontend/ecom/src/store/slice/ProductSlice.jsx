@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AddToCart, UpdateCart } from '../thunks/productThunk';
+import { AddToCart, DeleteCart, UpdateCart } from '../thunks/productThunk';
 
 const initialState = {
     cart: [],
@@ -22,7 +22,6 @@ const productsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-
             .addCase(AddToCart.pending, (state, action) => {
                 state.loading = true;
                 state.error = null;
@@ -30,8 +29,10 @@ const productsSlice = createSlice({
             .addCase(AddToCart.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.cart = action.payload.cart;
-                state.cartItems = action.payload.cart.items.reduce((total, item) => total + item.quantity, 0);
+                if (action.payload?.cart) {
+                    state.cart = action.payload.cart.items;
+                    state.cartItems = action.payload.cart.items.reduce((total, item) => total + item.quantity, 0);
+                }
             })
             .addCase(AddToCart.rejected, (state, action) => {
                 state.loading = false;
@@ -45,10 +46,24 @@ const productsSlice = createSlice({
             .addCase(UpdateCart.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.cart = action.payload.cart;
+                state.cart = action.payload.cart.items;
                 state.cartItems = action.payload.cart.items.reduce((total, item) => total + item.quantity, 0);
             })
             .addCase(UpdateCart.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(DeleteCart.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(DeleteCart.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.cart = action.payload.cart.items;
+                state.cartItems = action.payload.cart.items.reduce((total, item) => total + item.quantity, 0);
+            })
+            .addCase(DeleteCart.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })

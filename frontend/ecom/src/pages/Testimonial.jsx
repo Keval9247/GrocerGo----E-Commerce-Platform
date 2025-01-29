@@ -27,25 +27,7 @@ const testimonials = [
         rating: 5,
         image: "https://randomuser.me/api/portraits/women/50.jpg",
         purchased: "Smartwatch",
-    },
-    // {
-    //     name: "Michael Brown",
-    //     location: "Toronto, Canada",
-    //     comment:
-    //         "Received my order on time, and the packaging was perfect. The product exceeded my expectations. Will shop again!",
-    //     rating: 5,
-    //     image: "https://randomuser.me/api/portraits/men/45.jpg",
-    //     purchased: "Premium Shoes",
-    // },
-    // {
-    //     name: "Sophia Lee",
-    //     location: "Berlin, Germany",
-    //     comment:
-    //         "Great variety of products at unbeatable prices. The support team was very helpful with my queries.",
-    //     rating: 4,
-    //     image: "https://randomuser.me/api/portraits/women/30.jpg",
-    //     purchased: "Wireless Earbuds",
-    // },
+    }
 ];
 
 const TestimonialSection = () => {
@@ -54,7 +36,7 @@ const TestimonialSection = () => {
             <div className="container mx-auto">
                 <h2 className="relative text-4xl font-extrabold text-center text-[#36454F] mb-12">
                     Hear from Our Happy Customers
-                    <div className="absolute left-[20%] right-0 mx-auto h-[3px] bg-[#A555F7] w-[16%] mt-5"></div>
+                    <div className="absolute left-[20%] right-0 mx-auto h-[3px] bg-[#A555F7] w-[16%] mt-3"></div>
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 pt-20">
                     {testimonials.map((testimonial, index) => (

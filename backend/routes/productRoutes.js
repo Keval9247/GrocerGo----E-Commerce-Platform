@@ -17,12 +17,16 @@ router.post('/findProductByCategory', productController().findProductByCategory)
 router.get('/:id', productController().getProductById)
 
 
-
 // ratind and reviews :
 router.get('/get-rating/:productId', productController().getProductRatings)
 router.post('/rating-review/:userId/:productId', productController().createRatingAndReview)
 
 
+// favourite routes :
+router.post('/add-to-favorite/:productId', productController().addToFavourite)
+
+
+// category routes :
 router.use('/cart', cartRoutes)
 
 module.exports = router;

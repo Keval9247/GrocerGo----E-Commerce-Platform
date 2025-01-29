@@ -14,17 +14,18 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         /*Actions */
-        logout: (state) => {
-            state.isAuthenticated = false;
-            state.user = null;
-            state.role = null;
-            state.error = null;
-            localStorage.removeItem('token');
-        },
+        // logout: (state) => {
+        //     state.isAuthenticated = false;
+        //     state.user = null;
+        //     state.role = null;
+        //     state.error = null;
+        //     localStorage.removeItem('token');
+        // },
         clearAuthentication(state) {
             state.isAuthenticated = false;
             state.user = null;
             state.role = null;
+            localStorage.removeItem('token');
         },
     },
     extraReducers: (builder) => {

@@ -9,13 +9,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { getCheckoutSession, payPalPayment, payPalSuccess } from "../apis/payment/paymentApi";
 import { Tooltip } from "@mui/material";
 import { clearCart, setTotalItems } from "../store/slice/ProductSlice";
-import { UpdateCart } from "../store/thunks/productThunk";
+import { DeleteCart, UpdateCart } from "../store/thunks/productThunk";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 import html2pdf from 'html2pdf.js';
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
+  console.log("🚀🚀 Your selected text is => cart: ", cart.length);
   const [loading, setLoading] = useState(true);
   const [payPalOrderId, setPayPalOrderId] = useState(null);
   const [isInvoice, setIsInvoice] = useState(false);
@@ -34,6 +35,7 @@ const CartPage = () => {
     setLoading(true);
     try {
       const response = await GetCartItems(user?.id);
+      console.log("🚀🚀 Your selected text is => response: ", response);
       if (response?.cart?.items) {
         const totalItems = response?.cart?.items?.reduce((total, item) => total + item.quantity, 0)
         dispatch(setTotalItems(totalItems))
@@ -95,7 +97,8 @@ const CartPage = () => {
   const handleRemoveFromCart = async (productId) => {
     setLoading(true);
     try {
-      const response = await DeleteCartItem(user?.id, productId);
+      const data = { userId: user?.id, productId }
+      const response = await dispatch(DeleteCart(data));
       toast.success(response?.message);
       await fetchCartItems();
     } catch (error) {
@@ -175,7 +178,7 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      {!cart ? (
+      {cart.length == 0 ? (
         <EmptyState
           title="Your cart is empty"
           description="Add items to your cart to continue shopping."
