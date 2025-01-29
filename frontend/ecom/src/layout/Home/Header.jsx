@@ -41,6 +41,8 @@ const Header = () => {
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                 zIndex: 1000,
                 padding: '0.5rem 2rem',
+                fontFamily: 'Poppins, sans-serif',
+                color: '#4F46E5',
             }}
         >
             <Toolbar
@@ -50,28 +52,16 @@ const Header = () => {
                     alignItems: 'center',
                 }}
             >
-                {/* Logo Section */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
                         <img
-                            src='/Grocer Go.png'
+                            src='/images/logonew.png'
                             alt="GrocerGo Logo"
-                            style={{ height: '50px', marginRight: '10px' }}
+                            style={{ height: '60px', marginRight: '10px' }}
                         />
-                        <Typography
-                            variant="h6"
-                            sx={{
-                                fontFamily: 'Coiny, cursive',
-                                color: '#4F46E5',
-                                fontSize: '20px',
-                            }}
-                        >
-                            GrocerGo
-                        </Typography>
                     </Link>
                 </Box>
 
-                {/* Navigation Links */}
                 <Box sx={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                     <StyledButton
                         onClick={() => {
@@ -87,12 +77,12 @@ const Header = () => {
                     >
                         Why GrocerGo
                     </StyledButton>
-                    <StyledButton
+                    {/* <StyledButton
                         onClick={() => navigate('/pricing')}
                         sx={{ color: '#847c94' }}
                     >
                         Pricing
-                    </StyledButton>
+                    </StyledButton> */}
                     <StyledButton
                         onClick={() => navigate('/contact')}
                         sx={{ color: '#847c94' }}
@@ -107,7 +97,6 @@ const Header = () => {
                     </StyledButton>
                 </Box>
 
-                {/* Authentication Buttons */}
                 <Box sx={{ display: 'flex', gap: '1rem' }}>
                     <Button
                         variant="outlined"

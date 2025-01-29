@@ -9,7 +9,6 @@ import { ROLES } from "./Roles/roles";
 import Layout from "./layout/Home/Layout";
 import ProductsDetails from "./pages/ProductsDetails";
 import Cart from "./pages/Cart";
-import ContactUs from "./pages/ContactUs";
 import ForgotPassword from "./pages/ForgotPassword";
 import LoginLayout from "./layout/loginlayout/LoginLayout";
 import SignupLayout from "./layout/signupLayout/SignupLayout";
@@ -68,7 +67,7 @@ function App() {
           <Route path="/login" element={<LoginLayout />} />
           <Route path="/signup" element={<SignupLayout />} />
           <Route path="/forgot-password" element={<ForgotLayout />} />
-          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/contact" element={<UserContact />} />
           <Route path="/about" element={<HomeAbout />} />
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/FAQ" element={<FAQ />} />
@@ -84,7 +83,6 @@ function App() {
             <Route path="/user/settings" element={<UserSettings />} />
             <Route path="/user/contact" element={<UserContact />} />
             <Route path="/user/orders/:userId" element={<UserOrders />} />
-            {/* <Route path="/user/payment/checkout" element={<CheckoutPage />} /> */}
             <Route path="/user/payment/success" element={<CheckoutSuccessPage />} />
             <Route path="/user/payment/cancel" element={<CheckoutCancelPage />} />
           </Route>

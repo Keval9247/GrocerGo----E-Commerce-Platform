@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const getDataLength = async () => {
   try {
@@ -97,10 +98,10 @@ export const AddRatingAndReview = async (props) => {
 
 export const Add_To_Cart = async (props) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/add-to-cart/${props._id}`, props);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/add-to-cart/${props._id}`, { quantity: props.quantity, userId: props.userId });
     return response.data;
   } catch (error) {
-    console.error(error);
+    toast.error(error?.response?.data?.message);
   }
 };
 
@@ -122,9 +123,9 @@ export const UpdateCartItemQuantity = async (data) => {
   }
 }
 
-export const DeleteCartItem = async (userId, productId) => {
+export const DeleteCartItem = async (data) => {
   try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/remove-from-cart`, { data: { userId: userId, productId: productId } });
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/remove-from-cart`, { data: { userId: data.userId, productId: data.productId } });
     return response.data;
   } catch (error) {
     console.error(error);

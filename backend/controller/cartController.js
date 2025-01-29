@@ -18,12 +18,16 @@ const cartController = () => {
         },
 
         addItemToCart: async (req, res) => {
-            const { userId, productId, quantity } = req.body;
+            const { userId, quantity } = req.body;
+            const { productId } = req.params;
             try {
                 if (!userId || !productId || !quantity) {
                     return res.status(400).json({ message: 'Missing required fields' });
                 }
                 const product = await Product.findById(productId);
+                if (product.stock < quantity) {
+                    return res.status(400).json({ message: 'Not enough stock' });
+                }
                 if (!product) {
                     return res.status(404).json({ message: 'Product not found' });
                 }
@@ -34,12 +38,15 @@ const cartController = () => {
                     cart = new Cart({ userId, items: [], totalPrice: 0 });
                 }
 
-                const existingItemIndex = cart.items.findIndex(
-                    (item) => item.productId.toString() === productId
-                );
+                const existingItemIndex = cart.items.findIndex((item) => item.productId.toString() === productId);
 
                 if (existingItemIndex !== -1) {
-                    cart.items[existingItemIndex].quantity += quantity;
+                    const existingItem = cart.items[existingItemIndex];
+                    if (existingItem.quantity > product.stock) {
+                        return res.status(400).json({ message: 'Insufficient stock.' });
+                    }
+                    existingItem.quantity += 1;
+                    // existingItem.stock -= 1;
                 } else {
                     cart.items.push({
                         productId,
@@ -51,10 +58,10 @@ const cartController = () => {
                         stock: product?.stock || 0,
                     });
                 }
-                cart.totalPrice = cart.items.reduce((total, item) => {
-                    const itemTotal = item.quantity * item.price;
-                    return total + (isNaN(itemTotal) ? 0 : itemTotal);
-                }, 0);
+                product.stock -= 1;
+                await product.save();
+
+                cart.totalPrice = cart.items.reduce((total, item) => total + item.quantity * item.price, 0);
 
                 await cart.save();
                 res.status(200).json({ message: 'Item added to cart successfully', cart });
@@ -74,6 +81,10 @@ const cartController = () => {
                 if (!cart) {
                     return res.status(404).json({ message: 'Cart not found' });
                 }
+                const product = await Product.findById(productId);
+
+                product.stock += 1;
+                await product.save();
 
                 const initialItemCount = cart.items.length;
                 cart.items = cart.items.filter((item) => item.productId.toString() !== productId);
@@ -137,7 +148,6 @@ const cartController = () => {
                 res.status(500).json({ message: 'Internal server error while updating cart', error: error.message });
             }
         },
-
     }
 }
 

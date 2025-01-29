@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Truck, CheckCircle, Package, Calendar, Tag, ShieldBan } from "lucide-react";
 import { AddRatingAndReview, getAllRatingbyProductId, GetProductById, GetProductsByCategory } from "../apis/products/Productapi";
 import Loading from "../utils/Loading";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import ShareOptions from "./ShareOption";
 import { Tooltip } from '@mui/material'
 import { AddToCart } from "../store/thunks/productThunk";
@@ -28,26 +28,6 @@ const ProductDetails = () => {
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const user = useSelector((state) => state.authReducer.user);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const fetchProduct = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await GetProductById(id);
-  //       setProductDetails(response?.product);
-  //       if (response?.product.category) {
-  //         const similarProducts = await GetProductsByCategory(response?.product.category);
-  //         setSimilarProducts(similarProducts?.products?.filter((p) => p._id !== response.product._id));
-  //       }
-  //       if (response?.product._id) await fetchProductRatings(response?.product._id);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchProduct();
-  // }, [id]);
 
   const fetchProductDetails = useCallback(async () => {
     setLoading(true);
@@ -86,6 +66,7 @@ const ProductDetails = () => {
     }
     setLoading(true);
     const data = { productId: productDetails._id, userId: user.id, rating, review };
+
     try {
       await AddRatingAndReview(data);
       toast.success("Review added successfully!");
@@ -117,7 +98,7 @@ const ProductDetails = () => {
         quantity: 1,
       }
       const response = await dispatch(AddToCart(payload))
-      toast.success("Product added to cart successfully!");
+      toast.success(response?.payload?.message);
       setAddedToCart(true);
     }
   }
@@ -144,8 +125,7 @@ const ProductDetails = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* <ToastContainer position="top-right" /> */}
+    <div className="min-h-screen bg-gray-50 scrollbar-hidden">
       <div className="max-w-7xl mx-auto py-8 px-4">
         <nav className="flex items-center space-x-2 text-sm">
           <button onClick={() => navigate("/user/products")} className="flex items-center text-blue-600 hover:text-blue-800">
@@ -161,7 +141,11 @@ const ProductDetails = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-4">
               <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
-                <img src={`${import.meta.env.VITE_BACKEND_URL}${productDetails.ProductImages?.[activeImageIndex] || productDetails.ProductImage}`} alt={productDetails.ProductName} className="w-full h-full object-cover cursor-pointer transform hover:scale-105 transition" />
+                <img
+                  src={`${import.meta.env.VITE_BACKEND_URL}${productDetails.ProductImages?.[activeImageIndex] || productDetails.ProductImage}`}
+                  alt={productDetails.ProductName}
+                  className="w-full h-full object-cover cursor-pointer transform hover:scale-105 transition"
+                />
                 {productDetails.stock <= 0 && <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full">Out of Stock</div>}
                 {productDetails.ProductImages?.length > 1 && (
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">

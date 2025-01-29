@@ -7,6 +7,9 @@ import {
 } from "../apis/products/Productapi";
 import { useNavigate } from "react-router-dom";
 import Loading from "../utils/Loading";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { AddToCart } from "../store/thunks/productThunk";
 
 const ProductsPage = () => {
   const categories = [
@@ -21,31 +24,40 @@ const ProductsPage = () => {
   ];
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [priceRange, setPriceRange] = useState(10000); // Set a max price for range
+  const [priceRange, setPriceRange] = useState(10000);
   const [searchQuery, setSearchQuery] = useState("");
   const [showQuickView, setShowQuickView] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.authReducer.user);
+  const dispatch = useDispatch();
 
-  // Fetch products by selected category or fetch all products
   const fetchProductsByCategory = async () => {
     try {
       let response;
       if (selectedCategory === "All") {
-        response = await getAllProducts(); // Assuming getAllProducts fetches all products
+        response = await getAllProducts();
       } else {
         response = await GetProductsByCategory(selectedCategory);
       }
-      setProducts(response.products); // Set the products from the API response
+      setProducts(response.products);
     } catch (error) {
       console.error("Error fetching products: ", error);
     }
   };
 
-  const handleAddtoCart = () => {
-    if (loading) {
-      alert("Product added to cart successfully!");
-      setShowQuickView(null); // Close quick view
+  const handleAddtoCart = async (product) => {
+    if (!user) navigate("/login");
+    else {
+      const payload = {
+        _id: product._id,
+        userId: user.id,
+        productId: product._id,
+        quantity: 1,
+      }
+      const response = await dispatch(AddToCart(payload))
+      console.log("🚀🚀 Your selected text is => response: ", response);
+      toast.success(response?.payload?.message);
     }
   };
   if (loading) {
@@ -53,12 +65,11 @@ const ProductsPage = () => {
   }
 
   useEffect(() => {
-    setLoading(true); // Show loading spinner before fetching products
-    fetchProductsByCategory(); // Fetch products when the component mounts or category changes
-    setLoading(false); // Hide loading spinner after fetching products
+    setLoading(true);
+    fetchProductsByCategory();
+    setLoading(false);
   }, [selectedCategory]);
 
-  // Filter Products based on category, price, and search query
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
       selectedCategory === "All" || product.category === selectedCategory;
@@ -72,7 +83,6 @@ const ProductsPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Filters Sidebar */}
         <aside className="w-full md:w-64 bg-white p-6 rounded-lg shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Filters</h2>
 
@@ -95,7 +105,6 @@ const ProductsPage = () => {
             ))}
           </div>
 
-          {/* Price Range */}
           <div className="mb-6">
             <h3 className="text-sm font-medium mb-2">Price Range</h3>
             <input
@@ -113,9 +122,7 @@ const ProductsPage = () => {
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1">
-          {/* Search Bar */}
           <div className="mb-6">
             <div className="relative">
               <input
@@ -129,7 +136,6 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product, index) => (
               <div
@@ -182,7 +188,7 @@ const ProductsPage = () => {
                     </span>
                     <button
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                      onClick={handleAddtoCart}
+                      onClick={() => handleAddtoCart(product)}
                     >
                       Add to Cart
                     </button>

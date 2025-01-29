@@ -1,7 +1,5 @@
 import React from 'react';
 import SignUp from '../../pages/Signup';
-import Footer from '../Home/Footer';
-import Header from '../Home/Header';
 
 function SignupLayout() {
     return (

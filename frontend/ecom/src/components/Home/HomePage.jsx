@@ -49,9 +49,7 @@ function HomePage() {
         if (subscribeEmail) {
             setLoading(true);
             try {
-                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/`,
-                    { email: subscribeEmail }
-                );
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/`, { email: subscribeEmail });
                 toast.success('Subscribed to newsletter successfully!');
                 setSubscribeEmail('');
             } catch (error) {
@@ -93,9 +91,12 @@ function HomePage() {
                             <div className="flex flex-col sm:flex-row items-center sm:gap-4 gap-2">
                                 <button
                                     onClick={() => window.open("/user/products", '_blank')}
-                                    className="bg-white text-[#36454F] flex  gap-5 py-3 px-8 rounded-lg font-bold hover:bg-gray-200 transition"
+                                    className="bg-white text-[#36454F] flex  gap-5 py-3 px-8 rounded-lg font-bold hover:bg-gray-200 transition-all group"
                                 >
-                                    Start Shopping <ArrowUpRight />
+                                    Start Shopping
+                                    <span className="inline-block transition-transform duration-200 ease-in-out group-hover:scale-150">
+                                        <ArrowUpRight />
+                                    </span>
                                 </button>
                                 <button
                                     onClick={() => navigate("/learn-more")}
@@ -164,7 +165,7 @@ function HomePage() {
                     </div>
                 </section>
                 <Box sx={{ textAlign: "center", padding: 4 }} className="bg-[#928dee] relative" >
-                    <div className='absolute left-[65%] top-[50%]'>
+                    <div className='absolute left-[62%] top-[50%] z-10'>
                         <svg width="80%" height="20%" viewBox="0 0 198 98" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g filter="url(#filter0_d)">
                                 <path d="M181.651 90.6222L178.049 77.9643L190.642 81.1245L181.651 90.6222Z" fill="#ffffff"></path>
@@ -204,7 +205,7 @@ function HomePage() {
                     </div>
                     <Typography variant="h4" fontWeight="bold" color="white" className='relative'>
                         Why Choose <span className="text-[#DCE0E4]">Us </span><span className="font-bold text-[50px] pl-4 ">?</span>
-                        <div className="absolute left-[3%] right-0 mx-auto h-[3px] bg-[#ffffff] w-[10%] top-full mt-2"></div>
+                        <div className="absolute left-[3%] z-50 right-0 mx-auto h-[3px] bg-[#ffffff] w-[10%] top-full"></div>
                     </Typography>
                 </Box>
                 <WhyChooseUs />

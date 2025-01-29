@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import UserlayoutHeader from "./UserlayoutHeader";
-import UserlayoutFooter from "./UserlayoutFooter";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Box, Tooltip } from "@mui/material";
-import Sidebar from "./UserSidebar";
 import { FiHeart, FiShoppingCart, FiUser } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { LucideSettings2, Phone, Settings, X, } from "lucide-react";
-import { clearAuthentication, logout } from "../../store/slice/AuthSlice";
+import { LucideSettings2, Phone, ShoppingBag, X, } from "lucide-react";
+import { clearAuthentication } from "../../store/slice/AuthSlice";
 import { toast } from "react-toastify";
 
 function UserLayout() {
@@ -131,38 +128,46 @@ function UserLayout() {
                   >
                     <ul className="py-3 px-3 text-center">
                       <li
-                        className="flex gap-7 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
+                        className="flex gap-3 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
                         onClick={handleProfileClick}
                       >
                         {AdminProfileIcon()}
                         Profile
                       </li>
                       <li
-                        className="flex gap-7 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
+                        className="flex gap-3 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
                         onClick={() => navigate(`/user/orders/${user.id}`)}
                       >
-                        <Phone width={20} height={20} />
-                        Order
+                        <ShoppingBag width={20} height={20} />
+                        Orders
                       </li>
                       <li
-                        className="flex gap-7 px-5   py-2 mt-1 text-sm font-semibold tracking-normal text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
+                        className="flex gap-3 px-5 py-2 mt-1 text-sm font-semibold tracking-normal text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
                         onClick={() => navigate("/user/settings")}
                       >
                         <LucideSettings2 />
                         Settings
                       </li>
-                      <li onClick={handleLogout} className="flex gap-7 border-t px-6 mt-2 py-1 text-sm font-semibold tracking-wide text-white bg-red-600 hover:bg-red-700 cursor-pointer rounded-lg items-center">
+                      <li
+                        onClick={handleLogout}
+                        className="flex gap-3 border-t px-5 mt-2 py-1 text-sm font-semibold tracking-wide text-white bg-red-600 hover:bg-red-700 cursor-pointer rounded-lg items-center"
+                      >
                         {LogoutProfileIcon()}
                         Logout
                       </li>
                     </ul>
-                    <div className="border-t flex items-center justify-center gap-4 border-gray-300 mt-2 pt-2 pb-2 hover:text-blue-600 hover:cursor-pointer">
+
+                    <div className="border-t flex items-center justify-center gap-2 border-gray-300 mt-2 pt-2 pb-2 hover:text-blue-600 hover:cursor-pointer">
                       <Phone width={15} height={15} />
-                      <p className="text-center font-mono text-xs text-gray-60 hover:cursor-pointer" onClick={() => navigate("/user/contact")}>
+                      <p
+                        className="text-center font-mono text-xs text-gray-600 hover:cursor-pointer"
+                        onClick={() => navigate("/user/contact")}
+                      >
                         Contact Us
                       </p>
                     </div>
                   </div>
+
                 ) : (
                   <div
                     className="absolute top-12 right-[-80px] w-56 bg-white rounded-lg shadow-lg border border-gray-300 z-50"

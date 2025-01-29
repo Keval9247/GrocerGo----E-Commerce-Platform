@@ -1,7 +1,5 @@
-// authActions.js
-
 import { useDispatch } from 'react-redux';
-import { login, signup, logout } from '../slice/AuthSlice';
+import { login, signup } from '../slice/AuthSlice';
 
 let dispatch = useDispatch()
 
@@ -21,8 +19,4 @@ export const signupUser = async (userData) => {
     } catch (error) {
         throw error;
     }
-};
-
-export const logoutUser = () => (dispatch) => {
-    dispatch(logout());
 };
