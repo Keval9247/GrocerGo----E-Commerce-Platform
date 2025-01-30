@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Truck, CheckCircle, Package, Calendar, Tag, ShieldBan } from "lucide-react";
-import { AddRatingAndReview, getAllRatingbyProductId, GetProductById, GetProductsByCategory } from "../apis/products/Productapi";
+import { addRatingAndReview, getAllRatingByProductId, getProductById, getProductsByCategory } from "../apis/products/Productapi";
 import Loading from "../utils/Loading";
 import { toast } from "react-toastify";
 import ShareOptions from "./ShareOption";
@@ -32,10 +32,10 @@ const ProductDetails = () => {
   const fetchProductDetails = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await GetProductById(id);
+      const response = await getProductById(id);
       setProductDetails(response?.product);
       if (response?.product.category) {
-        const similarProducts = await GetProductsByCategory(response?.product.category);
+        const similarProducts = await getProductsByCategory(response?.product.category);
         setSimilarProducts(similarProducts?.products?.filter((p) => p._id !== response.product._id));
       }
       if (response?.product._id) await fetchProductRatings(response?.product._id);
@@ -52,7 +52,7 @@ const ProductDetails = () => {
 
   const fetchProductRatings = useCallback(async (productId) => {
     try {
-      const response = await getAllRatingbyProductId(productId);
+      const response = await getAllRatingByProductId(productId);
       setProductRating(response.data);
     } catch (error) {
       console.error("Error fetching ratings:", error);
@@ -68,7 +68,7 @@ const ProductDetails = () => {
     const data = { productId: productDetails._id, userId: user.id, rating, review };
 
     try {
-      await AddRatingAndReview(data);
+      await addRatingAndReview(data);
       toast.success("Review added successfully!");
       setReview("");
       setRating(0);

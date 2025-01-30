@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getUserDetials } from '../apis/Authapi';
+import { getUserDetails } from '../apis/Authapi';
 import {
     Camera, MapPin, Phone, Mail, Calendar, Edit2, Trash2,
     Briefcase, Award, Globe, Book, Heart, Star,
@@ -16,7 +16,7 @@ const UserProfile = () => {
     useEffect(() => {
         try {
             const fetchProfileData = async () => {
-                const response = await getUserDetials(id);
+                const response = await getUserDetails(id);
                 await setUser(response?.user);
             };
             fetchProfileData();

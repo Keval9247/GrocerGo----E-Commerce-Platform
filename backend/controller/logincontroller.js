@@ -1,29 +1,15 @@
 const User = require("../models/User");
-const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
-// const products = require("../models/Product");
 const Product = require("../models/Product");
-const Cart = require('../models/Cart');
 const sendEmail = require("../miidleware/sendEmail");
 const { ExpireOtp, OtpGenerate } = require("../utils/Otp");
 const Otp = require("../models/Otp");
 const path = require("path");
 const fs = require('fs');
-const uuid = require('uuid').v4
-const stripe = require('stripe')(process.env.STRIPE_SECRETKEY)
 
 const logincontroller = () => {
     return {
-        readAll: async (req, res) => {
-            try {
-                const users = await User.find({}, ['name', 'email']);
-                res.json(users);
-            } catch (error) {
-                res.status(500).json({ error: error.message });
-            }
-        },
-
         readOne: async (rea, res) => {
             try {
                 const user = await Product.findById(rea.params.id, ['category', 'name', 'price', 'description']);
@@ -81,7 +67,6 @@ const logincontroller = () => {
                     `;
                     await sendEmail(user.email, "Your OTP for Account Verification", htmlContent);
                     return res.status(200).json({
-                        // verify: false,
                         message: 'User is not verified',
                         user: {
                             id: user._id,
@@ -95,7 +80,6 @@ const logincontroller = () => {
 
                 const payload = {
                     id: user._id,
-                    // name: user.name,
                     email: user.email
                 }
 
@@ -311,211 +295,6 @@ const logincontroller = () => {
         //         res.status(500).json({ error: error.message });
         //     }
         // },
-        ListProductsWithoutParams: async (req, res) => {
-            try {
-                const product = await Product.find({}, ['category', 'name', 'price', 'description']);
-                if (!product) {
-                    return res.status(404).json({ error: 'No products found' });
-                }
-                res.status(200).json({
-                    success: true,
-                    message: 'Products listed successfully',
-                    count: product.length,
-                    products: product,
-                })
-            } catch (error) {
-                res.status(500).json({ error: error.message });
-            }
-        },
-
-        listproducts: async (req, res) => {
-            try {
-                const pagesize = 6;
-                const pagenumber = parseInt(req.query.page ? req.query.page : 1);
-                const startIndex = (pagenumber - 1) * pagesize;
-                const endIndex = startIndex + pagesize;
-
-                const product = await Product.find({}, ['category', 'name', 'price', 'description']);
-                if (!product) {
-                    return res.status(404).json({ error: 'No products found' });
-                }
-                const lastIndexForSliced = req.query.limit ? req.query.limit : product.length
-                const slicedproducts = product.slice(startIndex, lastIndexForSliced);
-                res.status(200).json({
-                    success: true,
-                    message: 'Products listed successfully',
-                    count: slicedproducts.length,
-                    currentPage: pagenumber,
-                    totalPages: Math.ceil(product.length / pagesize),
-                    products: slicedproducts,
-                })
-            } catch (error) {
-                res.status(500).json({ error: error.message });
-            }
-        },
-
-        addproduct: async (req, res) => {
-            try {
-                const { name, price, description } = req.body;
-                if (!req.file) {
-                    return res.status(400).json({ error: 'No image provided' });
-                }
-                const Productname = await Product.findOne({ name });
-                if (Productname) {
-                    return res.status(400).json({ error: 'Product already exists' });
-                }
-                const imageUrl = `/images/${req.file.filename}`;
-
-                const newProduct = new Product({ category: imageUrl, name, price, description });
-                await newProduct.save();
-                res.status(201).json({
-                    success: true,
-                    message: 'Product added successfully',
-                    product: newProduct
-                });
-            } catch (error) {
-                res.status(500).json({ error: error.message });
-            }
-        },
-
-        createPayment: async (req, res) => {
-            try {
-                const { token, cartdata, totalPrice } = req.body;
-                // const { price, name } = product;
-
-                if (!token || !token.email) {
-                    return res.status(400).json({ error: 'Token or email is missing in the request' });
-                }
-                if (!cartdata || !cartdata.items) {
-                    return res.status(400).json({ error: 'Product data (price, name) is missing in the request' });
-                }
-                // Create a customer with a payment method attached
-                const customer = await stripe.customers.create({
-                    email: token.email,
-                    source: token.id, // This attaches the payment method (token) to the customer
-                });
-                const name = cartdata.items ? cartdata.items.map(item => item.name) : req.user.email
-
-                // Create a PaymentIntent
-                const paymentIntent = await stripe.paymentIntents.create({
-                    amount: Math.round(totalPrice), // Convert to cents and round
-                    currency: 'usd',
-                    customer: customer.id,
-                    description: `Purchase of ${name}`,
-                    metadata: { idempotencyKey: uuid() },
-                    payment_method_types: ['card'],
-                    confirm: true, // Confirm the PaymentIntent immediately
-                    off_session: true,
-                    return_url: 'http://localhost:4000/', // Replace with your own return URL
-                });
-                res.status(200).json({
-                    success: true,
-                    message: 'Payment successful',
-                    paymentIntentId: paymentIntent.id,
-                });
-            } catch (error) {
-                console.error('Error creating payment:', error);
-                res.status(500).json({ error: error.message });
-            }
-        },
-
-        addToCart: async (req, res) => {
-            try {
-                if (!req.body) {
-                    return res.status(400).json({ error: 'No image provided' });
-                }
-
-                const { price, productId, category } = req.body;
-                const userId = req.user.id;
-
-                if (!productId) {
-                    return res.status(400).json({ error: 'Product ID is required' });
-                }
-
-                const product = await Product.findById(productId);
-                if (!product) {
-                    return res.status(404).json({ error: 'Product not found' });
-                }
-
-                let cart = await Cart.findOne({ userId: userId });
-                if (!cart) {
-                    cart = new Cart({ userId: userId, items: [] });
-                }
-
-                // Check if the product already exists in the cart
-                const existingCartItem = cart.items.find(item => item.productId.toString() === productId);
-
-                if (existingCartItem) {
-                    // Increase quantity if the item already exists in the cart
-                    existingCartItem.quantity++;
-                } else {
-                    // Add new item to cart if it doesn't exist
-                    cart.items.push({
-                        productId: productId,
-                        quantity: 1, // Assuming quantity is 1 for a new item
-                        price: price,
-                        category: category // Assuming req.body contains the category
-                    });
-                }
-                await cart.save();
-
-                // Respond with success message and updated cart
-                res.status(200).json({
-                    success: true,
-                    message: 'Product added to cart successfully',
-                    cart: cart
-                });
-            } catch (error) {
-                console.error('Error adding product to cart:', error);
-                res.status(500).json({ error: error.message });
-            }
-        },
-
-        getCart: async (req, res) => {
-            try {
-                const userId = req.user.id;
-                let cart = await Cart.findOne({ userId: userId }, ['userId', 'category', 'items.productId', 'items.quantity', 'items.category', 'items.price'])
-
-                if (!cart) {
-                    return res.status(404).json({ success: true, message: "Cart is Empty" });
-                }
-
-                res.status(200).json({
-                    success: true,
-                    message: 'Cart retrieved successfully',
-                    cart: cart
-                });
-            } catch (error) {
-                console.error('Error retrieving cart:', error);
-                res.status(500).json({ error: error.message });
-            }
-        },
-
-        removeFromCart: async (req, res) => {
-            try {
-                const { productId } = req.body;
-                const userId = req.user.id;
-
-                if (!productId) {
-                    return res.status(400).json({ error: 'Product ID is required' });
-                }
-
-                const cart = await Cart.findOne({ userId: userId });
-
-                cart.items = cart.items.filter(item => item.productId !== productId?.productId);
-                await cart.save();
-
-                res.status(200).json({
-                    success: true,
-                    message: 'Product removed from cart successfully',
-                    // cart: cart
-                });
-            } catch (error) {
-                console.error('Error removing product from cart:', error);
-                res.status(500).json({ error: error.message });
-            }
-
-        },
     }
 }
 

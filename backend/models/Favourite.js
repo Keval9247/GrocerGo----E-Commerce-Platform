@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { default: mongoose } = require("mongoose");
 
 const FavouriteSchema = new mongoose.Schema({
     userId: {
@@ -14,5 +14,4 @@ const FavouriteSchema = new mongoose.Schema({
 }, { timestamps: true }
 );
 
-
-module.exports = mongoose.model("Favourite", FavouriteSchema);
+module.exports = mongoose.model('Favourite', FavouriteSchema);

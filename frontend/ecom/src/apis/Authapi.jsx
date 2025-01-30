@@ -1,50 +1,33 @@
-// authAPI.js
-
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
+const api = axios.create({
+    baseURL: API_BASE_URL + '/api',
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
 
-export const Login = async (credentials) => {
+export const apiRequest = async (method, endpoint, data = {}, params = {}, headers = {}) => {
     try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, credentials);
-        return response?.data;
-    } catch (error) {
-        throw error
-    }
-};
-
-export const Signup = async (userData) => {
-    try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/add`, userData);
+        const response = await api({ method, url: endpoint, data, params, headers, withCredentials: true, });
         return response.data;
     } catch (error) {
-        throw error
+        console.error("API Error:", error.response);
+        toast.error(error?.response?.data?.message || "Something went wrong!");
     }
 };
 
-export const ForgotPassword = async (email) => {
-    try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/forgot-password`, email);
-        return response;
-    } catch (error) {
-        throw error;
-    }
-};
 
-export const VerifyOtp = async (otp) => {
-    try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verifyOtp`, otp);
-        return response;
-    } catch (error) {
-        throw error;
-    }
-}
 
-export const getUserDetials = async (id) => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/profile/${id}`);
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-}
 
+export const Login = (credentials) => apiRequest("POST", "/auth/login", credentials, {}, { withCredentials: true });
+
+export const Signup = (userData) => apiRequest("POST", "/auth/add", userData);
+
+export const ForgotPassword = (email) => apiRequest("POST", "/auth/forgot-password", { email });
+
+export const VerifyOtp = (otp) => apiRequest("POST", "/auth/verifyOtp", { otp });
+
+export const getUserDetails = (id) => apiRequest("GET", `/user/profile/${id}`);

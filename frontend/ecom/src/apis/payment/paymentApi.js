@@ -1,55 +1,21 @@
-import axios from "axios";
+import { apiRequest } from "../Authapi";
 
 export const getCheckoutSession = async (id, items) => {
-    try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/create-checkout-session/${id}`, { items });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching payment intent:', error);
-        throw error;
-    }
-}
+    return await apiRequest("POST", `/user/payment/create-checkout-session/${id}`, { items });
+};
 
 export const handlePaymentSuccess = async (session_id) => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/success?session_id=${session_id}`);
-        return response.data;
-    } catch (error) {
-        console.error('Error handling payment success:', error);
-        throw error;
-    }
-}
+    return await apiRequest("GET", "/user/payment/success", {}, { session_id });
+};
 
 export const handlePaymentCancel = async (session_id) => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/cancel?session_id=${session_id}`);
-        return response.data;
-    } catch (error) {
-        console.error('Error handling payment cancel:', error);
-        throw error;
-    }
-}
+    return await apiRequest("GET", "/user/payment/cancel", {}, { session_id });
+};
 
 export const payPalPayment = async (order) => {
-    try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/paypal`, order);
-        return response.data;
-    } catch (error) {
-        console.error('Error paying with PayPal:', error);
-        throw error;
-    }
-}
+    return await apiRequest("POST", "/user/payment/paypal", order);
+};
 
 export const payPalSuccess = async (orderId) => {
-    try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/payment/paypal-success`, { orderId },
-            {
-                responseType: "blob",
-            }
-        );
-        return response;
-    } catch (error) {
-        console.error('Error handling PayPal payment success:', error);
-        throw error;
-    }
-}
+    return await apiRequest("POST", "/user/payment/paypal-success", { orderId }, {}, { responseType: "blob" });
+};

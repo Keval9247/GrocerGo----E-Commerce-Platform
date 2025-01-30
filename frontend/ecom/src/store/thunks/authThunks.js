@@ -8,16 +8,6 @@ export const login = createAsyncThunk(
     async ({ email, password }, { rejectWithValue }) => {
         try {
             const response = await Login({ email, password });
-            // const { token, role } = response.user;
-
-            // if (!response.user.token) {
-            //     alert('Token Invalid. Please Login Again...');
-            //     return rejectWithValue('Invalid Token');
-            // } else {
-            //     localStorage.setItem('token', response.user.token);
-            //     document.cookie = `token=${response.user.token}; Secure; SameSite=Strict`;
-            //     return { user: response.user, role };
-            // }
             return response
         } catch (error) {
             return rejectWithValue(error?.response?.data);

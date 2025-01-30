@@ -1,142 +1,87 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { apiRequest } from "../Authapi";
 
 export const getDataLength = async () => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/count`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  return await apiRequest("GET", "/admin/products/count");
 };
 
-export const GetUSers = async () => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/users`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+export const getUsers = async () => {
+  return await apiRequest("GET", "/admin/users");
 };
 
-export const CreateProduct = async (formdata) => {
-  try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/create-product`, formdata);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+// -----------------------------> cart APis -----------------------------------------
+
+export const createProduct = async (formData) => {
+  return await apiRequest("POST", "/admin/products/create-product", formData);
+};
+export const getProductById = async (id) => {
+  return await apiRequest("GET", `/products/id/${id}`);
+};
+
+export const updateProduct = async (_id, formData) => {
+  return await apiRequest("PUT", `/admin/products/update/${_id}`, formData);
+};
+
+export const deleteProduct = async (_id) => {
+  return await apiRequest("DELETE", "/admin/products/delete", { _id });
 };
 
 export const getAllProducts = async () => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  return await apiRequest("GET", "/admin/products");
 };
 
-export const GetProductsByCategory = async (category) => {
-  try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/findProductByCategory`, { category: category });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+export const getProductsByCategory = async (category) => {
+  return await apiRequest("POST", "/admin/products/findProductByCategory", { category });
 };
 
-export const GetProductById = async (id) => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+
+// -------------------------> rating and review APis -----------------------------------------
+
+export const getAllRatingByProductId = async (_id) => {
+  return await apiRequest("GET", `/products/get-rating/${_id}`);
 };
 
-export const UpdateProduct = async (_id, formdata) => {
-  try {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/update/${_id}`, formdata
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+export const addRatingAndReview = async ({ userId, productId, rating, review }) => {
+  return await apiRequest("POST", `/products/rating-review/${userId}/${productId}`, { rating, review });
 };
 
-export const DeleteProduct = async (_id) => {
-  try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/delete`, { data: { _id } }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+// -----------------------------> cart APis -----------------------------------------
+
+export const addToCart = async ({ _id, quantity, userId }) => {
+  return await apiRequest("POST", `/products/cart/add-to-cart/${_id}`, { quantity, userId }, {}, { withCredentials: true });
 };
 
-export const getAllRatingbyProductId = async (_id) => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/get-rating/${_id}`);
-    return response?.data;
-  } catch (error) {
-    console.error(error);
-  }
+export const getCartItems = async (id) => {
+  return await apiRequest("GET", `/products/cart/getcart/${id}`);
 };
 
-export const AddRatingAndReview = async (props) => {
-  try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/rating-review/${props.userId}/${props.productId}`,
-      { rating: props.rating, review: props.review }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+export const updateCartItemQuantity = async (data) => {
+  return await apiRequest("PUT", "/products/cart/update-quantity", data);
 };
 
-export const Add_To_Cart = async (props) => {
-  try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/add-to-cart/${props._id}`, { quantity: props.quantity, userId: props.userId });
-    return response.data;
-  } catch (error) {
-    toast.error(error?.response?.data?.message);
-  }
+export const deleteCartItem = async ({ userId, productId }) => {
+  return await apiRequest("DELETE", "/products/cart/remove-from-cart", { userId, productId });
 };
 
-export const GetCartItems = async (id) => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/getcart/${id}`);
-    return response?.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
 
-export const UpdateCartItemQuantity = async (data) => {
-  try {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/update-quantity`, data);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
 
-export const DeleteCartItem = async (data) => {
-  try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/cart/remove-from-cart`, { data: { userId: data.userId, productId: data.productId } });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+// -------------------------> wishlist APis -----------------------------------------
 
-export const GetOrderHistory = async (userId) => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/orders/readOne/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+export const addToWishlist = async (productId) => {
+  return await apiRequest("POST", `/products/add-to-favorite/${productId}`);
+};
+
+export const removeFromWishlist = async (productId) => {
+  return await apiRequest("DELETE", `/products/remove-from-favorite/${productId}`);
+};
+
+export const getWishlistItems = async () => {
+  return await apiRequest("GET", `/products/get-favorite-products`);
+};
+
+
+
+// -------------------------> order APIs -----------------------------------------
+
+export const getOrderHistory = async (userId) => {
+  return await apiRequest("GET", `/user/orders/readOne/${userId}`);
+};

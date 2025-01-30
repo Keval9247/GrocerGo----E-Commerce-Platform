@@ -18,14 +18,15 @@ const cartController = () => {
         },
 
         addItemToCart: async (req, res) => {
-            const { userId, quantity } = req.body;
+            const { quantity } = req.body;
             const { productId } = req.params;
+            const userId = req.user._id;
             try {
                 if (!userId || !productId || !quantity) {
                     return res.status(400).json({ message: 'Missing required fields' });
                 }
                 const product = await Product.findById(productId);
-                if (product.stock < quantity) {
+                if (product?.stock < quantity) {
                     return res.status(400).json({ message: 'Not enough stock' });
                 }
                 if (!product) {

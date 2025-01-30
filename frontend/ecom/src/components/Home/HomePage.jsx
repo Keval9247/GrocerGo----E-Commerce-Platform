@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import WhyChooseUs from '../../pages/carousel';
 import TestimonialSection from '../../pages/Testimonial';
 import Loading from '../../utils/Loading';
@@ -33,14 +33,14 @@ function HomePage() {
     }, []);
 
 
-    const validateEmail = (email) => {
-        if (email) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const isemailTrue = regex.test(email)
-            const reposnse = isemailTrue ? setSubscribeEmail(email) : setSubscribeEmail('')
-            return;
-        }
-    };
+    // const validateEmail = (email) => {
+    //     if (email) {
+    //         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //         const isemailTrue = regex.test(email)
+    //         const reposnse = isemailTrue ? setSubscribeEmail(email) : setSubscribeEmail('')
+    //         return;
+    //     }
+    // };
 
     useEffect(() => {
     }, [subscribeEmail]);
@@ -74,7 +74,6 @@ function HomePage() {
     return (
         <>
             <div className="bg-gray-100 min-h-screen pt-20">
-                <ToastContainer position="top-right" autoClose={2000} />
                 {loading && <Loading />}
 
                 {/* Hero Section */}

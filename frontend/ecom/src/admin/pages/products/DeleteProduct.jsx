@@ -1,11 +1,11 @@
 import React from "react";
-import { DeleteProduct } from "../../../apis/products/Productapi";
+import { deleteProduct } from "../../../apis/products/Productapi";
 import { toast } from "react-toastify";
 
 const DeleteProductModal = ({ product, onClose }) => {
 
     const handleDeleteProduct = async () => {
-        const response = await DeleteProduct(product._id);
+        const response = await deleteProduct(product._id);
         if (response?.message === "Product deleted successfully") {
             onClose();
             toast.success(response?.message)

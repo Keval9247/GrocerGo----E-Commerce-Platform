@@ -2,20 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from '/Grocer Go.png';
 import TOSfile from '../../../public/htmlcontent/pdf/TOS.html';
-import { SubscribeLetter } from '../../store/thunks/subscribe/subscribeThunk';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
 
 const Footer = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [privacy, setPrivacy] = useState(false);
     const [privacyData, setPrivacyData] = useState(null);
-    const [subscribeEmail, setSubscribeEmail] = useState();
 
     useEffect(() => {
         fetch('../../../public/htmlcontent/pdf/TOS.html')
@@ -35,33 +29,6 @@ const Footer = () => {
     const handlePrivacy = () => {
         setPrivacy(true);
     };
-
-    const validateEmail = (email) => {
-        if (email) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const isemailTrue = regex.test(email)
-            const reposnse = isemailTrue ? setSubscribeEmail(email) : setSubscribeEmail('')
-            return;
-        }
-    };
-
-    useEffect(() => {
-    }, [subscribeEmail]);
-
-    const handleSubscribeNewsletter = async () => {
-        if (subscribeEmail) {
-            if (validateEmail(subscribeEmail)) {
-                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/`,
-                    { email: subscribeEmail }
-                );
-                toast.success('Subscribed to newsletter successfully!');
-                location.reload();
-            }
-            else {
-                toast.error("Invalid email format.");
-            }
-        }
-    }
 
     // Footer dynamic sections
     const footerContent = {
@@ -94,7 +61,6 @@ const Footer = () => {
 
     return (
         <>
-            <ToastContainer position='top-right' />
             <footer className="w-full bg-gray-900 text-gray-400 py-10">
                 <div className="container mx-auto px-4">
                     {/* Grid Section */}
