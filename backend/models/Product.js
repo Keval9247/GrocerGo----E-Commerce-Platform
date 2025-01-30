@@ -17,4 +17,4 @@ const Product = new mongoose.Schema({
     deleted_at: { type: Date, default: null }
 })
 
-module.exports = mongoose.model("products", Product)
+module.exports = mongoose.model("Product", Product)

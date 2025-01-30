@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GetUSers } from "../../apis/products/Productapi";
+import { getUsers } from "../../apis/products/Productapi";
 import UserList from "./users/UserList";
 import UserEditForm from "./users/UserEditForm";
 import UserDetailsModal from "./users/UserDetailsModal";
@@ -14,7 +14,7 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await GetUSers();
+        const res = await getUsers();
         setUsers(res.users);
       } catch (error) {
         console.error("Error fetching data:", error);

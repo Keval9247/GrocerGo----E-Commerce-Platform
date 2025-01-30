@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LockResetIcon from '@mui/icons-material/LockReset';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { forgetPassword } from '../store/thunks/authThunks';
 import { useDispatch } from 'react-redux';
@@ -56,7 +56,7 @@ function ForgotPassword() {
 
   return (
     <Container component="main" maxWidth="xs" className='d-flex'>
-      <Paper elevation={10} sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center',margin:'10rem 0rem' }}>
+      <Paper elevation={10} sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '10rem 0rem' }}>
         <LockResetIcon sx={{ m: 1, fontSize: 40, color: 'primary.main' }} />
         <Typography component="h1" variant="h5">
           Forgot Password
@@ -81,7 +81,7 @@ function ForgotPassword() {
             error={!!errors.email}
             helperText={errors.email?.message}
           />
-          {}
+          { }
           <Button
             type="submit"
             fullWidth
@@ -105,7 +105,6 @@ function ForgotPassword() {
           </Box>
         </form>
       </Paper>
-      <ToastContainer position='top-right' autoClose={5000} hideProgressBar={false} />
     </Container>
   );
 }

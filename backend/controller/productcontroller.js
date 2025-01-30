@@ -1,4 +1,5 @@
-const { default: Favourite } = require("../models/Favourite");
+const { default: mongoose } = require("mongoose");
+const Favourite = require("../models/Favourite");
 const Product = require("../models/Product");
 const Rating = require("../models/Rating");
 const User = require("../models/User");
@@ -50,7 +51,11 @@ const productController = () => {
 
         getProductById: async (req, res) => {
             try {
-                const product = await Product.findById(req.params.id);
+                const { id } = req.params;
+                if (!mongoose.Types.ObjectId.isValid(id)) {
+                    return res.status(400).json({ error: 'Invalid product ID' });
+                }
+                const product = await Product.findById(id);
                 if (!product) {
                     return res.status(404).json({ error: 'Product not found' });
                 }
@@ -193,24 +198,22 @@ const productController = () => {
         addToFavourite: async (req, res) => {
             try {
                 const { productId } = req.params;
-                const userId = req?.user?.id;
-                console.log("🚀🚀 Your selected text is => req.user: ", req.user);
+                const userId = req?.user?._id;
 
                 if (!productId) {
                     return res.status(400).json({ error: "Product ID is required" });
                 }
 
-                const existingFavourite = await Favourite.findOne({ userId, productId });
+                const existingFavourite = await Favourite.findOne({ productId: productId });
                 if (existingFavourite) {
                     return res.status(400).json({ error: "Product already in favourites" });
                 }
 
                 const favourite = await Favourite.create({ userId, productId });
 
-                // Populate the product details before sending response
                 const populatedFavourite = await Favourite.findById(favourite._id)
                     .populate("productId")
-                    .populate("userId", "name email"); // Populate user with selected fields
+                    .populate("userId", "name email");
                 console.log("🚀🚀 Your selected text is => populatedFavourite: ", populatedFavourite);
 
                 res.status(200).json({
@@ -225,49 +228,55 @@ const productController = () => {
 
         removeFromFavourite: async (req, res) => {
             try {
-                const { productId } = req.body;
-                const userId = req.user.id;
+                const { productId } = req.params;
+                console.log("🚀🚀 Your selected text is => productId: ", productId);
+                const userId = req.user._id;
+                console.log("🚀🚀 Your selected text is => userId: ", userId);
 
                 if (!productId) {
                     return res.status(400).json({ error: 'Product ID is required' });
                 }
 
-                const user = await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { favouriteProducts: productId } },
-                    { new: true }
-                );
+                // Find and delete the favorite entry for the given productId and userId
+                const favourite = await Favourite.findOneAndDelete({ productId: productId, userId: userId });
+                console.log("🚀🚀 Your selected text is => favourite: ", favourite);
 
-                if (!user) {
-                    return res.status(404).json({ error: 'User not found' });
+                if (!favourite) {
+                    return res.status(404).json({ error: 'Product not found in favourites' });
                 }
 
-                res.status(200).json({ message: 'Product removed from favourites successfully', user });
+                res.status(200).json({
+                    message: 'Product removed from wishlist.',
+                    favourite,
+                });
             } catch (error) {
                 console.error('Error removing product from favourites:', error);
-                res.status(500).json({ error: error.message });
+                res.status(500).json({ error: 'Internal server error' });
             }
         },
 
-        getFavourites: async (req, res) => {
+        getFavouriteProducts: async (req, res) => {
             try {
-                const userId = req.user.id;
+                if (!req.user?._id) {
+                    return res.status(400).json({ error: 'User ID is missing' });
+                }
+                const userId = req.user._id;
 
-                const user = await User.findById(userId)
+                const user = await Favourite.find({ userId })
                     .select('-token -password')
-                    .populate('favouriteProducts', 'id ProductName ProductImage')
+                    .populate('productId', 'ProductName ProductImage ProductPrice')
                     .exec();
 
                 if (!user) {
                     return res.status(404).json({ error: 'User not found' });
                 }
 
-                res.status(200).json({ message: 'Favourites retrieved successfully', user });
+                res.status(200).json({ message: 'Favourites retrieved successfully', Products: user });
             } catch (error) {
                 console.error('Error retrieving favourites:', error);
                 res.status(500).json({ error: error.message });
             }
-        },
+        }
     }
 }
 

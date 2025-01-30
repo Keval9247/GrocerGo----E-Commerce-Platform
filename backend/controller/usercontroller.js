@@ -39,27 +39,7 @@ const userController = () => {
             } catch (error) {
                 res.status(500).json({ error: error.message });
             }
-        },
-
-// -------------------------------->>> Payment Creation -----------------------------------
-
-
-        createPaymentIntent: async (req, res) => {
-            try {
-                const { amount, currency } = req.body;
-
-                const intent = await stripe.paymentIntents.create({
-                    amount,
-                    currency: "usd",
-                    payment_method_types: ['card'],
-                });
-                res.status(200).json({ clientSecret: intent.client_secret });
-            } catch (error) {
-                res.status(500).json({ error: error.message });
-            }
-        },
-
-
+        }
     }
 }
 

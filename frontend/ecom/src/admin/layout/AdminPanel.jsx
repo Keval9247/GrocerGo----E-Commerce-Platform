@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { FiBox, FiShoppingBag, FiHome, FiUsers, FiMenu, FiX, FiBarChart2, FiUser, } from "react-icons/fi";
-import { ToastContainer } from "react-toastify";
 import { clearAuthentication } from "../../store/slice/AuthSlice";
 import { useDispatch } from "react-redux";
 
@@ -254,8 +253,6 @@ const AdminPanel = () => {
                 </header>
 
                 {generateBreadcrumbs()}
-                <ToastContainer />
-                {/* Dynamic Content */}
                 <main className="flex-grow px-6 overflow-auto p-7 scrollbar-hidden">
                     <Outlet />
                 </main>

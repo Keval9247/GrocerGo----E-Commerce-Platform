@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GetOrderHistory } from "../apis/products/Productapi";
+import { getOrderHistory } from "../apis/products/Productapi";
 import Loading from "../utils/Loading";
 
 const OrdersPage = () => {
@@ -13,7 +13,7 @@ const OrdersPage = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await GetOrderHistory(userId);
+                const response = await getOrderHistory(userId);
                 setOrders(response.order);
                 setLoading(false);
             } catch (err) {

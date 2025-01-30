@@ -3,7 +3,7 @@ import { FiSearch } from "react-icons/fi";
 import { AiFillStar } from "react-icons/ai";
 import {
   getAllProducts,
-  GetProductsByCategory,
+  getProductsByCategory,
 } from "../apis/products/Productapi";
 import { useNavigate } from "react-router-dom";
 import Loading from "../utils/Loading";
@@ -38,7 +38,7 @@ const ProductsPage = () => {
       if (selectedCategory === "All") {
         response = await getAllProducts();
       } else {
-        response = await GetProductsByCategory(selectedCategory);
+        response = await getProductsByCategory(selectedCategory);
       }
       setProducts(response.products);
     } catch (error) {
@@ -56,7 +56,6 @@ const ProductsPage = () => {
         quantity: 1,
       }
       const response = await dispatch(AddToCart(payload))
-      console.log("🚀🚀 Your selected text is => response: ", response);
       toast.success(response?.payload?.message);
     }
   };

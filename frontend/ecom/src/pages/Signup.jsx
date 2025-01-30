@@ -6,7 +6,7 @@ import { Grid, Typography, FormControl, RadioGroup, FormControlLabel, Radio, Box
 import { Input, ButtonC } from '../components/index';
 import { signup as signupAction } from '../store/thunks/authThunks';
 import { sha256 } from 'js-sha256';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import OtpBox from '../components/otpbox/OtpBox';
 
 const SignUp = () => {
@@ -66,7 +66,6 @@ const SignUp = () => {
 
     return (
         <div className="w-full flex flex-col justify-center items-center mt-28">
-            <ToastContainer />
             {isOtpTabVisible ? (
                 <OtpBox />
             ) : (

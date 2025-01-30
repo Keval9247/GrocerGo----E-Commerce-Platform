@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { CreateProduct } from "../../../apis/products/Productapi";
+import { createProduct } from "../../../apis/products/Productapi";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
@@ -43,7 +43,7 @@ const AddProduct = () => {
         formData.append("category", newProduct.category);
         formData.append("productImg", image);
 
-        const response = await CreateProduct(formData);
+        const response = await createProduct(formData);
         if (response.error) {
             toast.error(response.error);
         } else {

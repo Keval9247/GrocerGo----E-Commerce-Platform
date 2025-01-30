@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { login } from '../store/thunks/authThunks';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginIcon from '@mui/icons-material/Login';
 import { ButtonC, Input } from '../components';
@@ -88,7 +88,6 @@ function Login() {
 
     return (
         <div className="w-full flex flex-col justify-center items-center mt-28">
-            <ToastContainer position="top-right" autoClose={5000} />
             {isOtpTabVisible ? (
                 <OtpBox />
             ) : (

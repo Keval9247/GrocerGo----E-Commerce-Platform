@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  GetProductById,
-  UpdateProduct,
+  getProductById,
+  updateProduct,
 } from "../../../apis/products/Productapi";
 import { toast } from "react-toastify";
 import Loading from "../../../utils/Loading";
@@ -31,7 +31,7 @@ const EditProduct = () => {
     const fetchProduct = async () => {
       setLoading(true); // Start loading
       try {
-        const response = await GetProductById(id);
+        const response = await getProductById(id);
         setProduct({
           name: response?.product?.ProductName || "ss",
           description: response?.product.ProductDescription,
@@ -77,7 +77,7 @@ const EditProduct = () => {
     if (newImage) formData.append("productImg", newImage);
 
     try {
-      await UpdateProduct(id, formData);
+      await updateProduct(id, formData);
       toast.success("Product updated successfully");
       navigate(-1);
     } catch (error) {
