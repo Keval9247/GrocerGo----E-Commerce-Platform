@@ -63,11 +63,10 @@ const Categories = () => {
         <div className="container mx-auto py-8 px-4">
             <h1 className="text-3xl font-bold text-center mb-8">Explore Categories</h1>
 
-            {/* Categories Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-12">
                 {categories.map((category) => (
                     <Link
-                        to={`/user/products`}
+                        to={`/user/products?category=${category.name}`}
                         key={category.id}
                         className="group block border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
                     >
@@ -102,7 +101,6 @@ const Categories = () => {
                 ))}
             </div>
 
-            {/* Trending Categories Section */}
             <section>
                 <h2 className="text-2xl font-bold text-center mb-6">Trending Categories</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">

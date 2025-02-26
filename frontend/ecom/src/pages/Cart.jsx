@@ -8,10 +8,9 @@ import Loading from "../utils/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import { getCheckoutSession, payPalPayment, payPalSuccess } from "../apis/payment/paymentApi";
 import { Tooltip } from "@mui/material";
-import { clearCart, setTotalItems } from "../store/slice/ProductSlice";
+import { setTotalItems } from "../store/slice/ProductSlice";
 import { DeleteCart, UpdateCart } from "../store/thunks/productThunk";
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import axios from "axios";
 import html2pdf from 'html2pdf.js';
 
 const CartPage = () => {
@@ -34,12 +33,11 @@ const CartPage = () => {
     setLoading(true);
     try {
       const response = await getCartItems(user?.id);
-      console.log("🚀🚀 Your selected text is => response: ", response);
-      if (response?.cart?.items) {
-        const totalItems = response?.cart?.items?.reduce((total, item) => total + item.quantity, 0)
+      if (response?.cart) {
+        const totalItems = response?.cart?.items.reduce((total, item) => total + item.quantity, 0)
         dispatch(setTotalItems(totalItems))
       }
-      setCart(response?.cart?.items);
+      setCart(response?.cart);
     } catch (error) {
       console.error("Error fetching cart items:", error);
     } finally {
@@ -72,7 +70,7 @@ const CartPage = () => {
 
   const handleUpdateQuantity = async (productId, change) => {
     try {
-      const item = cart.find((item) => item.productId === productId);
+      const item = cart?.items?.find((item) => item.productId === productId);
       if (!item) {
         toast.error("Item not found in cart.");
         return;
@@ -141,7 +139,6 @@ const CartPage = () => {
     try {
       const response = await payPalSuccess(orderId);
 
-      // Convert Blob to text if the response is a Blob
       const htmlContent = typeof response.data === 'object' && response.data instanceof Blob
         ? await response.data.text()
         : response.data;
@@ -168,8 +165,8 @@ const CartPage = () => {
     }
   };
 
-  const subtotal = cart?.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const total = subtotal; // Assuming shipping is free, so total = subtotal
+  const subtotal = cart?.items?.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = subtotal;
 
   if (loading) {
     return <Loading />;
@@ -177,14 +174,7 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      {cart?.length == 0 ? (
-        <EmptyState
-          title="Your cart is empty"
-          description="Add items to your cart to continue shopping."
-          link="/user/products"
-          linkText="Start Shopping"
-        />
-      ) : (
+      {cart && cart?.items?.length > 0 ? (
         <>
           <div className="p-16">
             <h3 className="text-3xl font-bold text-gray-900 mb-8 text-start">
@@ -193,7 +183,7 @@ const CartPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Cart Items */}
               <div className="lg:col-span-2 space-y-6">
-                {cart?.map((item) => (
+                {cart?.items?.map((item) => (
                   <div
                     key={item.productId}
                     className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col sm:flex-row gap-6 items-center animate-fade-in"
@@ -299,6 +289,13 @@ const CartPage = () => {
             </div>
           </div>
         </>
+      ) : (
+        <EmptyState
+          title="Your cart is empty"
+          description="Add items to your cart to continue shopping."
+          link="/user/products?category=All"
+          linkText="Start Shopping"
+        />
       )}
     </div>
   );

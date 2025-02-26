@@ -14,7 +14,7 @@ export const apiRequest = async (method, endpoint, data = {}, params = {}, heade
         const response = await api({ method, url: endpoint, data, params, headers, withCredentials: true, });
         return response.data;
     } catch (error) {
-        console.error("API Error:", error.response);
+        console.error("API Error:", error.response?.data);
         toast.error(error?.response?.data?.message || "Something went wrong!");
     }
 };

@@ -33,8 +33,6 @@ import UserProfile from "./pages/UserProfile";
 import UserSettings from "./pages/UserSettings";
 import UserContact from "./pages/UserContact";
 import NotFoundPage from "./pages/ErorrPage";
-import Deals from "./pages/Deals";
-
 import UserWishlist from "./pages/UserWishlist";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
@@ -60,7 +58,6 @@ function App() {
 
   return (
     <>
-      {/* <CartContent.Provider value={{ cartdata, setCartData }}> */}
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -74,7 +71,7 @@ function App() {
 
           <Route element={<UserLayout />}>
             <Route path="/user/categories" element={<Categories />} />
-            <Route path="/user/deals" element={<Deals />} />
+            {/* <Route path="/user/deals" element={<Deals />} /> */}
             <Route path="/user/products" element={<ProductsPage />} />
             <Route path="/user/products/:id" element={<ProductsDetails />} />
             <Route path="/user/cart" element={<Cart />} />
@@ -137,7 +134,6 @@ function App() {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      {/* </CartContent.Provider> */}
     </>
   );
 }

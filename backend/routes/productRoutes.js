@@ -15,16 +15,16 @@ router.put('/update/:id', authMiddleware('admin'), productImageHandler.single('p
 router.delete('/delete', authMiddleware('admin'), productController().deleteProduct)
 
 router.post('/findProductByCategory', productController().findProductByCategory)
-router.get('/id/:id', authMiddleware('user', 'admin'), productController().getProductById)
+router.get('/id/:id', productController().getProductById)
 
 
 // ratind and reviews :
-router.get('/get-rating/:productId', authMiddleware('user', 'admin'), productController().getProductRatings)
+router.get('/get-rating/:productId', productController().getProductRatings)
 router.post('/rating-review/:userId/:productId', authMiddleware('user'), productController().createRatingAndReview)
 
 
 // favourite routes :
-router.get('/get-favorite-products', authMiddleware('user', 'admin'), productController().getFavouriteProducts)
+router.get('/get-favorite-products', authMiddleware('user'), productController().getFavouriteProducts)
 router.post('/add-to-favorite/:productId', authMiddleware('user'), productController().addToFavourite)
 router.delete('/remove-from-favorite/:productId', authMiddleware('user'), productController().removeFromFavourite)
 

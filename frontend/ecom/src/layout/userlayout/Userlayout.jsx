@@ -3,7 +3,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Box, Tooltip } from "@mui/material";
 import { FiHeart, FiShoppingCart, FiUser } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { LucideSettings2, Phone, ShoppingBag, X, } from "lucide-react";
+import { FileQuestion, HelpCircle, LucideSettings2, Phone, ShoppingBag, X, } from "lucide-react";
 import { clearAuthentication } from "../../store/slice/AuthSlice";
 import { toast } from "react-toastify";
 
@@ -53,10 +53,10 @@ function UserLayout() {
 
   return (
     <>
-      <header className="sticky top-0 px-56 z-50 w-full border-b bg-indigo-50 backdrop-blur supports-[backdrop-filter]:bg-indigo-50/60">
+      <header className="sticky flex justify-between top-0 px-56 z-50 w-full border-b bg-indigo-50 backdrop-blur supports-[backdrop-filter]:bg-indigo-50/60">
         <div className="container flex h-16 items-center">
           <Link
-            to="/user/products"
+            to="/user/products?category=All"
             className="mr-6 flex items-center space-x-2"
           >
             <span className="text-xl font-bold">GrocerGo</span>
@@ -68,12 +68,6 @@ function UserLayout() {
               className="transition-colors hover:text-foreground/80"
             >
               Categories
-            </Link>
-            <Link
-              to="/user/deals"
-              className="transition-colors hover:text-foreground/80"
-            >
-              Deals
             </Link>
           </nav>
 
@@ -156,16 +150,6 @@ function UserLayout() {
                         Logout
                       </li>
                     </ul>
-
-                    <div className="border-t flex items-center justify-center gap-2 border-gray-300 mt-2 pt-2 pb-2 hover:text-blue-600 hover:cursor-pointer">
-                      <Phone width={15} height={15} />
-                      <p
-                        className="text-center font-mono text-xs text-gray-600 hover:cursor-pointer"
-                        onClick={() => navigate("/user/contact")}
-                      >
-                        Contact Us
-                      </p>
-                    </div>
                   </div>
 
                 ) : (
@@ -213,6 +197,11 @@ function UserLayout() {
             </div>
           </div>
         </div>
+        <Tooltip title="Help" arrow className="hover:cursor-pointer" onClick={() => navigate("/user/contact")}>
+          <div className="right-4 top-4 absolute">
+            <HelpCircle />
+          </div>
+        </Tooltip>
       </header>
 
       <Box>
@@ -304,14 +293,14 @@ const LogoutProfileIcon = () => {
         d="M12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4"
         stroke="#ffffff"
         strokeWidth="1.5"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
       <path
         d="M10 12H20M20 12L17 9M20 12L17 15"
         stroke="#ffffff"
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

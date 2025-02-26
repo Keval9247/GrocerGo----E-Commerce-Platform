@@ -2,12 +2,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Star, ArrowLeft, ShoppingCart, Heart, Share2, Truck, CheckCircle, Package, Calendar, Tag, ShieldBan } from "lucide-react";
-import { addRatingAndReview, getAllRatingByProductId, getProductById, getProductsByCategory } from "../apis/products/Productapi";
+import { addRatingAndReview, addToWishlist, getAllRatingByProductId, getProductById, getProductsByCategory, removeFromWishlist } from "../apis/products/Productapi";
 import Loading from "../utils/Loading";
 import { toast } from "react-toastify";
 import ShareOptions from "./ShareOption";
 import { Tooltip } from '@mui/material'
 import { AddToCart } from "../store/thunks/productThunk";
+import { addToFavourites, removeToFavourites } from "../store/slice/ProductSlice";
+import { AiFillHeart } from "react-icons/ai";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -24,9 +26,10 @@ const ProductDetails = () => {
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [cartPreview, setCartPreview] = useState('');
-
+  const [isFavourite, setIsFavourite] = useState(false);
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const user = useSelector((state) => state.authReducer.user);
+  const favouriteProductId = useSelector((state) => state.productsReducer.favourites);
   const dispatch = useDispatch();
 
   const fetchProductDetails = useCallback(async () => {
@@ -44,7 +47,11 @@ const ProductDetails = () => {
     } finally {
       setLoading(false);
     }
-  }, [id])
+  }, [id]);
+
+  useEffect(() => {
+    setIsFavourite(favouriteProductId.includes(id));
+  }, [id, favouriteProductId]);
 
   useEffect(() => {
     fetchProductDetails();
@@ -58,6 +65,28 @@ const ProductDetails = () => {
       console.error("Error fetching ratings:", error);
     }
   }, []);
+
+  const handleToggleFavourite = async (productId) => {
+    try {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+      if (favouriteProductId.includes(productId)) {
+        await dispatch(removeToFavourites(productId));
+        await removeFromWishlist(productId);
+        toast.success("Removed from favorites!");
+      } else {
+        // Add to favorites
+        await dispatch(addToFavourites(productId));
+        await addToWishlist(productId);
+        toast.success("Added to favorites!");
+      }
+    } catch (error) {
+      toast.error(error?.message || "Failed to update favorites");
+      console.error("Error updating wishlist:", error);
+    }
+  };
 
   const handleAddReview = useCallback(async () => {
     if (!review.trim() || !rating) {
@@ -103,11 +132,6 @@ const ProductDetails = () => {
     }
   }
 
-  const handleAddToFavaourite = () => {
-    toast.success("Product added to favorites successfully!");
-  }
-
-
   const handleReviewModalToggle = () => {
     if (!user) navigate("/login");
     else setShowReviewModal(!showReviewModal);
@@ -118,7 +142,7 @@ const ProductDetails = () => {
   if (!productDetails) return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4">
       <h2 className="text-2xl font-bold text-gray-700">Product not found</h2>
-      <button onClick={() => navigate("/user/products")} className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+      <button onClick={() => navigate("/user/products?category=All")} className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
         Back to Products
       </button>
     </div>
@@ -128,7 +152,7 @@ const ProductDetails = () => {
     <div className="min-h-screen bg-gray-50 scrollbar-hidden">
       <div className="max-w-7xl mx-auto py-8 px-4">
         <nav className="flex items-center space-x-2 text-sm">
-          <button onClick={() => navigate("/user/products")} className="flex items-center text-blue-600 hover:text-blue-800">
+          <button onClick={() => navigate("/user/products?category=All")} className="flex items-center text-blue-600 hover:text-blue-800">
             <ArrowLeft className="w-4 h-4 mr-1" /> Products
           </button>
           <span className="text-gray-500">/</span>
@@ -194,8 +218,8 @@ const ProductDetails = () => {
                     <ShoppingCart className="w-5 h-5" /> <span>Buy Now</span>
                   </button>
                 </Tooltip>
-                <button onClick={handleAddToFavaourite} className="flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
-                  <Heart className="w-5 h-5" /> <span>Save</span>
+                <button onClick={() => handleToggleFavourite(productDetails?._id)} className="flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
+                  {isFavourite ? <AiFillHeart className="w-5 h-5" /> : <Heart className="w-5 h-5" />} <span>Save</span>
                 </button>
                 <button onClick={handleShareToggle} className="py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
                   <Share2 className="w-5 h-5" /> <span>Share</span>

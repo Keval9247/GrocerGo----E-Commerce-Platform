@@ -86,11 +86,14 @@ const productController = () => {
 
         findProductByCategory: async (req, res) => {
             try {
-                const { category } = req.body;
+                const category = req.body;
                 if (!category) {
                     return res.status(400).json({ error: "Category is required" });
                 }
-
+                if (category === "All" || "all") {
+                    const products = await Product.find();
+                    return res.status(200).json({ message: "All products retrieved successfully.", products });
+                }
                 const products = await Product.find({ category });
                 if (products.length === 0) {
                     return res.status(404).json({ error: 'No products found for this category' });
@@ -201,12 +204,12 @@ const productController = () => {
                 const userId = req?.user?._id;
 
                 if (!productId) {
-                    return res.status(400).json({ error: "Product ID is required" });
+                    return res.status(400).json({ message: "Product ID is required" });
                 }
 
                 const existingFavourite = await Favourite.findOne({ productId: productId });
                 if (existingFavourite) {
-                    return res.status(400).json({ error: "Product already in favourites" });
+                    return res.status(400).json({ message: "Product already in favourites" });
                 }
 
                 const favourite = await Favourite.create({ userId, productId });
@@ -214,7 +217,6 @@ const productController = () => {
                 const populatedFavourite = await Favourite.findById(favourite._id)
                     .populate("productId")
                     .populate("userId", "name email");
-                console.log("🚀🚀 Your selected text is => populatedFavourite: ", populatedFavourite);
 
                 res.status(200).json({
                     message: "Product added to favourites successfully",
@@ -222,27 +224,21 @@ const productController = () => {
                 });
             } catch (error) {
                 console.error("Error adding product to favourites:", error);
-                res.status(500).json({ error: error.message });
+                res.status(500).json({ message: error.message });
             }
         },
 
         removeFromFavourite: async (req, res) => {
             try {
                 const { productId } = req.params;
-                console.log("🚀🚀 Your selected text is => productId: ", productId);
                 const userId = req.user._id;
-                console.log("🚀🚀 Your selected text is => userId: ", userId);
 
                 if (!productId) {
-                    return res.status(400).json({ error: 'Product ID is required' });
+                    return res.status(400).json({ message: 'Product ID is required' });
                 }
-
-                // Find and delete the favorite entry for the given productId and userId
                 const favourite = await Favourite.findOneAndDelete({ productId: productId, userId: userId });
-                console.log("🚀🚀 Your selected text is => favourite: ", favourite);
-
                 if (!favourite) {
-                    return res.status(404).json({ error: 'Product not found in favourites' });
+                    return res.status(404).json({ message: 'Product not found in favourites' });
                 }
 
                 res.status(200).json({
