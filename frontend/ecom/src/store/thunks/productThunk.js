@@ -5,7 +5,6 @@ import { addToCart, deleteCartItem, updateCartItemQuantity } from "../../apis/pr
 export const AddToCart = createAsyncThunk(
     'products/Add_To_Cart',
     async (props, { rejectWithValue }) => {
-        console.log("🚀🚀 Your selected text is => props: ", props);
         try {
             const response = await addToCart(props);
             return response;

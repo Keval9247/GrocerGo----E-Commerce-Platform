@@ -33,12 +33,12 @@ const Footer = () => {
     // Footer dynamic sections
     const footerContent = {
         products: [
-            { name: 'Explore Products', link: '/user/products' },
-            { name: "Men's Fashion", link: '/user/products' },
-            { name: "Women's Fashion", link: '/user/products' },
-            { name: 'Kids Wear', link: '/user/products' },
-            { name: 'Shoes & Bags', link: '/user/products' },
-            { name: 'Accessories', link: '/user/products' },
+            { name: 'Explore Products', link: '/user/products?category=All' },
+            { name: "Men's Fashion", link: '/user/products?category=All' },
+            { name: "Women's Fashion", link: '/user/products?category=All' },
+            { name: 'Kids Wear', link: '/user/products?category=All' },
+            { name: 'Shoes & Bags', link: '/user/products?category=All' },
+            { name: 'Accessories', link: '/user/products?category=All' },
         ],
         company: [
             { name: 'About Us', link: '/about' },

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { getWishlistItems, removeFromWishlist } from "../apis/products/Productapi";
 import { AddToCart } from "../store/thunks/productThunk";
 import { useDispatch } from "react-redux";
+import { clearFavourites, removeToFavourites } from "../store/slice/ProductSlice";
 
 const WishlistPage = () => {
   const [wishlist, setWishlist] = useState([]);
@@ -21,6 +22,7 @@ const WishlistPage = () => {
 
   const handleRemoveFromWishlist = async (product) => {
     try {
+      await dispatch(removeToFavourites(product?.productId?._id));
       const response = await removeFromWishlist(product.productId._id);
       setWishlist(wishlist.filter((item) => item.productId._id !== product.productId._id))
       if (response?.message) {
@@ -34,7 +36,6 @@ const WishlistPage = () => {
   };
 
   const handleAddToCart = async (product) => {
-    console.log("🚀🚀 Your selected text is => product: ", product);
     const payload = {
       _id: product.productId._id,
       // userId: user.id,
@@ -42,35 +43,35 @@ const WishlistPage = () => {
       quantity: 1,
     }
     const response = await dispatch(AddToCart(payload));
-    console.log("🚀🚀 Your selected text is => response: ", response);
     setWishlist(wishlist.filter((item) => item.productId.id !== product.productId._id));
     toast.success(response?.payload?.message);
   };
 
   return (
     <div className="min-h-screen py-8 bg-gray-50">
-      <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">
-        My Wishlist
-      </h1>
-
       {wishlist?.length === 0 ? (
         <EmptyState
           title="Your wishlist is empty"
           description="Save items you love and come back to them later."
-          link="/user/products"
+          link="/user/products?category=All"
           linkText="Start Shopping"
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
-          {wishlist?.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={handleAddToCart}
-              onRemove={handleRemoveFromWishlist}
-            />
-          ))}
-        </div>
+        <>
+          <div className="flex items-center justify-center px-6 mb-6">
+            <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">My Wishlist</h1>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+            {wishlist?.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+                onRemove={handleRemoveFromWishlist}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
@@ -122,38 +123,40 @@ export const ProductCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <img
-        src={`${import.meta.env.VITE_BACKEND_URL}${product?.productId?.ProductImage}`}
-        alt={product?.productId?.ProductName}
-        className="w-full h-56 object-cover"
-      />
+    <>
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <img
+          src={`${import.meta.env.VITE_BACKEND_URL}${product?.productId?.ProductImage}`}
+          alt={product?.productId?.ProductName}
+          className="w-full h-56 object-cover"
+        />
 
-      <div className="p-6">
-        <h3 className="font-semibold text-lg text-gray-800 mb-2">
-          {product?.productId?.ProductName}
-        </h3>
-        <p className="text-indigo-600 font-medium text-xl mb-4">
-          ${product?.productId?.ProductPrice?.toFixed(2)}
-        </p>
+        <div className="p-6">
+          <h3 className="font-semibold text-lg text-gray-800 mb-2">
+            {product?.productId?.ProductName}
+          </h3>
+          <p className="text-indigo-600 font-medium text-xl mb-4">
+            ${product?.productId?.ProductPrice?.toFixed(2)}
+          </p>
 
-        <div className="flex gap-2">
-          <button
-            onClick={handleAddToCart}
-            className="flex-1 inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transform hover:scale-105 transition-transform duration-300"
-          >
-            <ShoppingCart className="w-5 h-5 mr-2" />
-            Add to Cart
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transform hover:scale-105 transition-transform duration-300"
+            >
+              <ShoppingCart className="w-5 h-5 mr-2" />
+              Add to Cart
+            </button>
 
-          <button
-            onClick={handleRemove}
-            className="inline-flex items-center justify-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:text-red-500 hover:border-red-500 transform hover:scale-105 transition-transform duration-300"
-          >
-            <Trash2 className="w-5 h-5" />
-          </button>
+            <button
+              onClick={handleRemove}
+              className="inline-flex items-center justify-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:text-red-500 hover:border-red-500 transform hover:scale-105 transition-transform duration-300"
+            >
+              <Trash2 className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -6,12 +6,25 @@ const initialState = {
     cartItems: 0,
     loading: false,
     error: null,
+    favourites: [],
 };
 
 const productsSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
+        addToFavourites: (state, action) => {
+            const productId = action.payload;
+            if (!state.favourites.includes(productId)) {
+                state.favourites.push(productId);
+            }
+        },
+        removeToFavourites: (state, action) => {
+            state.favourites = state.favourites.filter(id => id !== action.payload);
+        },
+        clearFavourites: (state, action) => {
+            state.favourites = [];
+        },
         setTotalItems: (state, action) => {
             state.cartItems = action.payload;
         },
@@ -70,5 +83,5 @@ const productsSlice = createSlice({
     },
 });
 
-export const { setTotalItems, clearCart } = productsSlice.actions;
+export const { setTotalItems, addToFavourites, removeToFavourites, clearFavourites } = productsSlice.actions;
 export default productsSlice.reducer;

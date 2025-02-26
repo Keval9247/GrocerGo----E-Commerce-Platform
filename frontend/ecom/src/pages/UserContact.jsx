@@ -28,7 +28,6 @@ const ContactPage = () => {
 
         try {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/contact`, formData)
-            console.log("🚀🚀 Your selected text is => response: ", response);
             toast.success(response?.data);
             setFormData({ name: '', email: '', subject: '', message: '' });
         } catch (error) {

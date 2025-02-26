@@ -66,7 +66,7 @@ function HomePage() {
     const handleLoadMore = () => {
         setLoading(true);
         setTimeout(() => {
-            window.open('/user/products', '_blank');
+            window.open('/user/products?category=All', '_blank');
             setLoading(false);
         }, 1000);
     };
@@ -89,7 +89,7 @@ function HomePage() {
                             </p>
                             <div className="flex flex-col sm:flex-row items-center sm:gap-4 gap-2">
                                 <button
-                                    onClick={() => window.open("/user/products", '_blank')}
+                                    onClick={() => window.open("/user/products?category=All", '_blank')}
                                     className="bg-white text-[#36454F] flex  gap-5 py-3 px-8 rounded-lg font-bold hover:bg-gray-200 transition-all group"
                                 >
                                     Start Shopping
