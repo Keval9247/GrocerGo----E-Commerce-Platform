@@ -8,13 +8,13 @@ const authMiddleware = require('../miidleware/authMiddleware');
 
 router.get('/count', authMiddleware('user', 'admin'), productController().getCountData)
 router.post('/create-product', authMiddleware('admin'), productImageHandler.single('productImg'), productController().createProduct)
-router.get('/', authMiddleware('user', 'admin'), productController().getAllProducts)
+router.get('/', productController().getAllProducts)
 router.put('/update/:id', authMiddleware('admin'), productImageHandler.single('productImg'), productController().updateProduct)
 
 
 router.delete('/delete', authMiddleware('admin'), productController().deleteProduct)
 
-router.post('/findProductByCategory', authMiddleware('user', 'admin'), productController().findProductByCategory)
+router.post('/findProductByCategory', productController().findProductByCategory)
 router.get('/id/:id', authMiddleware('user', 'admin'), productController().getProductById)
 
 
