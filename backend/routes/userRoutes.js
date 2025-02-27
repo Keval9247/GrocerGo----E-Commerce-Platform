@@ -14,7 +14,7 @@ router.get('/profile/:id', userController().getProfileById)
 // ---------------------------> payment and order routes  <--------------------------------------------------------------//
 
 router.use('/payment', authMiddleware('user', 'admin'), paymentRouter)
-router.use('/orders', authMiddleware('user', 'admin'), orderRoutes)
+router.use('/orders', orderRoutes)
 
 
 module.exports = router;

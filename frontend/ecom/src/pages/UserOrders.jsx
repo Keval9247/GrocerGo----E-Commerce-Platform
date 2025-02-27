@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOrderHistory } from "../apis/products/Productapi";
 import Loading from "../utils/Loading";
+import { useSelector } from "react-redux";
 
 const OrdersPage = () => {
     const { userId } = useParams();
