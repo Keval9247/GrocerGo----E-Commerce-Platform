@@ -85,3 +85,7 @@ export const getWishlistItems = async () => {
 export const getOrderHistory = async (userId) => {
   return await apiRequest("GET", `/user/orders/readOne/${userId}`);
 };
+
+export const getAllOrder = async () => {
+  return await apiRequest("GET", `/user/orders/readAll`);
+}
