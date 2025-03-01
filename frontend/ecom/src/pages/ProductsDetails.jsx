@@ -27,7 +27,7 @@ const ProductDetails = () => {
   const [addedToCart, setAddedToCart] = useState(false);
   const [cartPreview, setCartPreview] = useState('');
   const [isFavourite, setIsFavourite] = useState(false);
-  const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
+  const isUser = useSelector((state) => state.authReducer.isUSer);
   const user = useSelector((state) => state.authReducer.user);
   const favouriteProductId = useSelector((state) => state.productsReducer.favourites);
   const dispatch = useDispatch();
@@ -210,17 +210,23 @@ const ProductDetails = () => {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <Tooltip title={!user ? "Please login to purchase this product" : productDetails.stock === 0 ? "Out of stock" : ""} arrow placement="top">
-                  <button
-                    onClick={() => handletoAddToCart(productDetails)}
-                    disabled={productDetails.stock === 0 || !user}
-                    className={`flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 ${productDetails.stock === 0 || !user ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"} transition`}>
-                    <ShoppingCart className="w-5 h-5" /> <span>Buy Now</span>
-                  </button>
+                <Tooltip title={!isUser ? "Please login to purchase this product" : productDetails.stock === 0 ? "Out of stock" : ""} arrow placement="top">
+                  <span>
+                    <button
+                      onClick={() => handletoAddToCart(productDetails)}
+                      disabled={productDetails.stock === 0 || !isUser}
+                      className={`flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 ${productDetails.stock === 0 || !isUser ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"} transition`}>
+                      <ShoppingCart className="w-5 h-5" /> <span>Buy Now</span>
+                    </button>
+                  </span>
                 </Tooltip>
-                <button onClick={() => handleToggleFavourite(productDetails?._id)} className="flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
-                  {isFavourite ? <AiFillHeart className="w-5 h-5" /> : <Heart className="w-5 h-5" />} <span>Save</span>
-                </button>
+                <Tooltip title={!isUser ? "Please login to add in Wishlist" : ""} arrow placement="top">
+                  <span>
+                    <button disabled={!isUser} onClick={() => handleToggleFavourite(productDetails?._id)} className="flex-1 py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
+                      {isFavourite && !isUser ? <AiFillHeart className="w-5 h-5" /> : <Heart className="w-5 h-5" />} <span>Save</span>
+                    </button>
+                  </span>
+                </Tooltip>
                 <button onClick={handleShareToggle} className="py-3 px-8 rounded-lg flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 transition">
                   <Share2 className="w-5 h-5" /> <span>Share</span>
                 </button>
@@ -267,7 +273,7 @@ const ProductDetails = () => {
               </div>
             </div>
             <div className="items-center">
-              <button className="bg-blue-400 text-white rounded-lg px-4 py-2 border border-blue-700 hover:bg-blue-500" onClick={handleReviewModalToggle}>Write a Review</button>
+              <button disabled={!isUser} className={`bg-blue-400 text-white rounded-lg px-4 py-2 border ${!isUser && "hover:cursor-not-allowed"} border-blue-700 hover:bg-blue-500`} onClick={handleReviewModalToggle}>Write a Review</button>
             </div>
           </div>
 

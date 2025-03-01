@@ -7,6 +7,7 @@ const initialState = {
     role: null,
     error: null,
     isVerified: false,
+    isUser: false,
 };
 
 const authSlice = createSlice({
@@ -26,6 +27,9 @@ const authSlice = createSlice({
             state.user = null;
             state.role = null;
             localStorage.removeItem('token');
+            state.error = null;
+            state.isVerified = false;
+            state.isUser = false;
         },
     },
     extraReducers: (builder) => {
@@ -35,7 +39,8 @@ const authSlice = createSlice({
                 state.user = action.payload?.user;
                 state.role = action.payload?.user?.role;
                 state.error = null;
-                state.isVerified = action.payload?.user?.isVerified
+                state.isVerified = action.payload?.user?.isVerified;
+                state.isUser = action.payload?.user?.role == 'user';
             },)
             .addCase(login.rejected, (state, action) => {
                 state.isAuthenticated = false;
@@ -49,6 +54,7 @@ const authSlice = createSlice({
                 state.role = action.payload?.user?.role;
                 state.error = null;
                 state.isVerified = action.payload?.user?.isVerified;
+                state.isUser = action.payload?.user?.role == 'user';
             },)
             .addCase(signup.rejected, (state, action) => {
                 state.isAuthenticated = false;

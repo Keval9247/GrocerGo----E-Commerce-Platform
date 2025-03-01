@@ -3,16 +3,16 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Box, Tooltip } from "@mui/material";
 import { FiHeart, FiShoppingCart, FiUser } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { FileQuestion, HelpCircle, LucideSettings2, Phone, ShoppingBag, X, } from "lucide-react";
+import { HelpCircle, LucideSettings2, ShoppingBag, X, } from "lucide-react";
 import { clearAuthentication } from "../../store/slice/AuthSlice";
 import { toast } from "react-toastify";
 
 function UserLayout() {
-  const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const totalItems = useSelector((state) => state.productsReducer.cartItems);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.user);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(!user);
+  const isUser = useSelector((state) => state.authReducer.isUser);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(!isUser);
   const dropdownref = useRef();
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ function UserLayout() {
   };
 
   const handleCart = () => {
-    if (!user) {
+    if (!user?.role) {
       toast.error("Please Login to view your cart.")
       setTimeout(() => {
         setIsDropdownOpen(true);
@@ -115,7 +115,7 @@ function UserLayout() {
                 </button>
               </Tooltip>
               {isDropdownOpen ? (
-                isAuthenticated ? (
+                user?.role === 'user' ? (
                   <div
                     className="absolute right-[-60px] mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
                     ref={dropdownref}
@@ -130,7 +130,7 @@ function UserLayout() {
                       </li>
                       <li
                         className="flex gap-3 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
-                        onClick={() => navigate(`/user/orders/${user.id}`)}
+                        onClick={() => navigate(`/user/orders/${user?.id}`)}
                       >
                         <ShoppingBag width={20} height={20} />
                         Orders
