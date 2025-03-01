@@ -41,20 +41,6 @@ import UserOrders from "./pages/UserOrders";
 export const CartContent = createContext();
 
 function App() {
-  // const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
-  // const role = useSelector((state) => state.authReducer.role);
-  // const navigate = useNavigate();
-  // const [cartdata, setCartData] = useState()
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     if (role === ROLES.ADMIN) {
-  //       navigate('/admin');
-  //     } else if (role === ROLES.USER) {
-  //       navigate('/user');
-  //     }
-  //   }
-  // }, [isAuthenticated, role, navigate]);
 
   return (
     <>
@@ -71,17 +57,21 @@ function App() {
 
           <Route element={<UserLayout />}>
             <Route path="/user/categories" element={<Categories />} />
-            {/* <Route path="/user/deals" element={<Deals />} /> */}
             <Route path="/user/products" element={<ProductsPage />} />
             <Route path="/user/products/:id" element={<ProductsDetails />} />
-            <Route path="/user/cart" element={<Cart />} />
-            <Route path="/user/wish-list" element={<UserWishlist />} />
-            <Route path="/user/profile/:id" element={<UserProfile />} />
-            <Route path="/user/settings" element={<UserSettings />} />
-            <Route path="/user/contact" element={<UserContact />} />
-            <Route path="/user/orders/:userId" element={<UserOrders />} />
-            <Route path="/user/payment/success" element={<CheckoutSuccessPage />} />
-            <Route path="/user/payment/cancel" element={<CheckoutCancelPage />} />
+            <Route
+              path="/user"
+              element={<ProtectedRoute allowedRoles={[ROLES.USER]} />}
+            >
+              <Route path="cart" element={<Cart />} />
+              <Route path="orders/:userId" element={<UserOrders />} />
+              <Route path="ayment/success" element={<CheckoutSuccessPage />} />
+              <Route path="payment/cancel" element={<CheckoutCancelPage />} />
+              <Route path="wish-list" element={<UserWishlist />} />
+              <Route path="profile/:id" element={<UserProfile />} />
+              <Route path="settings" element={<UserSettings />} />
+            </Route>
+            <Route path="/contact" element={<UserContact />} />
           </Route>
         </Route>
 
@@ -89,11 +79,6 @@ function App() {
           path="/admin"
           element={<ProtectedRoute allowedRoles={[ROLES.ADMIN]} />}
         >
-          {/* <Route element={<AdminLayout />}>
-            <Route index element={<Home />} />
-            <Route path="products" element={<Products />} />
-            <Route path="solution" element={<Solution />} />
-          </Route> */}
           <Route element={<AdminPanel />}>
             <Route index element={<Dashboard />} />
             <Route path="products" element={<ProductManagement />} />
@@ -106,31 +91,6 @@ function App() {
             <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Route>
-
-        {/* <Route
-          path="/user/products"
-          element={<ProtectedRoute allowedRoles={[ROLES.USER]} />}
-        > */}
-        {/* <Route element={<UserLayout />}> */}
-        {/* Nested routes for Home */}
-        <Route index element={<ProductsPage />} />
-        {/* <Route path="categories/:id" element={<CategoryDetail />} /> */}
-        {/* <Route path="home1" element={<Home1 />} />
-            <Route path="home2" element={<Home2 />} />
-            <Route path="home3" element={<Home3 />} /> */}
-        {/* <Route path='about' element={<About />} /> */}
-        {/* <Route path="contact" element={<Contact />} /> */}
-        {/* <Route path="products-list" element={<ProductUser />} /> */}
-        {/* <Route path="products-list/:_id" element={<ProductsDetails />} /> */}
-        {/* <Route path="services" element={<Services />} /> */}
-        {/* <Route path="authority" element={<Authority />} /> */}
-        {/* <Route path='payment/:_id' element={<Payment />} /> */}
-        {/* <Route path='payment/success' element={<PaymentSuccessPage />} /> */}
-        {/* <Route path='cart' element={<Cart />} /> */}
-
-        {/* <Route path='contact-us' element={<ContactUs />} /> */}
-        {/* </Route> */}
-        {/* </Route> */}
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

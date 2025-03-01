@@ -6,7 +6,6 @@ import { clearAuthentication } from '../store/slice/AuthSlice';
 
 const ProtectedRoute = ({ allowedRoles }) => {
     const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
-    console.log("🚀🚀 Your selected text is => isAuthenticated: ", isAuthenticated);
     const role = useSelector((state) => state.authReducer.role);
     const navigate = useNavigate();
     const dispatch = useDispatch()
