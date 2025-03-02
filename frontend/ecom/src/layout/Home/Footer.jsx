@@ -1,42 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import "react-toastify/dist/ReactToastify.css";
-import logo from '/Grocer Go.png';
-import TOSfile from '../../../public/htmlcontent/pdf/TOS.html';
 
 const Footer = () => {
     const navigate = useNavigate();
-    const [privacy, setPrivacy] = useState(false);
-    const [privacyData, setPrivacyData] = useState(null);
-
-    useEffect(() => {
-        fetch('../../../public/htmlcontent/pdf/TOS.html')
-            .then((res) => res.text())
-            .then((data) => setPrivacyData(data))
-            .catch((error) => console.error('Error:', error));
-    }, []);
-
-    const handlePrint = () => {
-        const printWindow = window.open(TOSfile);
-        if (printWindow) {
-            printWindow.focus();
-            printWindow.print();
-        }
-    };
-
-    const handlePrivacy = () => {
-        setPrivacy(true);
-    };
-
-    // Footer dynamic sections
     const footerContent = {
         products: [
             { name: 'Explore Products', link: '/user/products?category=All' },
-            { name: "Men's Fashion", link: '/user/products?category=All' },
-            { name: "Women's Fashion", link: '/user/products?category=All' },
-            { name: 'Kids Wear', link: '/user/products?category=All' },
+            { name: "Men's Fashion", link: '/user/products?category=Fashion' },
+            { name: "Women's Fashion", link: '/user/products?category=Fashion' },
+            { name: 'Kids Wear', link: '/user/products?category=Fashion' },
             { name: 'Shoes & Bags', link: '/user/products?category=All' },
             { name: 'Accessories', link: '/user/products?category=All' },
         ],
@@ -46,145 +21,61 @@ const Footer = () => {
             { name: 'FAQ', link: '#' },
             { name: 'Contact Us', link: '#' },
         ],
-        techUsed: [
-            { name: 'MongoDB', link: 'https://www.mongodb.com/' },
-            { name: 'ExpressJs', link: 'https://www.expressjs.com/' },
-            { name: 'ReactJs', link: 'https://www.reactjs.org/' },
-            { name: 'NodeJs', link: 'https://www.nodejs.org/' },
-        ],
         legal: [
-            { name: 'Terms of Service', action: handlePrint },
-            { name: 'Privacy Policy', action: handlePrivacy },
+            { name: 'Terms of Service', link: '/' },
+            { name: 'Privacy Policy', link: '/privacy-policy' },
             { name: 'Licenses', link: 'https://foodlicenseportal.org/' },
         ],
     };
 
     return (
         <>
-            <footer className="w-full bg-gray-900 text-gray-400 py-10">
-                <div className="container mx-auto px-4">
-                    {/* Grid Section */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-
-                        {/* Logo & Newsletter Section */}
-                        <div className="space-y-4">
+            <footer className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-gray-400 py-14">
+                <div className="container mx-auto px-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                        <div className="space-y-6">
                             <img
-                                src={logo}
+                                src='/images/logonew.png'
                                 alt="GrocerGo Logo"
-                                className="w-20 cursor-pointer mb-4"
+                                className="w-24 cursor-pointer hover:scale-105 transition-transform duration-300"
                                 onClick={() => navigate('/')}
                             />
-                            <p className="text-gray-100 font-bold text-xl">GrocerGo</p>
+                            <p className="text-gray-100 font-bold text-2xl">GrocerGo</p>
                         </div>
 
-                        {/* Products Section */}
-                        <div className="space-y-4 pl-20">
-                            <h5 className="text-lg font-bold text-gray-100">Products</h5>
-                            <ul className="space-y-2">
-                                {footerContent.products.map((item, index) => (
-                                    <li key={index}>
-                                        <a
-                                            href={item.link}
-                                            className="text-gray-400 hover:text-gray-200 transition"
-                                        >
-                                            {item.name}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Company Section */}
-                        <div className="space-y-4">
-                            <h5 className="text-lg font-bold text-gray-100">Company</h5>
-                            <ul className="space-y-2">
-                                {footerContent.company.map((item, index) => (
-                                    <li key={index}>
-                                        <a
-                                            href={item.link}
-                                            className="text-gray-400 hover:text-gray-200 transition"
-                                        >
-                                            {item.name}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Tech Used Section */}
-                        <div className="space-y-4">
-                            <h5 className="text-lg font-bold text-gray-100">Tech Stack</h5>
-                            <ul className="space-y-2">
-                                {footerContent.techUsed.map((item, index) => (
-                                    <li key={index}>
-                                        <a
-                                            href={item.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-gray-400 hover:text-gray-200 transition"
-                                        >
-                                            {item.name}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                        {Object.entries(footerContent).map(([title, items], index) => (
+                            <div key={index} className="space-y-4">
+                                <h5 className="text-lg font-semibold text-gray-100 uppercase">{title}</h5>
+                                <ul className="space-y-2">
+                                    {items.map((item, idx) => (
+                                        <li key={idx}>
+                                            <span
+                                                onClick={() => navigate(item.link)}
+                                                className="cursor-pointer text-gray-400 hover:text-white transition duration-300"
+                                            >
+                                                {item.name}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                     </div>
 
-                    {/* Divider */}
-                    <div className="border-t border-gray-700 my-6"></div>
+                    <div className="border-t border-gray-700 my-8"></div>
 
-                    {/* Legal Links and Social Icons */}
                     <div className="flex flex-col md:flex-row justify-between items-center">
-                        {/* Legal Links */}
-                        <div className="flex space-x-6">
-                            {footerContent.legal.map((item, index) => (
-                                <a
-                                    key={index}
-                                    onClick={item.action ? item.action : undefined}
-                                    href={item.link || '#'}
-                                    className="text-gray-400 hover:text-gray-200 cursor-pointer"
-                                >
-                                    {item.name}
+                        <div className="flex space-x-6 mt-6 md:mt-0">
+                            {[faFacebook, faInstagram, faTwitter, faLinkedin].map((icon, idx) => (
+                                <a key={idx} href="#" className="text-gray-400 hover:text-white transition-transform transform hover:scale-125 duration-300">
+                                    <FontAwesomeIcon icon={icon} size="lg" />
                                 </a>
                             ))}
                         </div>
-
-                        {/* Social Icons */}
-                        <div className="flex space-x-6 mt-4 md:mt-0">
-                            <a href="#" className="text-gray-400 hover:text-gray-200 transition">
-                                <FontAwesomeIcon icon={faFacebook} size="lg" />
-                            </a>
-                            <a href="#" className="text-gray-400 hover:text-gray-200 transition">
-                                <FontAwesomeIcon icon={faInstagram} size="lg" />
-                            </a>
-                            <a href="#" className="text-gray-400 hover:text-gray-200 transition">
-                                <FontAwesomeIcon icon={faTwitter} size="lg" />
-                            </a>
-                            <a href="#" className="text-gray-400 hover:text-gray-200 transition">
-                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
-                            </a>
-                        </div>
                     </div>
 
-                    {/* Privacy Modal */}
-                    <div
-                        className={`fixed top-1/2 left-1/2 w-4/5 max-w-lg max-h-full transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg overflow-auto z-50 transition-all duration-500 ${privacy ? 'opacity-100 visible' : 'opacity-0 invisible'
-                            }`}
-                    >
-                        <h2 className="text-lg font-bold mb-4">Privacy Policy</h2>
-                        {/* <div dangerouslySetInnerHTML={{ __html: privacyData }} className="text-sm text-gray-600" /> */}
-                        <button
-                            onClick={() => setPrivacy(false)}
-                            className="mt-4 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition duration-300"
-                        >
-                            Close
-                        </button>
-                    </div>
-
-                    {/* Footer Bottom */}
-                    <div className="text-center mt-6 text-gray-500 text-sm">
-                        &copy; {new Date().getFullYear()} GrocerGo. All rights reserved.
+                    <div className="text-center mt-8 text-gray-500 text-sm">
+                        &copy; {new Date().getFullYear()} <span className="font-semibold text-gray-300">GrocerGo</span>. All rights reserved.
                     </div>
                 </div>
             </footer>

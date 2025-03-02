@@ -1,6 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
-import bcrypt from 'bcryptjs';
 import { ForgotPassword, Login, Signup, VerifyOtp } from '../../apis/Authapi';
 
 export const login = createAsyncThunk(

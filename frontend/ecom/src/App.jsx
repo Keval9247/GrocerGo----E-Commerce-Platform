@@ -37,6 +37,7 @@ import UserWishlist from "./pages/UserWishlist";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 import UserOrders from "./pages/UserOrders";
+import PrivacyPolicy from "./pages/PrivacyPlicyPage";
 
 export const CartContent = createContext();
 
@@ -53,7 +54,8 @@ function App() {
           <Route path="/contact" element={<UserContact />} />
           <Route path="/about" element={<HomeAbout />} />
           <Route path="/learn-more" element={<LearnMore />} />
-          <Route path="/FAQ" element={<FAQ />} />
+          <Route path="/faqs" element={<FAQ />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
           <Route element={<UserLayout />}>
             <Route path="/user/categories" element={<Categories />} />

@@ -37,21 +37,23 @@ const WhyChooseUs = () => {
     };
 
     return (
-        <div className="bg-gray-100 py-10">
-            <div className="w-[90%] mx-auto px-4">
-                <Slider {...settings} className="overflow-visible">
-                    {features.map((feature, index) => (
-                        <div key={index} className="p-7">
-                            <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center min-h-full transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-                                <img src={feature.icon} alt={feature.title} className="w-16 h-16 mb-3" />
-                                <h3 className="text-lg font-semibold text-gray-800">{feature.title}</h3>
-                                <p className="text-gray-600 text-sm mt-2">{feature.description}</p>
+        <>
+            <div className="bg-[#928DEE] py-10">
+                <div className="w-[90%] mx-auto px-4">
+                    <Slider {...settings} className="overflow-visible">
+                        {features.map((feature, index) => (
+                            <div key={index} className="p-7">
+                                <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center min-h-full transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                                    <img src={feature.icon} alt={feature.title} className="w-16 h-16 mb-3" />
+                                    <h3 className="text-lg font-semibold text-gray-800">{feature.title}</h3>
+                                    <p className="text-gray-600 text-sm mt-2">{feature.description}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </Slider>
+                        ))}
+                    </Slider>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

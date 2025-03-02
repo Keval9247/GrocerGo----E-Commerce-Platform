@@ -7,6 +7,9 @@ import WhyChooseUs from '../../pages/carousel';
 import TestimonialSection from '../../pages/Testimonial';
 import Loading from '../../utils/Loading';
 import { ArrowUpRight } from "lucide-react"
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 function HomePage() {
 
@@ -14,6 +17,53 @@ function HomePage() {
     const [subscribeEmail, setSubscribeEmail] = useState();
     const [displayedProducts, setDisplayedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const heroImages = [
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+        "https://images.unsplash.com/photo-1525904097878-94fb15835963",
+    ];
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 800,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        arrows: true,
+        pauseOnHover: true,
+        fade: true,
+        adaptiveHeight: true,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    arrows: false,
+                },
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    dots: false,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    arrows: false,
+                    dots: false,
+                },
+            },
+        ],
+    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -31,16 +81,6 @@ function HomePage() {
         };
         fetchProducts();
     }, []);
-
-
-    // const validateEmail = (email) => {
-    //     if (email) {
-    //         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //         const isemailTrue = regex.test(email)
-    //         const reposnse = isemailTrue ? setSubscribeEmail(email) : setSubscribeEmail('')
-    //         return;
-    //     }
-    // };
 
     useEffect(() => {
     }, [subscribeEmail]);
@@ -75,11 +115,9 @@ function HomePage() {
         <>
             <div className="bg-gray-100 min-h-screen pt-20">
                 {loading && <Loading />}
-
-                {/* Hero Section */}
+                {/* Hero section */}
                 <section className="w-full bg-gradient-to-br from-indigo-600 to-purple-500 text-white py-20 px-6">
                     <div className="container mx-auto flex flex-col lg:flex-row items-center">
-                        {/* Left Content */}
                         <div className="lg:w-1/2">
                             <h1 className="text-5xl font-extrabold mb-6">
                                 Discover Exclusive Deals
@@ -89,7 +127,7 @@ function HomePage() {
                             </p>
                             <div className="flex flex-col sm:flex-row items-center sm:gap-4 gap-2">
                                 <button
-                                    onClick={() => window.open("/user/products?category=All", '_blank')}
+                                    onClick={() => window.open('/user/products?category=All', '_blank')}
                                     className="bg-white text-[#36454F] flex  gap-5 py-3 px-8 rounded-lg font-bold hover:bg-gray-200 transition-all group"
                                 >
                                     Start Shopping
@@ -98,28 +136,28 @@ function HomePage() {
                                     </span>
                                 </button>
                                 <button
-                                    onClick={() => navigate("/learn-more")}
+                                    onClick={() => navigate('/learn-more')}
                                     className="bg-transparent border-2 border-white py-3 px-8 rounded-lg font-bold hover:bg-white hover:text-[#36454F] transition"
                                 >
                                     Learn More
                                 </button>
                             </div>
                         </div>
-
-                        {/* Right Content */}
                         <div className="lg:w-1/2 mt-10 lg:mt-0">
-                            <img
-                                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
-                                alt="Hero Banner"
-                                className="w-full h-auto rounded-lg shadow-lg"
-                            />
+                            <Slider {...settings}>
+                                {heroImages.map((image, index) => (
+                                    <div key={index}>
+                                        <img
+                                            src={image}
+                                            alt={`Hero Banner ${index + 1}`}
+                                            className="w-full h-[500px] rounded-lg shadow-lg"
+                                        />
+                                    </div>
+                                ))}
+                            </Slider>
                         </div>
                     </div>
                 </section>
-
-
-
-                {/* Latest Products Section */}
                 <section className="py-20 bg-white">
                     <div className="container mx-auto">
                         <h2 className="relative text-3xl font-bold text-center text-[#36454F] mb-12" >
@@ -163,7 +201,7 @@ function HomePage() {
                         </div>
                     </div>
                 </section>
-                <Box sx={{ textAlign: "center", padding: 4 }} className="bg-[#928dee] relative" >
+                <Box sx={{ textAlign: "center", padding: 4 }} className="bg-[#928dee] relative h-60" >
                     <div className='absolute left-[62%] top-[50%] z-10'>
                         <svg width="80%" height="20%" viewBox="0 0 198 98" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g filter="url(#filter0_d)">
@@ -203,13 +241,11 @@ function HomePage() {
                         </svg>
                     </div>
                     <Typography variant="h4" fontWeight="bold" color="white" className='relative'>
-                        Why Choose <span className="text-[#DCE0E4]">Us </span><span className="font-bold text-[50px] pl-4 ">?</span>
+                        Why Choose Us<span className="font-bold text-[50px] pl-4 ">?</span>
                         <div className="absolute left-[3%] z-50 right-0 mx-auto h-[3px] bg-[#ffffff] w-[10%] top-full"></div>
                     </Typography>
                 </Box>
                 <WhyChooseUs />
-
-                {/* Testimonials Section */}
                 <TestimonialSection />
 
                 <section className="py-20 bg-gradient-to-br bg-[#6C69B0] text-white">
@@ -222,7 +258,6 @@ function HomePage() {
                             Subscribe to our newsletter to receive exclusive updates, offers, and the latest trends right in your inbox.
                         </p>
                         <div
-                            // onSubmit={handleSubscribeNewsletter}
                             className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-3xl mx-auto"
                         >
                             <input
