@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiUsers, FiDollarSign, FiShoppingBag, FiBarChart2, FiTrendingUp, FiArrowUp, FiArrowDown, FiBox, FiShoppingCart, FiAlertCircle, FiExternalLink } from "react-icons/fi";
+import { FiUsers, FiDollarSign, FiShoppingBag, FiArrowUp, FiArrowDown, FiAlertCircle, FiExternalLink } from "react-icons/fi";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { getDataLength } from "../../apis/products/Productapi";
@@ -10,7 +10,6 @@ const Dashboard = () => {
     const [count, setCount] = useState(0);
     const navigate = useNavigate();
 
-    // Sample data for charts
     const salesData = [
         { name: "Mon", sales: 4000, orders: 24 },
         { name: "Tue", sales: 3000, orders: 18 },
@@ -28,7 +27,22 @@ const Dashboard = () => {
         { name: "Furniture", value: count?.CategoryCount?.furniture }
     ];
 
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+    const categoryStockTotals = count?.ProductData?.reduce((acc, item) => {
+        const { category, stock } = item;
+        if (acc[category]) {
+            acc[category] += stock;
+        } else {
+            acc[category] = stock;
+        }
+        return acc;
+    }, {});
+
+    const categoryDatas = Object?.entries(categoryStockTotals).map(([name, value]) => ({
+        name,
+        value,
+    }));
+
+    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#C45850", "#7F525C", "#3F51B5", "#4CAF50", "#FF9800",];
 
     const statsCards = [
         {
@@ -146,7 +160,7 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
                             <Pie
-                                data={categoryData}
+                                data={categoryDatas}
                                 cx="50%"
                                 cy="50%"
                                 innerRadius={60}
@@ -155,7 +169,7 @@ const Dashboard = () => {
                                 paddingAngle={5}
                                 dataKey="value"
                             >
-                                {categoryData.map((entry, index) => (
+                                {categoryDatas?.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>

@@ -65,11 +65,11 @@ const Header = () => {
                 <Box sx={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                     <StyledButton
                         onClick={() => {
-                            if (location.pathname === '/') { window.scrollTo({ top: 3250, behavior: 'smooth' }) }
+                            if (location.pathname === '/') { window.scrollTo({ top: 3200, behavior: 'smooth' }) }
                             else {
                                 navigate('/')
                                 setTimeout(() => {
-                                    window.scrollTo({ top: 3250, behavior: 'smooth' })
+                                    window.scrollTo({ top: 3200, behavior: 'smooth' })
                                 }, 1000)
                             }
                         }}

@@ -83,7 +83,7 @@ const logincontroller = () => {
                     email: user.email
                 }
 
-                const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
+                const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
 
                 res.cookie('token', `${token}`, { httpOnly: true })
                     .status(200).json({

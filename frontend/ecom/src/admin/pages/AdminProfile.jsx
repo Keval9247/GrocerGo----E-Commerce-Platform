@@ -15,6 +15,7 @@ const AdminProfile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [message, setMessage] = useState({ type: "", text: "" });
     const [userDetails, setUserDetails] = useState({});
+    console.log("🚀🚀 Your selected text is => userDetails: ", userDetails);
     const [errorMessage, setErrorMessage] = useState("");
 
 
