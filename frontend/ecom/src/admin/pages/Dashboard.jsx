@@ -27,7 +27,19 @@ const Dashboard = () => {
         { name: "Furniture", value: count?.CategoryCount?.furniture }
     ];
 
-    const categoryStockTotals = count?.ProductData?.reduce((acc, item) => {
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                const response = await getDataLength();
+                setCount(response);
+            }
+            fetchData();
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
+    const categoryStockTotals = (count?.ProductData || []).reduce((acc, item) => {
         const { category, stock } = item;
         if (acc[category]) {
             acc[category] += stock;
@@ -37,7 +49,7 @@ const Dashboard = () => {
         return acc;
     }, {});
 
-    const categoryDatas = Object?.entries(categoryStockTotals).map(([name, value]) => ({
+    const categoryDatas = Object?.entries(categoryStockTotals)?.map(([name, value]) => ({
         name,
         value,
     }));
@@ -86,17 +98,6 @@ const Dashboard = () => {
         { id: "#ORD-1236", customer: "Mike Johnson", product: "Gaming Keyboard", amount: "$129", status: "Pending" },
     ];
 
-    useEffect(() => {
-        try {
-            const fetchData = async () => {
-                const response = await getDataLength();
-                setCount(response);
-            }
-            fetchData();
-        } catch (error) {
-            console.error(error);
-        }
-    }, [])
 
     const getStatusColor = (status) => {
         switch (status) {
