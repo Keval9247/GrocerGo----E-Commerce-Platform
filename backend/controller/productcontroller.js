@@ -86,22 +86,31 @@ const productController = () => {
 
         findProductByCategory: async (req, res) => {
             try {
-                const category = req.body;
+                const { category } = req.body;
+
                 if (!category) {
-                    return res.status(400).json({ error: "Category is required" });
-                }
-                if (category === "All" || "all") {
-                    const products = await Product.find();
-                    return res.status(200).json({ message: "All products retrieved successfully.", products });
-                }
-                const products = await Product.find({ category });
-                if (products.length === 0) {
-                    return res.status(404).json({ error: 'No products found for this category' });
+                    return res.status(400).json({ error: "Category is required." });
                 }
 
-                res.status(200).json({ message: "Products Retrieved Successfully.", products });
+                let products;
+
+                if (category.toLowerCase() === "all") {
+                    products = await Product.find();
+                } else {
+                    products = await Product.find({ category });
+                }
+
+                if (!products || products.length === 0) {
+                    return res.status(404).json({ error: "No products found for this category." });
+                }
+
+                return res.status(200).json({
+                    message: `Products retrieved for category: ${category}`,
+                    products
+                });
             } catch (error) {
-                res.status(500).json({ error: error.message });
+                console.error("Error in findProductByCategory:", error);
+                res.status(500).json({ error: "Internal server error." });
             }
         },
 
