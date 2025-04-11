@@ -37,8 +37,8 @@ const ProductDetails = () => {
     try {
       const response = await getProductById(id);
       setProductDetails(response?.product);
-      if (response?.product.category) {
-        const similarProducts = await getProductsByCategory(response?.product.category);
+      if (response?.product?.category) {
+        const similarProducts = await getProductsByCategory(response?.product?.category);
         setSimilarProducts(similarProducts?.products?.filter((p) => p._id !== response.product._id));
       }
       if (response?.product._id) await fetchProductRatings(response?.product._id);
@@ -50,7 +50,7 @@ const ProductDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    setIsFavourite(favouriteProductId.includes(id));
+    setIsFavourite(favouriteProductId?.includes(id));
   }, [id, favouriteProductId]);
 
   useEffect(() => {
@@ -139,17 +139,22 @@ const ProductDetails = () => {
 
   if (loading) return <Loading />;
 
-  if (!productDetails) return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-      <h2 className="text-2xl font-bold text-gray-700">Product not found</h2>
-      <button onClick={() => navigate("/user/products?category=All")} className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-        Back to Products
-      </button>
-    </div>
-  );
+  if (!productDetails) {
+    return (
+      <div className="flex items-center justify-center h-96 text-center">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-700">Product not found</h2>
+          <button onClick={() => navigate("/user/products?category=All")}
+            className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+            Back to Products
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 scrollbar-hidden">
+    <div className="min-h-screen bg-gray-50 px-4 py-6">
       <div className="max-w-7xl mx-auto py-8 px-4">
         <nav className="flex items-center space-x-2 text-sm">
           <button onClick={() => navigate("/user/products?category=All")} className="flex items-center text-blue-600 hover:text-blue-800">
