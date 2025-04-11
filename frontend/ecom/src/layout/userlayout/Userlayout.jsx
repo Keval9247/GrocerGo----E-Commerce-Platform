@@ -2,36 +2,29 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Box, Tooltip } from "@mui/material";
 import { FiHeart, FiShoppingCart, FiUser } from "react-icons/fi";
+import { HelpCircle, LucideSettings2, ShoppingBag, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { HelpCircle, LucideSettings2, ShoppingBag, X, } from "lucide-react";
 import { clearAuthentication } from "../../store/slice/AuthSlice";
 import { toast } from "react-toastify";
 
 function UserLayout() {
   const totalItems = useSelector((state) => state.productsReducer.cartItems);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.authReducer.user);
+  const userRole = useSelector((state) => state.authReducer.role);
   const isUser = useSelector((state) => state.authReducer.isUser);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(!isUser);
-  const dropdownref = useRef();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef();
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownref.current && !dropdownref.current.contains(event.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDropdownOpen]);
-
-  const handleProfileClick = () => {
-    navigate(`/user/profile/${user.id}`);
-  };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     dispatch(clearAuthentication());
@@ -39,179 +32,109 @@ function UserLayout() {
   };
 
   const handleCart = () => {
-    if (!user?.role) {
-      toast.error("Please Login to view your cart.")
-      setTimeout(() => {
-        setIsDropdownOpen(true);
-      }, 1500)
-      return;
+    if (!userRole) {
+      toast.error("Please login to view your cart.");
+      setTimeout(() => setIsDropdownOpen(true), 1200);
+    } else {
+      navigate("/user/cart");
     }
-    else {
-      navigate(`/user/cart`);
-    }
-  }
+  };
 
   return (
     <>
-      <header className="sticky flex justify-between top-0 px-56 z-50 w-full border-b bg-indigo-50 backdrop-blur supports-[backdrop-filter]:bg-indigo-50/60">
-        <div className="container flex h-16 items-center">
-          <Link
-            to="/user/products?category=All"
-            className="mr-6 flex items-center space-x-2"
-          >
-            <span className="text-xl font-bold">GrocerGo</span>
-          </Link>
-
-          <nav className="flex items-center space-x-6 text-sm font-medium">
-            <Link
-              to="/user/categories"
-              className="transition-colors hover:text-foreground/80"
-            >
-              Categories
+      <header className="sticky top-0 z-50 bg-indigo-50 backdrop-blur shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-20 h-16 flex items-center justify-between">
+          {/* Logo + Nav */}
+          <div className="flex items-center gap-10">
+            <Link to="/user/products?category=All" className="text-xl font-bold text-gray-800">
+              GrocerGo
             </Link>
-          </nav>
+            <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+              <Link to="/user/categories" className="hover:text-gray-800 transition">Categories</Link>
+            </nav>
+          </div>
 
-          <div className="ml-auto flex items-center space-x-7">
-            <div>
-              <Tooltip
-                title="Wish-List"
-                arrow
-                variant="outlined"
-                color="success"
+          {/* Action Icons */}
+          <div className="flex items-center gap-6">
+            <Tooltip title="Wish List" arrow>
+              <button onClick={() => navigate("/user/wish-list")} className="icon-button">
+                <FiHeart className="w-5 h-5" />
+              </button>
+            </Tooltip>
+
+            <Tooltip title="Cart" arrow>
+              <div className="relative">
+                <button onClick={handleCart} className="icon-button">
+                  <FiShoppingCart className="w-5 h-5 text-gray-700" />
+                </button>
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 text-xs flex items-center justify-center rounded-full font-bold">
+                    {totalItems}
+                  </span>
+                )}
+              </div>
+            </Tooltip>
+
+            {/* Profile */}
+            <Tooltip title="Profile Settings" arrow>
+              <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="icon-button">
+                <FiUser className="w-5 h-5" />
+              </button>
+            </Tooltip>
+
+            {/* Help */}
+            <Tooltip title="Help" arrow>
+              <button onClick={() => navigate("/user/contact")} className="icon-button">
+                <HelpCircle className="w-5 h-5" />
+              </button>
+            </Tooltip>
+
+            {/* Dropdown */}
+            {isDropdownOpen && (
+              <div
+                ref={dropdownRef}
+                className="absolute md:right-15 top-16 bg-white rounded-lg shadow-lg border w-56 z-50 transition-all"
               >
-                <button
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300"
-                  aria-label="Profile"
-                  onClick={() => navigate(`/user/wish-list`)}
-                >
-                  <FiHeart className="h-5 w-5" />
-                </button>
-              </Tooltip>
-            </div>
-            <div className="relative">
-              <Tooltip title="Cart" arrow>
-                <button
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
-                  aria-label="Cart"
-                  onClick={handleCart}
-                >
-                  <FiShoppingCart className="h-5 w-5 text-gray-700" />
-                </button>
-              </Tooltip>
-              {totalItems > 0 && (
-                <Box component="span" className="absolute -top-2 -right-2 flex items-center justify-center text-xs font-medium bg-red-500 text-white rounded-full w-5 h-5">
-                  {totalItems}
-                </Box>
-              )}
-            </div>
-            <div className="relative">
-              <Tooltip title="Profile Settings" arrow>
-                <button
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300"
-                  aria-label="Profile"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                  <FiUser className="h-5 w-5" />
-                </button>
-              </Tooltip>
-              {isDropdownOpen ? (
-                user?.role === 'user' ? (
-                  <div
-                    className="absolute right-[-60px] mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
-                    ref={dropdownref}
-                  >
-                    <ul className="py-3 px-3 text-center">
-                      <li
-                        className="flex gap-3 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
-                        onClick={handleProfileClick}
-                      >
-                        {AdminProfileIcon()}
-                        Profile
-                      </li>
-                      <li
-                        className="flex gap-3 px-5 font-semibold tracking-normal py-2 text-sm text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
-                        onClick={() => navigate(`/user/orders/${user?.id}`)}
-                      >
-                        <ShoppingBag width={20} height={20} />
-                        Orders
-                      </li>
-                      <li
-                        className="flex gap-3 px-5 py-2 mt-1 text-sm font-semibold tracking-normal text-gray-600 hover:bg-blue-500 hover:text-white cursor-pointer rounded-lg items-center"
-                        onClick={() => navigate("/user/settings")}
-                      >
-                        <LucideSettings2 />
-                        Settings
-                      </li>
-                      <li
-                        onClick={handleLogout}
-                        className="flex gap-3 border-t px-5 mt-2 py-1 text-sm font-semibold tracking-wide text-white bg-red-600 hover:bg-red-700 cursor-pointer rounded-lg items-center"
-                      >
-                        {LogoutProfileIcon()}
-                        Logout
-                      </li>
-                    </ul>
-                  </div>
-
+                {isUser && userRole === "user" ? (
+                  <ul className="py-3 px-3 space-y-1 text-sm text-gray-700 font-medium">
+                    <li className="dropdown-item" onClick={() => navigate(`/user/profile/${user.id}`)}>
+                      <FiUser className="w-4 h-4 mr-2" /> Profile
+                    </li>
+                    <li className="dropdown-item" onClick={() => navigate(`/user/orders/${user.id}`)}>
+                      <ShoppingBag className="w-4 h-4 mr-2" /> Orders
+                    </li>
+                    <li className="dropdown-item" onClick={() => navigate(`/user/settings`)}>
+                      <LucideSettings2 className="w-4 h-4 mr-2" /> Settings
+                    </li>
+                    <li className="dropdown-item text-red-600" onClick={handleLogout}>
+                      <X className="w-4 h-4 mr-2" /> Logout
+                    </li>
+                  </ul>
                 ) : (
-                  <div
-                    className="absolute top-12 right-[-80px] w-56 bg-white rounded-lg shadow-lg border border-gray-300 z-50"
-                    ref={dropdownref}
-                  >
-                    <div className="flex justify-end p-2">
-                      <button
-                        className="text-white p-[2px] hover:bg-white hover:text-red-600 transition-all bg-red-600 rounded-full"
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <div className="px-5 pb-5">
-                      <div className="px-4 pb-3 border-b border-gray-200 text-center">
-                        <h3 className="text-lg font-semibold text-gray-700">
-                          Welcome!
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          Please log in or register
-                        </p>
-                      </div>
-                      <div className="flex justify-center items-center px-4 pt-7">
-                        <Link
-                          to="/login"
-                          className="w-full text-center text-white bg-blue-500 hover:bg-blue-600 py-2 rounded-md font-medium transition-all"
-                        >
-                          Login
-                        </Link>
-                      </div>
-                      <div className="flex justify-center items-center px-4 py-3">
-                        <Link
-                          to="/signup"
-                          className="w-full text-center text-white bg-green-500 hover:bg-green-600 py-2 rounded-md font-medium transition-all"
-                        >
-                          Register
-                        </Link>
-                      </div>
-                    </div>
+                  <div className="p-4 text-center space-y-4">
+                    <h3 className="font-semibold text-gray-800 text-lg">Welcome</h3>
+                    <p className="text-sm text-gray-500">Please login or sign up</p>
+                    <Link to="/login" className="w-full block bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Login</Link>
+                    <Link to="/signup" className="w-full block bg-green-500 text-white py-2 rounded hover:bg-green-600">Register</Link>
                   </div>
-                )
-              ) : null}
-            </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
-        <Tooltip title="Help" arrow className="hover:cursor-pointer" onClick={() => navigate("/user/contact")}>
-          <div className="right-4 top-4 absolute">
-            <HelpCircle />
-          </div>
-        </Tooltip>
       </header>
 
-      <Box>
-        <Outlet />
-      </Box>
+      <main>
+        <Box>
+          <Outlet />
+        </Box>
+      </main>
     </>
   );
 }
 
 export default UserLayout;
+
 
 const AdminProfileIcon = () => {
   return (

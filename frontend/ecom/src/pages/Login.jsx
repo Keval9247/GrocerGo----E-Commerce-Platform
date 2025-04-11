@@ -13,6 +13,8 @@ import { ButtonC, Input } from '../components';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../config/firebaseConfig';
 import OtpBox from '../components/otpbox/OtpBox';
+import { useAuth0 } from '@auth0/auth0-react';
+import { auth0LoginSuccess } from '../store/slice/AuthSlice';
 
 function Login() {
     const dispatch = useDispatch();
@@ -21,7 +23,8 @@ function Login() {
     const [errorMessage, setErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isOtpTabVisible, setIsOtpTabVisible] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoginLoading, setIsLoginLoading] = useState(false);
+    const { loginWithRedirect, logout, user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
         if (isOtpTabVisible) setIsOtpTabVisible(false);
@@ -32,7 +35,7 @@ function Login() {
     };
 
     const handleLogin = async (data) => {
-        setIsLoading(true);
+        setIsLoginLoading(true);
         try {
             const response = await dispatch(login({ email: data.email, password: data.password }));
 
@@ -56,11 +59,11 @@ function Login() {
         } catch (error) {
             toast.error(error.message || "Login failed");
         } finally {
-            setIsLoading(false);
+            setIsLoginLoading(false);
         }
     };
 
-    if (isLoading) {
+    if (isLoginLoading) {
         return (
             <Box className="flex justify-center items-center w-full h-screen">
                 <CircularProgress size={50} />
@@ -68,14 +71,35 @@ function Login() {
         )
     }
 
+    // useEffect(() => {
+    //     const storeAuthToken = async () => {
+    //         if (isAuthenticated) {
+    //             try {
+    //                 const token = await getAccessTokenSilently();
+    //                 const auth0User = user; // Auth0 user info
+
+    //                 // Dispatch to Redux
+    //                 dispatch(auth0LoginSuccess({ token, user: auth0User }));
+
+    //                 toast.success("Login Successful with SSO");
+    //                 navigate(auth0User?.role === 'admin' ? '/admin' : '/user/products?category=All');
+    //             } catch (error) {
+    //                 console.error("Token retrieval error", error);
+    //                 toast.error("Failed to login with SSO");
+    //             }
+    //         }
+    //     };
+
+    //     storeAuthToken();
+    // }, [isAuthenticated]);
+
 
     const handleGoogleLogin = async () => {
-        setIsLoading(true);
+        setIsLoginLoading(true);
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const token = result.user.accessToken;
 
-            // Store token securely
             localStorage.setItem('token', token);
             toast.success('Login Successful');
             navigate('/user');
@@ -83,7 +107,7 @@ function Login() {
             toast.error(error.message || 'Google login failed');
             setErrorMessage(error.message || 'Google login failed');
         }
-        setIsLoading(false);
+        setIsLoginLoading(false);
     };
 
     return (
@@ -146,8 +170,8 @@ function Login() {
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                <ButtonC type="submit" className="bg-indigo-600 w-full text-white py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300" disabled={isLoading}>
-                                    {isLoading ? (
+                                <ButtonC type="submit" className="bg-indigo-600 w-full text-white py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300" disabled={isLoginLoading}>
+                                    {isLoginLoading ? (
                                         <div className="flex items-center justify-center">
                                             <CircularProgress size={20} color="inherit" className="mr-2" />
                                             Logging in...
@@ -156,6 +180,23 @@ function Login() {
                                     }
                                 </ButtonC>
                             </Grid>
+                            <Grid item xs={12}>
+                                <Button
+                                    onClick={() => loginWithRedirect()}
+                                    fullWidth
+                                    variant="outlined"
+                                    sx={{
+                                        mt: 2,
+                                        '&:hover': {
+                                            backgroundColor: '#00264d',
+                                            color: '#ffffff',
+                                        },
+                                    }}
+                                >
+                                    Login with SSO (Auth0)
+                                </Button>
+                            </Grid>
+
                             <Grid item xs={12}>
                                 <Divider className="flex items-center justify-center my-4">
                                     <Typography variant="h6" className="text-gray-600 font-extrabold">
