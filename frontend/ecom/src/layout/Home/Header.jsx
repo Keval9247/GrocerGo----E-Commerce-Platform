@@ -16,6 +16,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { ArrowUpRight, LogOut, LogOutIcon, ViewIcon } from 'lucide-react';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     fontWeight: 'bold',
@@ -36,6 +38,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
     '&:hover:after': {
         width: '100%',
+        color: '#4F46E5',
     },
 }));
 
@@ -43,6 +46,7 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const user = useSelector((state) => state.authReducer.user);
 
     const handleScrollOrNavigate = () => {
         if (location.pathname === '/') {
@@ -53,7 +57,8 @@ const Header = () => {
         } else {
             navigate('/');
             setTimeout(() => {
-                window.scrollTo({ top: 3200, behavior: 'smooth' });
+                const element = document.getElementById('whygrocergo');
+                element.scrollIntoView({ top: 500, behavior: 'smooth' });
             }, 1000);
         }
         setDrawerOpen(false);
@@ -118,34 +123,75 @@ const Header = () => {
                     </Box>
 
                     {/* Auth Buttons (Desktop) */}
-                    <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: '1rem' }}>
-                        <Button
-                            variant="outlined"
-                            sx={{
-                                borderColor: '#4F46E5',
-                                color: '#4F46E5',
-                                '&:hover': { backgroundColor: '#4F46E5', color: '#fff' },
-                            }}
-                            component={Link}
-                            to="/login"
-                        >
-                            Login
-                        </Button>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                backgroundColor: '#4F46E5',
-                                color: '#fff',
-                                '&:hover': {
-                                    backgroundColor: '#3C3AEB',
-                                },
-                            }}
-                            component={Link}
-                            to="/signup"
-                        >
-                            Sign Up
-                        </Button>
-                    </Box>
+                    {user ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: '1rem' }} className="group">
+                                <Button
+                                    variant="contained"
+                                    sx={{
+                                        backgroundColor: '#4F46E5',
+                                        color: '#fff',
+                                        '&:hover': {
+                                            backgroundColor: '#3C3AEB',
+                                        },
+                                    }}
+                                    component={Link}
+                                    to="/user/products?category=All"
+                                    className="flex items-center gap-2"
+                                >
+                                    Dashboard
+                                    <ArrowUpRight className="ml-2 transition-transform duration-300 group-hover:scale-125" />
+                                </Button>
+                            </Box>
+                            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: '1rem' }} className="group">
+                                <Button
+                                    variant="contained"
+                                    sx={{
+                                        backgroundColor: '#fff',
+                                        color: '#f6616a',
+                                        '&:hover': {
+                                            backgroundColor: '#f6616a',
+                                            color: '#fff',
+                                        },
+                                    }}
+                                    className="flex items-center gap-2"
+                                >
+                                    <LogOutIcon className="ml-2 transition-transform duration-300 group-hover:scale-105" />
+                                </Button>
+                            </Box>
+                        </div>
+                    ) :
+                        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: '1rem' }}>
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    borderColor: '#4F46E5',
+                                    color: '#4F46E5',
+                                    '&:hover': { backgroundColor: '#4F46E5', color: '#fff' },
+                                }}
+                                component={Link}
+                                to="/login"
+                            >
+                                Login
+                            </Button>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#4F46E5',
+                                    color: '#fff',
+                                    '&:hover': {
+                                        backgroundColor: '#3C3AEB',
+                                    },
+                                }}
+                                component={Link}
+                                to="/signup"
+                            >
+                                Sign Up
+                            </Button>
+                        </Box>
+                    }
+
+                    {/* Auth Buttons (Mobile) */}
 
                     {/* Mobile Menu Icon */}
                     <IconButton
@@ -171,25 +217,44 @@ const Header = () => {
                             <CloseIcon />
                         </IconButton>
                     </Box>
-                    <List>
+                    <List className='rounded-full'>
                         {navLinks.map((link, index) => (
                             <ListItem key={index} disablePadding>
                                 <ListItemButton
                                     onClick={() =>
                                         link.path ? navigate(link.path) : link.action()
                                     }
+                                    sx={{
+                                        borderRadius: '10px',
+                                        '&:hover': {
+                                            backgroundColor: '#3666f1',
+                                            color: '#fff',
+                                        },
+                                    }}
                                 >
                                     <ListItemText primary={link.label} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="/login">
+                            <ListItemButton component={Link} to="/login" sx={{
+                                borderRadius: '10px',
+                                '&:hover': {
+                                    backgroundColor: '#3666f1',
+                                    color: '#fff',
+                                },
+                            }}>
                                 <ListItemText primary="Login" />
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="/signup">
+                            <ListItemButton component={Link} to="/signup" sx={{
+                                borderRadius: '10px',
+                                '&:hover': {
+                                    backgroundColor: '#3666f1',
+                                    color: '#fff',
+                                },
+                            }}>
                                 <ListItemText primary="Sign Up" />
                             </ListItemButton>
                         </ListItem>

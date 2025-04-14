@@ -4,8 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const features = [
-    { title: "Exclusive Products", description: "Discover unique, high-quality products curated just for you.", icon: "/images/discount.png" },
-    { title: "Fast & Reliable Shipping", description: "Enjoy swift delivery services with same-day or next-day shipping options.", icon: "/images/fast.png" },
+    { title: "Fast & Reliable Shipping", description: "Enjoy swift delivery services with same-day or next-day shipping options.", icon: "/images/discount.png" },
     { title: "Secure Payments", description: "Shop with peace of mind using our secure payment methods.", icon: "/images/payment.png" },
     { title: "24/7 Customer Support", description: "Our dedicated support team is here to assist you anytime.", icon: "/images/24-7.png" },
     { title: "Hassle-Free Returns", description: "Not satisfied? Enjoy a seamless return process with no hidden charges.", icon: "/images/returns.png" },
@@ -21,7 +20,7 @@ const WhyChooseUs = () => {
         infinite: true,
         speed: 800,
         autoplay: true,
-        autoplaySpeed: 2500,
+        autoplaySpeed: 3000,
         slidesToShow: 4,
         slidesToScroll: 1,
         arrows: false,
@@ -35,21 +34,25 @@ const WhyChooseUs = () => {
     };
 
     return (
-        <div id="whygrocergo" className="bg-[#f6f7fc] py-16 pt-24">
-            <div className="max-w-7xl mx-auto px-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-[#333] mb-12">
+        <section id="whygrocergo" className="bg-[#f6f7fc] py-20 px-4">
+            <div className="max-w-7xl mx-auto">
+                <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-14">
                     Why Choose <span className="text-indigo-600">GrocerGo</span>
                 </h2>
                 <Slider {...settings}>
                     {features.map((feature, index) => (
-                        <div key={index} className="px-3 py-2">
-                            <div className="bg-white bg-opacity-70 backdrop-blur-md border border-gray-200 rounded-2xl p-6 h-[320px] flex flex-col justify-between items-center text-center">
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-100 to-purple-200 flex items-center justify-center mb-4">
-                                    <img src={feature.icon} alt={feature.title} className="w-8 h-8" />
+                        <div key={index} className="px-4">
+                            <div className="bg-white rounded-3xl p-6 h-[300px] flex flex-col items-center justify-between text-center">
+                                <div className="w-24 h-24 flex items-center justify-center mb-6">
+                                    <img
+                                        src={feature.icon}
+                                        alt={feature.title}
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
-                                <div>
+                                <div className="flex-grow flex flex-col justify-start">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                                    <p className="text-sm text-gray-600 leading-relaxed">
+                                    <p className="text-sm text-gray-600 px-2">
                                         {feature.description}
                                     </p>
                                 </div>
@@ -58,7 +61,7 @@ const WhyChooseUs = () => {
                     ))}
                 </Slider>
             </div>
-        </div>
+        </section>
     );
 };
 
