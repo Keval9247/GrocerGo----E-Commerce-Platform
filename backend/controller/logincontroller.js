@@ -2,11 +2,11 @@ const User = require("../models/User");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const Product = require("../models/Product");
-const sendEmail = require("../miidleware/sendEmail");
 const { ExpireOtp, OtpGenerate } = require("../utils/Otp");
 const Otp = require("../models/Otp");
 const path = require("path");
 const fs = require('fs');
+const sendEmail = require("../miidleware/sendEmail");
 
 const logincontroller = () => {
     return {

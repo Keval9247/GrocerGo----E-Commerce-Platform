@@ -15,7 +15,7 @@ const subscribecontroller = () => {
                 const htmlContent = htmlContentuserset.replace('{{username}}', req.user?.email || email);
 
                 const defaultSubject = `Thanks for Joining GrocerGo! Let's Get Shopping 🛒`;
-                await sendEmail(email, defaultSubject, htmlContent);
+                await sendEmail.sendEmail(email, defaultSubject, htmlContent);
                 res.json({
                     email: email,
                     message: 'Subscribed Newsletter successfully.'
@@ -28,10 +28,11 @@ const subscribecontroller = () => {
 
         contactUs: async (req, res) => {
             const { name, email, subject, message } = req.body;
+            console.log("🚀🚀 Your selected text is => req.body: ", req.body);
             if (!name || !email || !subject || !message) {
                 return res.status(400).json({ error: 'All fields are required.' });
             }
-            await sendEmail(email, subject, message)
+            await sendEmail.sendContactEmail(name, email, message, subject)
 
             res.status(201).json({ message: 'Your message has been sent successfully.' })
         }

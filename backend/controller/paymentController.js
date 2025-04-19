@@ -28,7 +28,7 @@ const paymentController = () => {
             const { items } = req.body;
             try {
                 const customer = await User.findById(req.params.id)
-                const AllItems = items?.map((item) => ({
+                const AllItems = items.items?.map((item) => ({
                     price_data: {
                         currency: 'usd',
                         unit_amount: item.price * 100, // Price in cents
@@ -41,11 +41,11 @@ const paymentController = () => {
                     quantity: item.quantity,
                 }))
 
-                const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                const totalAmount = items?.items?.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
                 const order = new Order({
                     userId: customer._id,
-                    items: items.map((item) => ({
+                    items: items?.items?.map((item) => ({
                         productId: item.productId,
                         name: item.name,
                         description: item.description,

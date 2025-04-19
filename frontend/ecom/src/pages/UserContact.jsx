@@ -28,7 +28,7 @@ const ContactPage = () => {
 
         try {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/subscribe/contact`, formData)
-            toast.success(response?.data);
+            toast.success(response?.data?.message || "Message sent successfully.");
             setFormData({ name: '', email: '', subject: '', message: '' });
         } catch (error) {
             toast.error("Something did wrong.");
@@ -66,7 +66,7 @@ const ContactPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 mt-10 overflow-hidden">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-auto mt-10">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">

@@ -11,7 +11,7 @@ function UserLayout() {
   const totalItems = useSelector((state) => state.productsReducer.cartItems);
   const dispatch = useDispatch();
   const userRole = useSelector((state) => state.authReducer.role);
-  const isUser = useSelector((state) => state.authReducer.isUser);
+  const user = useSelector((state) => state.authReducer.user);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   const navigate = useNavigate();
@@ -67,8 +67,8 @@ function UserLayout() {
                 <button onClick={handleCart} className="icon-button">
                   <FiShoppingCart className="w-5 h-5 text-gray-700" />
                 </button>
-                {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 text-xs flex items-center justify-center rounded-full font-bold">
+                {user && totalItems > 0 && (
+                  <span className="absolute -top-4 -right-4 bg-red-500 text-white w-5 h-5 text-xs flex items-center justify-center rounded-full font-bold">
                     {totalItems}
                   </span>
                 )}
@@ -84,7 +84,7 @@ function UserLayout() {
 
             {/* Help */}
             <Tooltip title="Help" arrow>
-              <button onClick={() => navigate("/user/contact")} className="icon-button">
+              <button onClick={() => navigate("/contact")} className="icon-button">
                 <HelpCircle className="w-5 h-5" />
               </button>
             </Tooltip>
@@ -93,29 +93,63 @@ function UserLayout() {
             {isDropdownOpen && (
               <div
                 ref={dropdownRef}
-                className="absolute md:right-15 top-16 bg-white rounded-lg shadow-lg border w-56 z-50 transition-all"
+                className="absolute right-4 top-16 w-64 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 transition-all animate-fade-in"
               >
-                {isUser && userRole === "user" ? (
-                  <ul className="py-3 px-3 space-y-1 text-sm text-gray-700 font-medium">
-                    <li className="dropdown-item" onClick={() => navigate(`/user/profile/${user.id}`)}>
-                      <FiUser className="w-4 h-4 mr-2" /> Profile
-                    </li>
-                    <li className="dropdown-item" onClick={() => navigate(`/user/orders/${user.id}`)}>
-                      <ShoppingBag className="w-4 h-4 mr-2" /> Orders
-                    </li>
-                    <li className="dropdown-item" onClick={() => navigate(`/user/settings`)}>
-                      <LucideSettings2 className="w-4 h-4 mr-2" /> Settings
-                    </li>
-                    <li className="dropdown-item text-red-600" onClick={handleLogout}>
-                      <X className="w-4 h-4 mr-2" /> Logout
-                    </li>
-                  </ul>
+                {user && userRole === "user" ? (
+                  <div className="p-4">
+                    <div className="flex items-center gap-3 mb-4 border-b pb-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold uppercase">
+                        {user.name?.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                        <p className="text-xs text-gray-500">{user.email}</p>
+                      </div>
+                    </div>
+
+                    <ul className="space-y-2 text-sm text-gray-700 font-medium">
+                      <li
+                        className="dropdown-item flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+                        onClick={() => navigate(`/user/profile/${user.id}`)}
+                      >
+                        <FiUser className="w-4 h-4 mr-2 text-blue-500" /> Profile
+                      </li>
+                      <li
+                        className="dropdown-item flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+                        onClick={() => navigate(`/user/orders/${user.id}`)}
+                      >
+                        <ShoppingBag className="w-4 h-4 mr-2 text-green-500" /> Orders
+                      </li>
+                      <li
+                        className="dropdown-item flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+                        onClick={() => navigate(`/user/settings`)}
+                      >
+                        <LucideSettings2 className="w-4 h-4 mr-2 text-yellow-500" /> Settings
+                      </li>
+                      <li
+                        className="dropdown-item flex items-center px-3 py-2 rounded-lg hover:bg-red-100 text-red-600 cursor-pointer transition"
+                        onClick={handleLogout}
+                      >
+                        <X className="w-4 h-4 mr-2" /> Logout
+                      </li>
+                    </ul>
+                  </div>
                 ) : (
-                  <div className="p-4 text-center space-y-4">
-                    <h3 className="font-semibold text-gray-800 text-lg">Welcome</h3>
-                    <p className="text-sm text-gray-500">Please login or sign up</p>
-                    <Link to="/login" className="w-full block bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Login</Link>
-                    <Link to="/signup" className="w-full block bg-green-500 text-white py-2 rounded hover:bg-green-600">Register</Link>
+                  <div className="p-6 text-center space-y-4">
+                    <h3 className="font-semibold text-gray-800 text-lg">Welcome 👋</h3>
+                    <p className="text-sm text-gray-500">Please login or sign up to continue</p>
+                    <Link
+                      to="/login"
+                      className="w-full block bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="w-full block bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
+                    >
+                      Register
+                    </Link>
                   </div>
                 )}
               </div>
