@@ -180,7 +180,7 @@ function Login() {
                                     }
                                 </ButtonC>
                             </Grid>
-                            <Grid item xs={12}>
+                            {/* <Grid item xs={12}>
                                 <Button
                                     onClick={() => loginWithRedirect()}
                                     fullWidth
@@ -222,7 +222,7 @@ function Login() {
                                 >
                                     Login with Google
                                 </Button>
-                            </Grid>
+                            </Grid> */}
                             {errorMessage && (
                                 <Grid item xs={12}>
                                     <Typography color="error" align="center">{errorMessage}</Typography>

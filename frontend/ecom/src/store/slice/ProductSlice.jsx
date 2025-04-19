@@ -83,5 +83,5 @@ const productsSlice = createSlice({
     },
 });
 
-export const { setTotalItems, addToFavourites, removeToFavourites, clearFavourites } = productsSlice.actions;
+export const { setTotalItems, addToFavourites, removeToFavourites, clearFavourites, clearCart } = productsSlice.actions;
 export default productsSlice.reducer;

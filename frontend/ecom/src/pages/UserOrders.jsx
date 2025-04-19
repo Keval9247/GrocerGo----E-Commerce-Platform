@@ -102,7 +102,7 @@ const OrdersPage = () => {
                                         <div className="space-y-2">
                                             <p className="text-sm text-gray-600">
                                                 <span className="font-medium">Address:</span>{" "}
-                                                {order.deliveryDetails.address1 || "Not provided"}
+                                                {order.deliveryDetails.address1 || order?.userId?.address || "Not provided"}
                                             </p>
                                             <p className="text-sm text-gray-600">
                                                 <span className="font-medium">City:</span>{" "}

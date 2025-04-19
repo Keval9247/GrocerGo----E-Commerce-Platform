@@ -8,7 +8,7 @@ import Loading from "../utils/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import { getCheckoutSession, payPalPayment, payPalSuccess } from "../apis/payment/paymentApi";
 import { Tooltip } from "@mui/material";
-import { setTotalItems } from "../store/slice/ProductSlice";
+import { clearCart, setTotalItems } from "../store/slice/ProductSlice";
 import { DeleteCart, UpdateCart } from "../store/thunks/productThunk";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import html2pdf from 'html2pdf.js';
@@ -78,11 +78,13 @@ const CartPage = () => {
 
       const newQuantity = Math.max(1, Math.min(item.quantity + change, item.stock));
 
-      setCart((prevCart) =>
-        prevCart.map((item) =>
+      setCart((prevCart) => ({
+        ...prevCart,
+        items: prevCart.items.map((item) =>
           item.productId === productId ? { ...item, quantity: newQuantity } : item
-        )
-      );
+        ),
+      }));
+
 
       debouncedUpdateQuantity(user?.id, productId, newQuantity);
     } catch (error) {
@@ -109,7 +111,7 @@ const CartPage = () => {
   const handleCheckout = async (cart) => {
     try {
       const response = await getCheckoutSession(user?.id, cart)
-      if (response.url) {
+      if (response?.url) {
         window.location.href = response.url;
       }
       else {

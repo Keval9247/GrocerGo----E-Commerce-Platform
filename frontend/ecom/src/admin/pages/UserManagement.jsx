@@ -15,7 +15,6 @@ const UserManagement = () => {
     const fetchData = async () => {
       try {
         const res = await getUsers();
-        console.log("🚀🚀 Your selected text is => res: ", res);
         setUsers(res.users);
       } catch (error) {
         console.error("Error fetching data:", error);

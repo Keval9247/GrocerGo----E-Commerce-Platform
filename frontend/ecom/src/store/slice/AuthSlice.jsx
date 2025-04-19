@@ -44,7 +44,7 @@ const authSlice = createSlice({
                 state.role = action.payload?.user?.role;
                 state.error = null;
                 state.isVerified = action.payload?.user?.isVerified;
-                state.isUser = action.payload?.user?.role == 'user';
+                state.isUser = action.payload?.user?.role == 'user' || true;
             },)
             .addCase(login.rejected, (state, action) => {
                 state.isAuthenticated = false;

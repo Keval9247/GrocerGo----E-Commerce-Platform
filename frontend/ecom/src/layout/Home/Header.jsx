@@ -16,8 +16,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ArrowUpRight, LogOut, LogOutIcon, ViewIcon } from 'lucide-react';
+import { clearAuthentication } from '../../store/slice/AuthSlice';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     fontWeight: 'bold',
@@ -47,6 +48,7 @@ const Header = () => {
     const location = useLocation();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const user = useSelector((state) => state.authReducer.user);
+    const dispatch = useDispatch();
 
     const handleScrollOrNavigate = () => {
         if (location.pathname === '/') {
@@ -69,6 +71,11 @@ const Header = () => {
         { label: 'Contact', path: '/contact' },
         { label: 'FAQs', path: '/faqs' },
     ];
+
+    const handleLogout = () => {
+        dispatch(clearAuthentication());
+        navigate("/login");
+    };
 
     return (
         <>
@@ -155,6 +162,7 @@ const Header = () => {
                                         },
                                     }}
                                     className="flex items-center gap-2"
+                                    onClick={handleLogout}
                                 >
                                     <LogOutIcon className="ml-2 transition-transform duration-300 group-hover:scale-105" />
                                 </Button>

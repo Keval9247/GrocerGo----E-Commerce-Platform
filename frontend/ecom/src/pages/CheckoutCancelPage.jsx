@@ -7,10 +7,12 @@ const CancelPage = () => {
     const [searchParams] = useSearchParams();
     const sessionId = searchParams.get("session_id");
     const [orderId, setOrderId] = useState('');
+    const [loading, setLoading] = useState(false);
 
 
     useEffect(() => {
         if (sessionId) {
+            setLoading(true);
             const fetchHandleCancel = async () => {
                 try {
                     const response = await handlePaymentCancel(sessionId);
@@ -20,6 +22,7 @@ const CancelPage = () => {
                 }
             };
             fetchHandleCancel();
+            setLoading(false)
         }
     }, [sessionId]);
 
@@ -31,7 +34,7 @@ const CancelPage = () => {
                 <p className="text-gray-600 mb-6">
                     Your payment was not completed. Please review your payment details and try again. If you continue to experience issues, contact our support team.
                 </p>
-                <p className='font-semibold mb-5'>Your OrderId is : <span>{orderId ? orderId : "order id not found."}</span></p>
+                <p className='font-semibold mb-5'>Your OrderId is : <span>{loading ? sessionId ? orderId : "Loading order ID..." : "Order not found. Please drop us email on olixlab.38@gmail.com."}</span></p>
                 <div className="flex flex-col space-y-4">
                     <a
                         href="/user/cart"

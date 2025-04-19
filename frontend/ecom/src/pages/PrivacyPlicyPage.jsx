@@ -3,7 +3,7 @@ import React from 'react';
 const PrivacyPolicy = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-8 flex justify-center items-center mt-20 ">
-            <div className="max-w-4xl w-full bg-white/80 backdrop-blur-md p-10 rounded-2xl shadow-2xl border border-gray-200">
+            <div className="max-w-[1200px] w-full bg-white/80 backdrop-blur-md p-10 rounded-2xl shadow-2xl border border-gray-200">
                 <h1 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">Privacy Policy</h1>
                 <p className="text-gray-500 text-center text-sm mb-6">Last Updated: 02-03-2025, 13:59 PM</p>
 
